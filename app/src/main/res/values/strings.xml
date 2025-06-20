@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PyeonKing</string>
+
+    //홈스크린
+    <string name="price_format">%1$s원 (%2$s원)</string>
+    <string name="today_recommend">오늘의 추천</string>
+    <string name="search_hint">어떤 상품을 찾으세요?</string>
+    <string name="app_name_kr">편킹</string>
 </resources>
