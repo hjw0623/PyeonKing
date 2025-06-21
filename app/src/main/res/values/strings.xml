@@ -6,4 +6,13 @@
     <string name="today_recommend">오늘의 추천</string>
     <string name="search_hint">어떤 상품을 찾으세요?</string>
     <string name="app_name_kr">편킹</string>
+
+    //카메라스크린
+    <string name="action_retake_photo">다시 촬영</string>
+    <string name="action_search">검색 하기</string>
+    <string name="permission_camera_required">카메라 기능을 사용하려면\n권한을 허용해주세요.</string>
+    <string name="permission_required">권한이 필요합니다</string>
+    <string name="action_request_permission_again">권한 다시 요청</string>
+    <string name="error_save_photo_failed">사진 저장 실패: %1$s</string>
+    <string name="camera_permission_required">카메라 권한이 필요합니다.</string>"
 </resources>
