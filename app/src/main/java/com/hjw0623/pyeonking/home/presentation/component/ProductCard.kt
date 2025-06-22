@@ -20,14 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hjw0623.pyeonking.R
+import com.hjw0623.pyeonking.core.data.Product
+import com.hjw0623.pyeonking.core.data.mockProduct
 import com.hjw0623.pyeonking.core.util.getBrandColor
-import com.hjw0623.pyeonking.home.data.RecommendItem
-import com.hjw0623.pyeonking.home.data.mockRecommendItem1
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 
 @Composable
 fun ProductCardLarge(
-    recommendItem: RecommendItem,
+    recommendItem: Product,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,7 +85,7 @@ private fun ProductCardPreview() {
     PyeonKingTheme {
         ProductCardLarge(
             onCardClick = {},
-            recommendItem = mockRecommendItem1
+            recommendItem = mockProduct
         )
     }
 }
