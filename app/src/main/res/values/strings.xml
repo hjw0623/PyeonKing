@@ -14,5 +14,17 @@
     <string name="permission_required">권한이 필요합니다</string>
     <string name="action_request_permission_again">권한 다시 요청</string>
     <string name="error_save_photo_failed">사진 저장 실패: %1$s</string>
-    <string name="camera_permission_required">카메라 권한이 필요합니다.</string>"
+    <string name="camera_permission_required">카메라 권한이 필요합니다.</string>
+
+    //검색 스크린
+    <string name="label_recent_searches">최근 검색어</string>
+    <string name="message_no_recent_searches">최근 검색어가 없습니다</string>
+    <string name="label_convenience_store">편의점</string>
+    <string name="label_promotion_type">행사 종류</string>
+    <string name="label_cu">CU</string>
+    <string name="label_gs25">GS25</string>
+    <string name="label_emart24">이마트24</string>
+    <string name="label_seven_eleven">세븐일레븐</string>
+    <string name="label_one_plus_one">1+1</string>
+    <string name="label_two_plus_one">2+1</string>"
 </resources>
