@@ -27,7 +27,7 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 
 @Composable
 fun ProductCardLarge(
-    recommendItem: Product,
+    product: Product,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -49,7 +49,7 @@ fun ProductCardLarge(
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
-                model = recommendItem.imgUrl,
+                model = product.imgUrl,
                 contentDescription = null,
                 modifier = Modifier.size(160.dp),
                 contentScale = ContentScale.Crop,
@@ -59,19 +59,19 @@ fun ProductCardLarge(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            ProductCardTextLarge(string = recommendItem.name)
-            ProductCardTextLarge(string = recommendItem.promotion)
+            ProductCardTextLarge(string = product.name)
+            ProductCardTextLarge(string = product.promotion)
             ProductCardTextLarge(
                 string = stringResource(
                     R.string.price_format,
-                    recommendItem.price,
-                    recommendItem.priceForEach
+                    product.price,
+                    product.priceForEach
                 )
             )
             ProductCardTextLarge(
-                string = recommendItem.brand,
+                string = product.brand,
                 color = getBrandColor(
-                    brand = recommendItem.brand,
+                    brand = product.brand,
                     isDarkTheme = isSystemInDarkTheme()
                 )
             )
@@ -85,7 +85,7 @@ private fun ProductCardPreview() {
     PyeonKingTheme {
         ProductCardLarge(
             onCardClick = {},
-            recommendItem = mockProduct
+            product = mockProduct
         )
     }
 }

@@ -26,5 +26,8 @@
     <string name="label_emart24">이마트24</string>
     <string name="label_seven_eleven">세븐일레븐</string>
     <string name="label_one_plus_one">1+1</string>
-    <string name="label_two_plus_one">2+1</string>"
+    <string name="label_two_plus_one">2+1</string>
+    <string name="camera_search_result">사진 검색 결과</string>
+    <string name="search_result">검색 결과</string>
+    <string name="search_result_title_with_query">\'%1$s\'에 대한 검색 결과</string>"
 </resources>

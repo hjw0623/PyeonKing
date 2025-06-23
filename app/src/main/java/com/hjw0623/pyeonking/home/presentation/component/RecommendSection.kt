@@ -56,7 +56,7 @@ fun RecommendSection(
             ) {
                 ProductCardLarge(
                     onCardClick = { onCardClick(state.recommendList[it].name)},
-                    recommendItem = state.recommendList[it]
+                    product = state.recommendList[it]
                 )
             }
         }
