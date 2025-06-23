@@ -15,10 +15,11 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun PyeonKingButton(
     text: String = "",
     onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(8.dp)

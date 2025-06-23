@@ -29,5 +29,12 @@
     <string name="label_two_plus_one">2+1</string>
     <string name="camera_search_result">사진 검색 결과</string>
     <string name="search_result">검색 결과</string>
-    <string name="search_result_title_with_query">\'%1$s\'에 대한 검색 결과</string>"
+    <string name="search_result_title_with_query">\'%1$s\'에 대한 검색 결과</string>
+    <string name="label_unit_price">1개당 가격: %1$s원</string>
+    <string name="label_unit_price_with_promotion">%1$s 구매시 개당 가격: %2$s원</string>
+    <string name="text_item_count">%1$s 개</string>
+    <string name="lebel_review">리뷰</string>
+    <string name="lebel_map">지도</string>
+    <string name="text_total_reviews">%1$s 개의 리뷰</string>
+    <string name="action_write_review">리뷰 작성하기</string>"
 </resources>

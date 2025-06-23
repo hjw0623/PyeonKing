@@ -8,6 +8,8 @@ val Gs25 = Color(0xFF0072CE)
 val Seven = Color(0xFF009047)
 val Emart24 = Color(0xFFFFDE00)
 
+val PyeonKingYellow = Color(0xFFFFC107)
+
 //LightTheme
 val primaryLight = Color(0xFF0077F6)
 val onPrimaryLight = Color(0xFFFFFFFF)
