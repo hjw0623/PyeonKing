@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,8 @@ fun BackBar(
     title: String? = null,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
-    modifier: Modifier = Modifier
+    icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -39,7 +41,7 @@ fun BackBar(
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = icon,
                     contentDescription = null,
                     tint = iconTint
                 )
