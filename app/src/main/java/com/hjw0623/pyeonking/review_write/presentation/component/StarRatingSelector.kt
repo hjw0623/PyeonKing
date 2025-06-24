@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.search_result.presentation.component
+package com.hjw0623.pyeonking.review_write.presentation.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

@@ -32,8 +32,8 @@ import com.hjw0623.pyeonking.core.data.Product
 import com.hjw0623.pyeonking.core.data.mockProduct
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
-import com.hjw0623.pyeonking.search_result.presentation.component.StarRatingSelector
-import com.hjw0623.pyeonking.search_result.presentation.component.WritingSection
+import com.hjw0623.pyeonking.review_write.presentation.component.StarRatingSelector
+import com.hjw0623.pyeonking.review_write.presentation.component.WritingSection
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 
 @Composable

@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.search_result.presentation.component
+package com.hjw0623.pyeonking.review_write.presentation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
