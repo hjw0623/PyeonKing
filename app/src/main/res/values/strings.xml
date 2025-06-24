@@ -36,5 +36,9 @@
     <string name="lebel_review">리뷰</string>
     <string name="lebel_map">지도</string>
     <string name="text_total_reviews">%1$s 개의 리뷰</string>
-    <string name="action_write_review">리뷰 작성하기</string>"
+    <string name="action_write_review">리뷰 작성하기</string>
+    <string name="text_review_input_prompt">상세한 후기를 써주세요</string>
+    <string name="hint_review_input">상품에 대한 평가를 남겨주시면 다른 사용자에게도 도움이 됩니다.</string>
+    <string name="action_submit">작성 하기</string>
+    <string name="title_write_review">리뷰 작성 하기</string>"
 </resources>
