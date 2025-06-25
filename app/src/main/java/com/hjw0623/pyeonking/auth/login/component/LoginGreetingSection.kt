@@ -15,18 +15,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hjw0623.pyeonking.R
 
 @Composable
 fun LoginGreetingSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
     ) {
-        Box(modifier = Modifier.align(Alignment.Start)) {
+
+        Text(
+            text = stringResource(R.string.label_login),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(vertical = 32.dp)
+        ) {
             AsyncImage(
                 model = "https://robohash.org/login",
                 contentDescription = null,
@@ -39,9 +50,20 @@ fun LoginGreetingSection(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(stringResource(R.string.welcom_prompt), style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = stringResource(R.string.welcom_prompt),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+
         Spacer(modifier = Modifier.height(8.dp))
-        Text(stringResource(R.string.prompt_login_for_member_service), style = MaterialTheme.typography.bodySmall)
+
+        Text(
+            text = stringResource(R.string.prompt_login_for_member_service),
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Bold
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
     }
