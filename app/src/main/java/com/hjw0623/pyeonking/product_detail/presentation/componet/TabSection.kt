@@ -28,8 +28,8 @@ fun TabSection(
                 text = {
                     Text(
                         text = when (tab) {
-                            ProductDetailTab.REVIEW -> stringResource(R.string.lebel_review)
-                            ProductDetailTab.MAP -> stringResource(R.string.lebel_map)
+                            ProductDetailTab.REVIEW -> stringResource(R.string.label_review)
+                            ProductDetailTab.MAP -> stringResource(R.string.label_map)
                         }
                     )
                 }

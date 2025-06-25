@@ -33,12 +33,22 @@
     <string name="label_unit_price">1개당 가격: %1$s원</string>
     <string name="label_unit_price_with_promotion">%1$s 구매시 개당 가격: %2$s원</string>
     <string name="text_item_count">%1$s 개</string>
-    <string name="lebel_review">리뷰</string>
-    <string name="lebel_map">지도</string>
+    <string name="label_review">리뷰</string>
+    <string name="label_map">지도</string>
     <string name="text_total_reviews">%1$s 개의 리뷰</string>
     <string name="action_write_review">리뷰 작성하기</string>
     <string name="text_review_input_prompt">상세한 후기를 써주세요</string>
     <string name="hint_review_input">상품에 대한 평가를 남겨주시면 다른 사용자에게도 도움이 됩니다.</string>
     <string name="action_submit">작성 하기</string>
-    <string name="title_write_review">리뷰 작성 하기</string>"
+    <string name="title_write_review">리뷰 작성 하기</string>
+
+    <string name="label_login">로그인</string>
+    <string name="label_register">회원가입</string>
+    <string name="label_password">비밀번호</string>
+    <string name="welcom_prompt">안녕하세요.\n편킹입니다.</string>
+    <string name="prompt_login_for_member_service">회원 서비스 이용을 위해 로그인 해주세요</string>
+    <string name="label_email">이메일</string>
+    <string name="email_input_hint">example@example.com</string>
+    <string name="email_input_error">이메일 형식이 아닙니다.</string>"
+
 </resources>
