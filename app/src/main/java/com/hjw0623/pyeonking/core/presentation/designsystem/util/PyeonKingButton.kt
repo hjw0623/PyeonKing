@@ -1,8 +1,9 @@
 package com.hjw0623.pyeonking.core.presentation.designsystem.util
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults // ButtonDefaults import 추가
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,15 +16,20 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun PyeonKingButton(
     text: String = "",
     onClick: () -> Unit = {},
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(8.dp)
-            )
+        modifier = modifier,
+        enabled = enabled,
+        contentPadding = contentPadding,
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
     ) {
         Text(
             text = text,
@@ -37,7 +43,10 @@ fun PyeonKingButton(
 private fun PyeonKingButtonPreview() {
     PyeonKingTheme {
         PyeonKingButton(
-            text = ""
+            text = "미리보기 버튼",
+            onClick = {},
+            enabled = true,
+            contentPadding = PaddingValues(vertical = 16.dp, horizontal = 24.dp)
         )
     }
 }
