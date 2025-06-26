@@ -78,6 +78,11 @@
     <string name="input_current_password_new_password">현재 비밀번호와 새 비밀번호를 입력해 주세요</string>
     <string name="lable_current_password">현재 비밀번호</string>
     <string name="label_new_password">새 비밀번호</string>
-    <string name="label_new_password_confirm">새 비밀번호 확인</string>"
+    <string name="label_new_password_confirm">새 비밀번호 확인</string>
+    <string name="action_edit_review">" 수정하기 "</string>
+    <string name="label_review_history">작성한 리뷰</string>
+    <string name="title_edit_review">리뷰 수정하기</string>
+    <string name="action_edit_review_complete">수정하기 완료</string>
+    <string name="prompt_edit_review">리뷰를 수정해 주세요</string>"
 
 </resources>
