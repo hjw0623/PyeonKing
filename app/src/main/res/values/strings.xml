@@ -71,6 +71,8 @@
     <string name="action_change_nickname">닉네임 변경</string>
     <string name="action_change_password">비밀번호 변경</string>
     <string name="action_view_review_history">작성한 리뷰 보기</string>
-    <string name="action_logout">로그아웃</string>"
+    <string name="action_logout">로그아웃</string>
+    <string name="input_new_nickname">새 닉네임을 입력해 주세요</string>
+    <string name="text_change_nickname">닉네임 변경하기</string>"
 
 </resources>
