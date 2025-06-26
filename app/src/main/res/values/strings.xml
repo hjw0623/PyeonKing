@@ -62,6 +62,15 @@
     <string name="label_confirm">비밀번호 확인</string>
     <string name="action_go_to_login">로그인 하러 가기</string>
     <string name="signup_success_title">회원가입 완료!</string>
-    <string name="signup_success_welcome_message">편킹의 회원이 되신 것을 환영합니다!</string>"
+    <string name="signup_success_welcome_message">편킹의 회원이 되신 것을 환영합니다!</string>
+    <string name="nav_menu_login_signup">로그인/회원가입 하러 가기</string>
+    <string name="text_login_required">로그인 후 사용 가능합니다.</string>
+    <string name="text_greeting">안녕하세요!</string>
+    <string name="text_user_name">%1$s님</string>
+    <string name="text_welcom_to_pyeonking">편킹에 오신 것을 환영합니다!</string>
+    <string name="action_change_nickname">닉네임 변경</string>
+    <string name="action_change_password">비밀번호 변경</string>
+    <string name="action_view_review_history">작성한 리뷰 보기</string>
+    <string name="action_logout">로그아웃</string>"
 
 </resources>
