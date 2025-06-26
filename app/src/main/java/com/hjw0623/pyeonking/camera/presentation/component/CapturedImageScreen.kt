@@ -32,7 +32,7 @@ fun CapturedImageScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         BackBar(
             onBackClick = onBackClick

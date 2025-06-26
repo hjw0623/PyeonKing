@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -24,38 +23,36 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun TackingPictureScreen(
     cameraController: LifecycleCameraController,
     onAction: (CameraScreenAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(Color.Black)
-            )
+    Column(modifier = modifier) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(Color.Black)
+        )
 
-            CameraPreview(
-                controller = cameraController,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
+        CameraPreview(
+            controller = cameraController,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(Color.Black),
-                contentAlignment = Alignment.Center
-            ) {
-                CaptureButton(
-                    onClick = {
-                        onAction(CameraScreenAction.OnCaptureClick)
-                    },
-                    modifier = Modifier.size(80.dp)
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(Color.Black),
+            contentAlignment = Alignment.Center
+        ) {
+            CaptureButton(
+                onClick = {
+                    onAction(CameraScreenAction.OnCaptureClick)
+                },
+                modifier = Modifier.size(80.dp)
+            )
         }
     }
 }
