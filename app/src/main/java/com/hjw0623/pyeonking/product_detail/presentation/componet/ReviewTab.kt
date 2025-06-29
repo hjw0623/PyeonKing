@@ -1,5 +1,6 @@
 package com.hjw0623.pyeonking.product_detail.presentation.componet
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,60 +31,51 @@ fun ReviewTab(
     totalReviewSum: Int,
     reviewList: List<ReviewItem>,
     onWriteReviewClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
-        item {
-            Text(
-                text = avgRating.toString(),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+        Text(
+            text = avgRating.toString(),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RatingStars(
-                    rating = avgRating,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = stringResource(R.string.text_total_reviews, totalReviewSum),
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            RatingDistribution(ratingList = ratingList)
-
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        items(
-            count = reviewList.size,
-            key = { index -> reviewList[index].reviewId }
-        ) { index ->
-            ReviewListItem(review = reviewList[index])
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            PyeonKingButton(
-                text = stringResource(R.string.action_write_review),
-                onClick = { onWriteReviewClick() },
-                modifier = Modifier.fillMaxWidth()
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RatingStars(
+                rating = avgRating,
+                modifier = Modifier.weight(1f)
             )
         }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = stringResource(R.string.text_total_reviews, totalReviewSum),
+            style = MaterialTheme.typography.bodySmall
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        RatingDistribution(ratingList = ratingList)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        reviewList.forEach { review ->
+            ReviewListItem(review = review)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        PyeonKingButton(
+            text = stringResource(R.string.action_write_review),
+            onClick = onWriteReviewClick,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
