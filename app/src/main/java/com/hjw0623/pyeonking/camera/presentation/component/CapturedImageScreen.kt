@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hjw0623.pyeonking.R
-import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 import java.io.File
@@ -28,15 +27,11 @@ fun CapturedImageScreen(
     imagePath: String,
     onRetake: () -> Unit,
     onSearchClick: () -> Unit,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
-        BackBar(
-            onBackClick = onBackClick
-        )
         Box(
             modifier = modifier
                 .fillMaxWidth()
@@ -80,7 +75,6 @@ private fun CapturedImageScreenPreview() {
             imagePath = "",
             onRetake = {},
             onSearchClick = {},
-            onBackClick = {}
         )
     }
 }
