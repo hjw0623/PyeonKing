@@ -1,6 +1,7 @@
 package com.hjw0623.pyeonking.review_history.presentation
 
+import com.hjw0623.pyeonking.review_history.data.ReviewInfo
+
 sealed interface ReviewHistoryScreenAction {
-    object OnBackClick : ReviewHistoryScreenAction
-    object OnEditReviewClick : ReviewHistoryScreenAction
+    data class OnEditReviewClick(val reviewInfo: ReviewInfo) : ReviewHistoryScreenAction
 }
