@@ -31,7 +31,7 @@ fun LoggedOutScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedButton(
-            onClick = { onLoginClick },
+            onClick = { onLoginClick() },
             modifier = Modifier,
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.outlinedButtonColors(MaterialTheme.colorScheme.onPrimary),
