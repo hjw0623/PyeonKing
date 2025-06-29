@@ -16,7 +16,7 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun ProductList(
     products: List<Product>,
     modifier: Modifier = Modifier,
-    onProductClick: (String) -> Unit,
+    onProductClick: (Product) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
@@ -28,7 +28,7 @@ fun ProductList(
             key = { it.uuid }
         ) {
             ProductCardSmall(
-                onClick = { onProductClick(it.name) },
+                onClick = { onProductClick(it) },
                 product = it
             )
         }

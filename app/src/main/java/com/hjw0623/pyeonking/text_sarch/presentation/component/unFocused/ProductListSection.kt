@@ -14,7 +14,7 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun ProductListSection(
     selectedFilter: Map<FilterType, Boolean>,
     products: List<Product>,
-    onProductClick: (String) -> Unit,
+    onProductClick: (Product) -> Unit,
     onFilterToggle: (FilterType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
