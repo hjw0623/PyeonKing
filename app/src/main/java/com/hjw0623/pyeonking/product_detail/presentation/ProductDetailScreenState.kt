@@ -10,7 +10,8 @@ import com.hjw0623.pyeonking.product_detail.data.mockAvgRating
 import com.hjw0623.pyeonking.product_detail.data.mockRatingList
 import com.hjw0623.pyeonking.product_detail.data.mockReviewList
 
-data class ProductDetailState(
+
+data class ProductDetailScreenState(
     val isLoading: Boolean = false,
     val product: Product? = mockProduct,
     val selectedTab: ProductDetailTab = ProductDetailTab.MAP,

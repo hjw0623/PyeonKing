@@ -1,5 +1,7 @@
 package com.hjw0623.pyeonking.auth.register.presentation
 
+import com.hjw0623.pyeonking.auth.register.data.NicknameValidationState
+
 data class RegisterScreenState(
     val email: String = "",
     val password: String = "",

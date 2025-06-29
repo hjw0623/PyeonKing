@@ -74,9 +74,7 @@ fun TopHeader(
                 .clip(RoundedCornerShape(28.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(12.dp)
-                .clickable {
-                    keyboardController?.show()
-                },
+                ,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             singleLine = true,
             textStyle = MaterialTheme.typography.bodyLarge.copy(

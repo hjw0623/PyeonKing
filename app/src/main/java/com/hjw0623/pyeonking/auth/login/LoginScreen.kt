@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.hjw0623.pyeonking.auth.login
 
 import androidx.compose.foundation.layout.Column
@@ -9,15 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,18 +24,39 @@ import com.hjw0623.pyeonking.R
 import com.hjw0623.pyeonking.auth.isEmailValid
 import com.hjw0623.pyeonking.auth.login.component.LoginGreetingSection
 import com.hjw0623.pyeonking.auth.register.presentation.component.PyeonKingOutlinedTextField
-import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
+import com.hjw0623.pyeonking.core.presentation.designsystem.util.showToast
+import com.hjw0623.pyeonking.core.util.ObserveAsEvents
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreenRoot(
-    onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    onNavigateBack: () -> Unit,
+    onNavigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     var state by remember { mutableStateOf(LoginScreenState()) }
+    val eventFlow = remember { MutableSharedFlow<LoginScreenEvent>() }
+
+    ObserveAsEvents(flow = eventFlow) { event ->
+        when (event) {
+            is LoginScreenEvent.Error -> {
+                showToast(context, event.error)
+            }
+
+            LoginScreenEvent.NavigateToRegister -> {
+                onNavigateToRegister()
+            }
+
+            LoginScreenEvent.NavigateToMyPage -> {
+                onNavigateToMyPage()
+            }
+        }
+    }
 
     LoginScreen(
         state = state,
@@ -57,9 +76,17 @@ fun LoginScreenRoot(
                     )
                 }
 
-                LoginScreenAction.OnLoginClick -> onLoginSuccess()
-                LoginScreenAction.OnRegisterClick -> onNavigateToRegister()
-                LoginScreenAction.OnBackClick -> onNavigateBack()
+                LoginScreenAction.OnLoginClick -> {
+                    coroutineScope.launch {
+                        eventFlow.emit(LoginScreenEvent.NavigateToMyPage)
+                    }
+                }
+
+                LoginScreenAction.OnRegisterClick -> {
+                    coroutineScope.launch {
+                        eventFlow.emit(LoginScreenEvent.NavigateToRegister)
+                    }
+                }
             }
         },
         modifier = modifier
@@ -72,78 +99,68 @@ fun LoginScreen(
     onAction: (LoginScreenAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        topBar = {
-            BackBar(
-                onBackClick = { onAction(LoginScreenAction.OnBackClick) },
-            )
-        },
-    ) { paddingValues ->
+    Column(
+        modifier = modifier
+            .padding(32.dp)
+            .fillMaxSize()
+    ) {
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(32.dp)
-                .fillMaxSize()
+            modifier = Modifier.weight(1f)
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                LoginGreetingSection()
+            LoginGreetingSection()
 
 
-                PyeonKingOutlinedTextField(
-                    value = state.email,
-                    onValueChange = { onAction(LoginScreenAction.OnEmailChanged(it)) },
-                    label = stringResource(R.string.label_email),
-                    placeholder = stringResource(R.string.login_hint_email),
-                    isValid = state.isEmailValid,
-                    supportingText = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
-                        R.string.email_input_error
-                    ) else null,
-                    keyboardType = KeyboardType.Email
-                )
+            PyeonKingOutlinedTextField(
+                value = state.email,
+                onValueChange = { onAction(LoginScreenAction.OnEmailChanged(it)) },
+                label = stringResource(R.string.label_email),
+                placeholder = stringResource(R.string.login_hint_email),
+                isValid = state.isEmailValid,
+                supportingText = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
+                    R.string.email_input_error
+                ) else null,
+                keyboardType = KeyboardType.Email
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                PyeonKingOutlinedTextField(
-                    value = state.password,
-                    onValueChange = { onAction(LoginScreenAction.OnPasswordChanged(it)) },
-                    label = stringResource(R.string.label_password),
-                    isValid = true,
-                    isPassword = true,
-                )
+            PyeonKingOutlinedTextField(
+                value = state.password,
+                onValueChange = { onAction(LoginScreenAction.OnPasswordChanged(it)) },
+                label = stringResource(R.string.label_password),
+                isValid = true,
+                isPassword = true,
+            )
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Column {
-                    if (state.isLoginButtonEnabled) {
-                        PyeonKingButton(
-                            text = stringResource(R.string.label_login),
-                            onClick = { onAction(LoginScreenAction.OnLoginClick) },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            enabled = state.isLoginButtonEnabled,
-                            contentPadding = PaddingValues(16.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
+            Column {
+                if (state.isLoginButtonEnabled) {
                     PyeonKingButton(
-                        text = stringResource(R.string.label_register),
-                        onClick = { onAction(LoginScreenAction.OnRegisterClick) },
+                        text = stringResource(R.string.label_login),
+                        onClick = { onAction(LoginScreenAction.OnLoginClick) },
                         modifier = Modifier
                             .fillMaxWidth(),
+                        enabled = state.isLoginButtonEnabled,
                         contentPadding = PaddingValues(16.dp)
                     )
                 }
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                PyeonKingButton(
+                    text = stringResource(R.string.label_register),
+                    onClick = { onAction(LoginScreenAction.OnRegisterClick) },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(16.dp)
+                )
             }
+
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

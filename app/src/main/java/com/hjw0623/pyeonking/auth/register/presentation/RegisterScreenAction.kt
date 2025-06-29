@@ -7,5 +7,4 @@ sealed interface RegisterScreenAction {
     data class OnNicknameChanged(val nickname: String) : RegisterScreenAction
     data object OnNicknameCheckClick : RegisterScreenAction
     data object OnRegisterClick : RegisterScreenAction
-    data object OnBackClick : RegisterScreenAction
 }

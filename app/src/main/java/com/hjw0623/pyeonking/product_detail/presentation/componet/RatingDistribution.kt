@@ -18,10 +18,16 @@ import androidx.compose.ui.unit.dp
 import com.hjw0623.pyeonking.R
 
 @Composable
-fun RatingDistribution(ratingList: List<Pair<Int, Int>>) {
+fun RatingDistribution(
+    ratingList: List<Pair<Int, Int>>,
+    modifier: Modifier = Modifier,
+) {
     val totalCount = ratingList.sumOf { it.second }
 
-    Column {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
         (5 downTo 1).forEach { rating ->
             val count = ratingList.find { it.first == rating }?.second ?: 0
             val progress = if (totalCount > 0) count.toFloat() / totalCount else 0f

@@ -16,12 +16,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,19 +35,37 @@ import com.hjw0623.pyeonking.auth.isConfirmPasswordValid
 import com.hjw0623.pyeonking.auth.isEmailValid
 import com.hjw0623.pyeonking.auth.isPasswordValid
 import com.hjw0623.pyeonking.auth.mockTakenNicknames
+import com.hjw0623.pyeonking.auth.register.data.NicknameValidationState
 import com.hjw0623.pyeonking.auth.register.presentation.component.PyeonKingOutlinedTextField
-import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
+import com.hjw0623.pyeonking.core.presentation.designsystem.util.showToast
+import com.hjw0623.pyeonking.core.util.ObserveAsEvents
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreenRoot(
-    onRegisterSuccess: () -> Unit,
-    onNavigateBack: () -> Unit,
+    onNavigateToRegisterSuccess: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var state by remember { mutableStateOf(RegisterScreenState()) }
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    var state by remember { mutableStateOf(RegisterScreenState()) }
+    val eventFlow = remember { MutableSharedFlow<RegisterScreenEvent>() }
+
+    ObserveAsEvents(flow = eventFlow) { event ->
+        when (event) {
+            is RegisterScreenEvent.Error -> {
+                showToast(context, event.error)
+            }
+
+            RegisterScreenEvent.NavigateToRegisterSuccess -> {
+                onNavigateToRegisterSuccess()
+            }
+        }
+    }
+
 
     RegisterScreen(
         state = state,
@@ -106,8 +124,11 @@ fun RegisterScreenRoot(
                     )
                 }
 
-                RegisterScreenAction.OnBackClick -> onNavigateBack()
-                RegisterScreenAction.OnRegisterClick -> onRegisterSuccess()
+                RegisterScreenAction.OnRegisterClick -> {
+                    scope.launch {
+                        eventFlow.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
+                    }
+                }
             }
         },
         modifier = modifier
@@ -120,130 +141,120 @@ fun RegisterScreen(
     onAction: (RegisterScreenAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            BackBar(
-                onBackClick = { onAction(RegisterScreenAction.OnBackClick) },
+    Column(
+        modifier = modifier
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
 
-                )
-        },
-        bottomBar = {
-            PyeonKingButton(
-                text = stringResource(R.string.label_register),
-                onClick = { onAction(RegisterScreenAction.OnRegisterClick) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                enabled = state.isRegisterButtonEnabled,
-                contentPadding = PaddingValues(16.dp)
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+        Text(
+            text = stringResource(R.string.label_register),
+            style = MaterialTheme.typography.headlineLarge
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = stringResource(R.string.input_email_password),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
         ) {
-
-            Text(
-                text = stringResource(R.string.label_register),
-                style = MaterialTheme.typography.headlineLarge
+            PyeonKingOutlinedTextField(
+                modifier = Modifier.weight(1f),
+                value = state.nickname,
+                onValueChange = { onAction(RegisterScreenAction.OnNicknameChanged(it)) },
+                label = stringResource(R.string.label_nickname),
+                isValid = state.nicknameValidationState is NicknameValidationState.Valid,
+                supportingText = when (val validationState = state.nicknameValidationState) {
+                    is NicknameValidationState.Valid -> stringResource(R.string.text_useable_nickname)
+                    is NicknameValidationState.Invalid -> validationState.message
+                    else -> null
+                },
+                supportingTextColor = if (state.nicknameValidationState is NicknameValidationState.Valid) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.error
+                }
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.width(18.dp))
 
-            Text(
-                text = stringResource(R.string.input_email_password),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
+            Box(
+                modifier = Modifier
+                    .height(70.dp),
+                contentAlignment = Alignment.Center
             ) {
-                PyeonKingOutlinedTextField(
-                    modifier = Modifier.weight(1f),
-                    value = state.nickname,
-                    onValueChange = { onAction(RegisterScreenAction.OnNicknameChanged(it)) },
-                    label = stringResource(R.string.label_nickname),
-                    isValid = state.nicknameValidationState is NicknameValidationState.Valid,
-                    supportingText = when (val validationState = state.nicknameValidationState) {
-                        is NicknameValidationState.Valid -> stringResource(R.string.text_useable_nickname)
-                        is NicknameValidationState.Invalid -> validationState.message
-                        else -> null
-                    },
-                    supportingTextColor = if (state.nicknameValidationState is NicknameValidationState.Valid) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.error
-                    }
-                )
-
-                Spacer(modifier = Modifier.width(18.dp))
-
-                Box(
-                    modifier = Modifier
-                        .height(70.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (state.nicknameValidationState is NicknameValidationState.Checking) {
-                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                    } else {
-                        PyeonKingButton(
-                            text = stringResource(R.string.action_duplicate_check),
-                            onClick = { onAction(RegisterScreenAction.OnNicknameCheckClick) },
-                            enabled = state.nickname.isNotBlank() && state.nicknameValidationState !is NicknameValidationState.Valid,
-                            modifier = Modifier.height(56.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp)
-                        )
-                    }
+                if (state.nicknameValidationState is NicknameValidationState.Checking) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                } else {
+                    PyeonKingButton(
+                        text = stringResource(R.string.action_duplicate_check),
+                        onClick = { onAction(RegisterScreenAction.OnNicknameCheckClick) },
+                        enabled = state.nickname.isNotBlank() && state.nicknameValidationState !is NicknameValidationState.Valid,
+                        modifier = Modifier.height(56.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp)
+                    )
                 }
             }
-
-            PyeonKingOutlinedTextField(
-                value = state.email,
-                onValueChange = { onAction(RegisterScreenAction.OnIdChanged(it)) },
-                label = stringResource(R.string.label_email),
-                placeholder = stringResource(R.string.login_hint_email),
-                isValid = state.isEmailValid,
-                supportingText = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
-                    R.string.email_input_error
-                ) else null,
-                keyboardType = KeyboardType.Email
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            PyeonKingOutlinedTextField(
-                value = state.password,
-                onValueChange = { onAction(RegisterScreenAction.OnPasswordChanged(it)) },
-                label = stringResource(R.string.label_password),
-                isValid = state.isPasswordValid,
-                supportingText = if (state.password.isNotBlank() && !state.isPasswordValid) stringResource(
-                    R.string.signup_password_validation_rule
-                ) else null,
-                isPassword = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PyeonKingOutlinedTextField(
-                value = state.confirmPassword,
-                onValueChange = { onAction(RegisterScreenAction.OnConfirmPasswordChanged(it)) },
-                label = stringResource(R.string.label_confirm),
-                isValid = state.isConfirmPasswordValid,
-                supportingText = if (state.confirmPassword.isNotBlank() && !state.isConfirmPasswordValid) stringResource(
-                    R.string.signup_error_password_mismatch
-                ) else null,
-                isPassword = true
-            )
         }
+
+        PyeonKingOutlinedTextField(
+            value = state.email,
+            onValueChange = { onAction(RegisterScreenAction.OnIdChanged(it)) },
+            label = stringResource(R.string.label_email),
+            placeholder = stringResource(R.string.login_hint_email),
+            isValid = state.isEmailValid,
+            supportingText = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
+                R.string.email_input_error
+            ) else null,
+            keyboardType = KeyboardType.Email
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        PyeonKingOutlinedTextField(
+            value = state.password,
+            onValueChange = { onAction(RegisterScreenAction.OnPasswordChanged(it)) },
+            label = stringResource(R.string.label_password),
+            isValid = state.isPasswordValid,
+            supportingText = if (state.password.isNotBlank() && !state.isPasswordValid) stringResource(
+                R.string.signup_password_validation_rule
+            ) else null,
+            isPassword = true
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PyeonKingOutlinedTextField(
+            value = state.confirmPassword,
+            onValueChange = { onAction(RegisterScreenAction.OnConfirmPasswordChanged(it)) },
+            label = stringResource(R.string.label_confirm),
+            isValid = state.isConfirmPasswordValid,
+            supportingText = if (state.confirmPassword.isNotBlank() && !state.isConfirmPasswordValid) stringResource(
+                R.string.signup_error_password_mismatch
+            ) else null,
+            isPassword = true
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        PyeonKingButton(
+            text = stringResource(R.string.label_register),
+            onClick = { onAction(RegisterScreenAction.OnRegisterClick) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            enabled = state.isRegisterButtonEnabled,
+            contentPadding = PaddingValues(16.dp)
+        )
     }
 }
 

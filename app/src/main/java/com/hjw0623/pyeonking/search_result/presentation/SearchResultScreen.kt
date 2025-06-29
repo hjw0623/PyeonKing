@@ -13,35 +13,64 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hjw0623.pyeonking.R
+import com.hjw0623.pyeonking.core.data.Product
+import com.hjw0623.pyeonking.core.data.SearchResultNavArgs
 import com.hjw0623.pyeonking.core.data.mockProductList
-import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
+import com.hjw0623.pyeonking.core.presentation.designsystem.util.showToast
+import com.hjw0623.pyeonking.core.util.ObserveAsEvents
 import com.hjw0623.pyeonking.home.presentation.component.ProductCardLarge
 import com.hjw0623.pyeonking.search_result.data.SearchResultSource
 import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchResultScreenRoot(
-    modifier: Modifier = Modifier,
+    navArgs: SearchResultNavArgs,
+    onNavigateToProductDetail: (Product) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var state by remember { mutableStateOf(SearchResultState()) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var state by remember {
+        mutableStateOf(
+            SearchResultScreenState(
+                source = navArgs.source,
+                passedQuery = navArgs.passedQuery.let { "" },
+                passedImagePath = navArgs.passedImagePath
+            )
+        )
+    }
+    val eventFlow = remember { MutableSharedFlow<SearchResultScreenEvent>() }
 
+    ObserveAsEvents(flow = eventFlow) { event ->
+        when (event) {
+            is SearchResultScreenEvent.Error -> {
+                showToast(context, event.error)
+            }
+
+            is SearchResultScreenEvent.NavigateToProductDetail -> {
+                onNavigateToProductDetail(event.product)
+            }
+        }
+    }
 
     SearchResultScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                SearchResultAction.OnBackClick -> {
-
-                }
-
-                is SearchResultAction.OnProductClick -> {
-
+                is SearchResultScreenAction.OnProductClick -> {
+                    scope.launch {
+                        eventFlow.emit(SearchResultScreenEvent.NavigateToProductDetail(action.product))
+                    }
                 }
             }
         },
@@ -51,8 +80,8 @@ fun SearchResultScreenRoot(
 
 @Composable
 fun SearchResultScreen(
-    state: SearchResultState,
-    onAction: (SearchResultAction) -> Unit,
+    state: SearchResultScreenState,
+    onAction: (SearchResultScreenAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -60,13 +89,6 @@ fun SearchResultScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        BackBar(
-            onBackClick = { onAction(SearchResultAction.OnBackClick) },
-            title = when (state.source) {
-                SearchResultSource.CAMERA -> stringResource(R.string.camera_search_result)
-                SearchResultSource.TEXT -> stringResource(R.string.search_result)
-            }
-        )
 
         Text(
             text = when (state.source) {
@@ -90,7 +112,7 @@ fun SearchResultScreen(
                 key = { state.products[it].uuid }
             ) {
                 ProductCardLarge(
-                    onCardClick = { onAction(SearchResultAction.OnProductClick(state.products[it])) },
+                    onCardClick = { onAction(SearchResultScreenAction.OnProductClick(state.products[it])) },
                     product = state.products[it]
                 )
             }
@@ -103,7 +125,7 @@ fun SearchResultScreen(
 private fun SearchResultScreenPreview() {
     PyeonKingTheme {
         SearchResultScreen(
-            state = SearchResultState(
+            state = SearchResultScreenState(
                 source = SearchResultSource.TEXT,
                 products = mockProductList,
                 passedQuery = "콜라"

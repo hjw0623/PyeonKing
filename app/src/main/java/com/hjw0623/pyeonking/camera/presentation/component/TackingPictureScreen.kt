@@ -24,38 +24,38 @@ import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
 fun TackingPictureScreen(
     cameraController: LifecycleCameraController,
     onAction: (CameraScreenAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(Color.Black)
-            )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(Color.Black)
+        )
 
-            CameraPreview(
-                controller = cameraController,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            )
+        CameraPreview(
+            controller = cameraController,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(Color.Black),
-                contentAlignment = Alignment.Center
-            ) {
-                CaptureButton(
-                    onClick = {
-                        onAction(CameraScreenAction.OnCaptureClick)
-                    },
-                    modifier = Modifier.size(80.dp)
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+                .background(Color.Black),
+            contentAlignment = Alignment.Center
+        ) {
+            CaptureButton(
+                onClick = {
+                    onAction(CameraScreenAction.OnCaptureClick)
+                },
+                modifier = Modifier.size(80.dp)
+            )
         }
     }
 }

@@ -5,5 +5,4 @@ sealed interface ChangeNicknameScreenAction {
     data class OnNicknameChanged(val nickname: String) : ChangeNicknameScreenAction
     data object OnNicknameCheckClick : ChangeNicknameScreenAction
     data object OnChangeNicknameClick : ChangeNicknameScreenAction
-    data object OnBackClick : ChangeNicknameScreenAction
 }

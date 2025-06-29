@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.auth.register.presentation
+package com.hjw0623.pyeonking.auth.register.data
 
 sealed interface NicknameValidationState {
     object Idle : NicknameValidationState
