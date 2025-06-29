@@ -1,6 +1,6 @@
 package com.hjw0623.pyeonking.change_nickname
 
-import com.hjw0623.pyeonking.auth.register.presentation.NicknameValidationState
+import com.hjw0623.pyeonking.auth.register.data.NicknameValidationState
 
 data class ChangeNicknameScreenState(
     val currentNickname: String = "",
