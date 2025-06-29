@@ -1,0 +1,200 @@
+package com.hjw0623.pyeonking
+
+import android.util.Log
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.hjw0623.pyeonking.bottom_nav.BottomNavItem
+import com.hjw0623.pyeonking.camera.presentation.CameraScreenRoot
+import com.hjw0623.pyeonking.core.data.TopBarData
+import com.hjw0623.pyeonking.core.data.topBarAsRouteName
+import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
+import com.hjw0623.pyeonking.core.util.shouldShowBottomBar
+import com.hjw0623.pyeonking.home.presentation.HomeScreenRoot
+import com.hjw0623.pyeonking.mypage.presentation.MyPageScreenRoot
+import com.hjw0623.pyeonking.nav_route.CameraNestedRoute
+import com.hjw0623.pyeonking.nav_route.HomeNestedRoute
+import com.hjw0623.pyeonking.nav_route.MainNavigationRoute
+import com.hjw0623.pyeonking.nav_route.MyPageNestedRoute
+import com.hjw0623.pyeonking.nav_route.TextSearchNestedRoute
+import com.hjw0623.pyeonking.nav_route.cameraNavGraph
+import com.hjw0623.pyeonking.nav_route.changeNicknameNavGraph
+import com.hjw0623.pyeonking.nav_route.changePasswordNavGraph
+import com.hjw0623.pyeonking.nav_route.homeNavGraph
+import com.hjw0623.pyeonking.nav_route.loginNavGraph
+import com.hjw0623.pyeonking.nav_route.myPageNavGraph
+import com.hjw0623.pyeonking.nav_route.productDetailNavGraph
+import com.hjw0623.pyeonking.nav_route.registerNavGraph
+import com.hjw0623.pyeonking.nav_route.registerSuccessNavGraph
+import com.hjw0623.pyeonking.nav_route.reviewEditNavGraph
+import com.hjw0623.pyeonking.nav_route.reviewHistoryNavGraph
+import com.hjw0623.pyeonking.nav_route.reviewWriteNavGraph
+import com.hjw0623.pyeonking.nav_route.searchResultNavGraph
+import com.hjw0623.pyeonking.nav_route.textSearchNavGraph
+import com.hjw0623.pyeonking.text_sarch.presentation.TextSearchScreenRoot
+import timber.log.Timber
+
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+    val bottomNavItems = remember { BottomNavItem.fetchBottomNavItems() }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
+    val showBottomBar = shouldShowBottomBar(currentRoute)
+    LaunchedEffect(key1 = currentRoute) {
+        Timber.d("currentRoute: $currentRoute")
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            if (topBarData.visible) {
+                BackBar(
+                    title = topBarData.title,
+                    iconTint = topBarData.iconTint,
+                    backgroundColor = topBarData.backgroundColor,
+                    onBackClick = { navController.popBackStack() },
+                    icon = topBarData.icon,
+                    modifier = Modifier.padding(
+                        top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+                    )
+                )
+            }
+        },
+        bottomBar = {
+            if (showBottomBar) {
+                NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
+                    bottomNavItems.forEach { bottomItem ->
+                        NavigationBarItem(
+                            selected = currentRoute?.startsWith(bottomItem.destination.route) == true,
+                            onClick = {
+                                navController.navigate(bottomItem.destination.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = {
+                                Icon(bottomItem.icon, contentDescription = bottomItem.tabName)
+                            },
+                            label = { Text(bottomItem.tabName) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                unselectedTextColor = MaterialTheme.colorScheme.outline,
+                                unselectedIconColor = MaterialTheme.colorScheme.outline,
+                                indicatorColor = Color.Transparent
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    ) { innerPadding ->
+        NavHost(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            navController = navController,
+            startDestination = MainNavigationRoute.Home.route
+        ) {
+            composable(MainNavigationRoute.Home.route) {
+                HomeScreenRoot(
+                    onNavigateToProductDetail = { product ->
+                        navController.navigate(HomeNestedRoute.ProductDetail(product)) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToSearchResult = { args ->
+                        navController.navigate(HomeNestedRoute.SearchResult(args)) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable(MainNavigationRoute.Camera.route) {
+                CameraScreenRoot(
+                    onNavigateToSearchResult = { args ->
+                        navController.navigate(CameraNestedRoute.SearchResult(args)) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable(MainNavigationRoute.TextSearch.route) {
+                TextSearchScreenRoot(
+                    onNavigateToSearchResult = { args ->
+                        navController.navigate(TextSearchNestedRoute.SearchResult(args)) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToProductDetail = { product ->
+                        navController.navigate(TextSearchNestedRoute.ProductDetail(product)) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            composable(MainNavigationRoute.MyPage.route) {
+                MyPageScreenRoot(
+                    onNavigateToChangeNickname = {
+                        navController.navigate(MyPageNestedRoute.ChangeNickname) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToChangePassword = {
+                        navController.navigate(MyPageNestedRoute.ChangePassword) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToLogin = {
+                        navController.navigate(MyPageNestedRoute.Login) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onNavigateToReviewHistory = {
+                        navController.navigate(MyPageNestedRoute.ReviewHistory) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+            homeNavGraph(navController)
+            cameraNavGraph(navController)
+            textSearchNavGraph(navController)
+            myPageNavGraph(navController)
+            loginNavGraph(navController)
+            registerNavGraph(navController)
+            registerSuccessNavGraph(navController)
+            changeNicknameNavGraph(navController)
+            changePasswordNavGraph(navController)
+            productDetailNavGraph(navController)
+            reviewEditNavGraph(navController)
+            reviewHistoryNavGraph(navController)
+            reviewWriteNavGraph(navController)
+            searchResultNavGraph(navController)
+        }
+    }
+}
