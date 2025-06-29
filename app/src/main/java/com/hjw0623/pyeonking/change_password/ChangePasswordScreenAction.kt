@@ -5,5 +5,4 @@ sealed interface ChangePasswordScreenAction {
     data class OnNewPasswordChanged(val password: String) : ChangePasswordScreenAction
     data class OnConfirmPasswordChanged(val confirmPassword: String) : ChangePasswordScreenAction
     data object OnChangePasswordClick : ChangePasswordScreenAction
-    data object OnBackClick : ChangePasswordScreenAction
 }
