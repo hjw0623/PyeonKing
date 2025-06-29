@@ -1,6 +1,11 @@
 package com.hjw0623.pyeonking.review_history.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
+@Parcelize
 data class ReviewInfo(
     val reviewId: Long,
     val content: String,
@@ -8,4 +13,4 @@ data class ReviewInfo(
     val createdAt: String,
     val productName: String,
     val productImgUrl: String
-)
+): Parcelable

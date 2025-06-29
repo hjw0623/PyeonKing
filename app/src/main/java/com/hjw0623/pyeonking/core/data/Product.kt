@@ -1,5 +1,11 @@
 package com.hjw0623.pyeonking.core.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class Product(
     val uuid: String,
     val imgUrl: String,
@@ -8,5 +14,5 @@ data class Product(
     val priceForEach: String,
     val promotion: String,
     val brand: String,
-)
+) : Parcelable
 
