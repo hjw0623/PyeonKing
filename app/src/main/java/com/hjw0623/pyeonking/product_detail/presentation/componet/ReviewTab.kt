@@ -1,14 +1,11 @@
 package com.hjw0623.pyeonking.product_detail.presentation.componet
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +19,7 @@ import com.hjw0623.pyeonking.R
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
 import com.hjw0623.pyeonking.product_detail.data.ReviewItem
 import com.hjw0623.pyeonking.product_detail.data.mockReviewList
-import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import com.hjw0623.pyeonking.core.presentation.ui.theme.PyeonKingTheme
 
 @Composable
 fun ReviewTab(

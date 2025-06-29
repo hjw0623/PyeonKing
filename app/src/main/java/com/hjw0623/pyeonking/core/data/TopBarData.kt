@@ -5,8 +5,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavBackStackEntry
-import com.hjw0623.pyeonking.ui.theme.backgroundLight
-import com.hjw0623.pyeonking.ui.theme.primaryLight
+import com.hjw0623.pyeonking.core.presentation.ui.theme.backgroundLight
+import com.hjw0623.pyeonking.core.presentation.ui.theme.primaryLight
 
 data class TopBarData(
     val title: String = "",

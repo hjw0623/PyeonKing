@@ -1,12 +1,12 @@
 package com.hjw0623.pyeonking.core.util
 
 import androidx.compose.ui.graphics.Color
-import com.hjw0623.pyeonking.ui.theme.Cu
-import com.hjw0623.pyeonking.ui.theme.Emart24
-import com.hjw0623.pyeonking.ui.theme.Gs25
-import com.hjw0623.pyeonking.ui.theme.Seven
-import com.hjw0623.pyeonking.ui.theme.errorDark
-import com.hjw0623.pyeonking.ui.theme.errorLight
+import com.hjw0623.pyeonking.core.presentation.ui.theme.Cu
+import com.hjw0623.pyeonking.core.presentation.ui.theme.Emart24
+import com.hjw0623.pyeonking.core.presentation.ui.theme.Gs25
+import com.hjw0623.pyeonking.core.presentation.ui.theme.Seven
+import com.hjw0623.pyeonking.core.presentation.ui.theme.errorDark
+import com.hjw0623.pyeonking.core.presentation.ui.theme.errorLight
 
 fun getBrandColor(
     brand: String,

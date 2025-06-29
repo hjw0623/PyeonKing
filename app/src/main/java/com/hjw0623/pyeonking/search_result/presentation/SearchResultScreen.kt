@@ -26,9 +26,9 @@ import com.hjw0623.pyeonking.core.data.SearchResultNavArgs
 import com.hjw0623.pyeonking.core.data.mockProductList
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.showToast
 import com.hjw0623.pyeonking.core.util.ObserveAsEvents
-import com.hjw0623.pyeonking.home.presentation.component.ProductCardLarge
+import com.hjw0623.pyeonking.main_screen.home.presentation.component.ProductCardLarge
 import com.hjw0623.pyeonking.search_result.data.SearchResultSource
-import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import com.hjw0623.pyeonking.core.presentation.ui.theme.PyeonKingTheme
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

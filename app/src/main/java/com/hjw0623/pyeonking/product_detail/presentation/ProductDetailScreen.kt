@@ -38,7 +38,7 @@ import com.hjw0623.pyeonking.product_detail.presentation.componet.RatingDistribu
 import com.hjw0623.pyeonking.product_detail.presentation.componet.RatingStars
 import com.hjw0623.pyeonking.product_detail.presentation.componet.ReviewListItem
 import com.hjw0623.pyeonking.product_detail.presentation.componet.TabSection
-import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import com.hjw0623.pyeonking.core.presentation.ui.theme.PyeonKingTheme
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

@@ -32,7 +32,7 @@ import com.hjw0623.pyeonking.R
 import com.hjw0623.pyeonking.core.data.Product
 import com.hjw0623.pyeonking.core.data.mockProduct
 import com.hjw0623.pyeonking.core.util.getBrandColor
-import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import com.hjw0623.pyeonking.core.presentation.ui.theme.PyeonKingTheme
 
 @Composable
 fun ProductCardDetail(

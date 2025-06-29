@@ -40,7 +40,7 @@ import com.hjw0623.pyeonking.auth.register.presentation.component.PyeonKingOutli
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.PyeonKingButton
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.showToast
 import com.hjw0623.pyeonking.core.util.ObserveAsEvents
-import com.hjw0623.pyeonking.ui.theme.PyeonKingTheme
+import com.hjw0623.pyeonking.core.presentation.ui.theme.PyeonKingTheme
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

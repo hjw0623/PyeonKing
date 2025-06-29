@@ -1,6 +1,5 @@
 package com.hjw0623.pyeonking
 
-import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,35 +22,34 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hjw0623.pyeonking.bottom_nav.BottomNavItem
-import com.hjw0623.pyeonking.camera.presentation.CameraScreenRoot
+import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
+import com.hjw0623.pyeonking.main_screen.camera.presentation.CameraScreenRoot
 import com.hjw0623.pyeonking.core.data.TopBarData
 import com.hjw0623.pyeonking.core.data.topBarAsRouteName
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.util.shouldShowBottomBar
-import com.hjw0623.pyeonking.home.presentation.HomeScreenRoot
-import com.hjw0623.pyeonking.mypage.presentation.MyPageScreenRoot
-import com.hjw0623.pyeonking.nav_route.CameraNestedRoute
-import com.hjw0623.pyeonking.nav_route.HomeNestedRoute
-import com.hjw0623.pyeonking.nav_route.MainNavigationRoute
-import com.hjw0623.pyeonking.nav_route.MyPageNestedRoute
-import com.hjw0623.pyeonking.nav_route.TextSearchNestedRoute
-import com.hjw0623.pyeonking.nav_route.cameraNavGraph
-import com.hjw0623.pyeonking.nav_route.changeNicknameNavGraph
-import com.hjw0623.pyeonking.nav_route.changePasswordNavGraph
-import com.hjw0623.pyeonking.nav_route.homeNavGraph
-import com.hjw0623.pyeonking.nav_route.loginNavGraph
-import com.hjw0623.pyeonking.nav_route.myPageNavGraph
-import com.hjw0623.pyeonking.nav_route.productDetailNavGraph
-import com.hjw0623.pyeonking.nav_route.registerNavGraph
-import com.hjw0623.pyeonking.nav_route.registerSuccessNavGraph
-import com.hjw0623.pyeonking.nav_route.reviewEditNavGraph
-import com.hjw0623.pyeonking.nav_route.reviewHistoryNavGraph
-import com.hjw0623.pyeonking.nav_route.reviewWriteNavGraph
-import com.hjw0623.pyeonking.nav_route.searchResultNavGraph
-import com.hjw0623.pyeonking.nav_route.textSearchNavGraph
-import com.hjw0623.pyeonking.text_sarch.presentation.TextSearchScreenRoot
-import timber.log.Timber
+import com.hjw0623.pyeonking.main_screen.home.presentation.HomeScreenRoot
+import com.hjw0623.pyeonking.main_screen.mypage.presentation.MyPageScreenRoot
+import com.hjw0623.pyeonking.main_screen.text_sarch.presentation.TextSearchScreenRoot
+import com.hjw0623.pyeonking.navigation.nav_route.CameraNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.HomeNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
+import com.hjw0623.pyeonking.navigation.nav_route.MyPageNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.TextSearchNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.cameraNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.changeNicknameNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.changePasswordNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.loginNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.productDetailNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.registerNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.registerSuccessNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.reviewEditNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.reviewHistoryNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.reviewWriteNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.searchResultNavGraph
+import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
 
 @Composable
 fun MainScreen() {
@@ -61,9 +59,7 @@ fun MainScreen() {
     val currentRoute = navBackStackEntry?.destination?.route
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
-    LaunchedEffect(key1 = currentRoute) {
-        Timber.d("currentRoute: $currentRoute")
-    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

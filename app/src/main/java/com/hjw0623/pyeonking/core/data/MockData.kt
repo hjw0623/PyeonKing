@@ -19,3 +19,4 @@ val mockProductList = listOf(
     mockProduct.copy(uuid = UUID.randomUUID().toString()),
     mockProduct.copy(uuid = UUID.randomUUID().toString())
 )
+
