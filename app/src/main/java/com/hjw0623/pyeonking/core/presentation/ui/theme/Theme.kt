@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.ui.theme
+package com.hjw0623.pyeonking.core.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

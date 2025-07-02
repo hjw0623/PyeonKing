@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.ui.theme
+package com.hjw0623.pyeonking.core.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -7,6 +7,8 @@ val Cu = Color(0xFF673AB7)
 val Gs25 = Color(0xFF0072CE)
 val Seven = Color(0xFF009047)
 val Emart24 = Color(0xFFFFDE00)
+
+val PyeonKingYellow = Color(0xFFFFC107)
 
 //LightTheme
 val primaryLight = Color(0xFF0077F6)
