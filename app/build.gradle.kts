@@ -77,4 +77,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(project(":core"))
+    implementation(project(":presentation"))
+    implementation(project(":data"))
 }
