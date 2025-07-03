@@ -1,9 +1,12 @@
 package com.hjw0623.core.presentation.ui
 
-fun shouldShowBottomBar(route: String?): Boolean {
-    val normalizedRoute = route?.lowercase() ?: return false
+import com.hjw0623.core.constants.ScreenRoutes
 
-    return normalizedRoute in listOf(
-        "home", "camera_search", "text_search", "mypage"
+fun shouldShowBottomBar(route: String?): Boolean {
+    return route in listOf(
+        ScreenRoutes.HOME,
+        ScreenRoutes.CAMERA_SEARCH,
+        ScreenRoutes.TEXT_SEARCH,
+        ScreenRoutes.MYPAGE
     )
 }

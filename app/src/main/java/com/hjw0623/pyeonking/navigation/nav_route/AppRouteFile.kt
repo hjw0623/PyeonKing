@@ -1,5 +1,6 @@
 package com.hjw0623.pyeonking.navigation.nav_route
 
+import com.hjw0623.core.constants.ScreenRoutes
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
@@ -9,19 +10,19 @@ sealed interface MainNavigationRoute {
     val route: String
 
     object Home : MainNavigationRoute {
-        override val route = "home"
+        override val route = ScreenRoutes.HOME
     }
 
     object Camera : MainNavigationRoute {
-        override val route = "camera_search"
+        override val route = ScreenRoutes.CAMERA_SEARCH
     }
 
     object TextSearch : MainNavigationRoute {
-        override val route = "text_search"
+        override val route = ScreenRoutes.TEXT_SEARCH
     }
 
     object MyPage : MainNavigationRoute {
-        override val route = "mypage"
+        override val route = ScreenRoutes.MYPAGE
     }
 }
 

@@ -1,6 +1,7 @@
 package com.hjw0623.core.presentation.ui
 
 import androidx.compose.ui.graphics.Color
+import com.hjw0623.core.constants.Brand
 import com.hjw0623.core.presentation.designsystem.theme.Cu
 import com.hjw0623.core.presentation.designsystem.theme.Emart24
 import com.hjw0623.core.presentation.designsystem.theme.Gs25
@@ -13,10 +14,10 @@ fun getBrandColor(
     isDarkTheme: Boolean
 ): Color {
     return when (brand) {
-        "CU" -> Cu
-        "GS25" -> Gs25
-        "SEVENELEVEN" -> Seven
-        "EMART24" -> Emart24
+        Brand.CU -> Cu
+        Brand.GS25 -> Gs25
+        Brand.SEVEN -> Seven
+        Brand.EMART24 -> Emart24
         else -> if (isDarkTheme) errorDark else errorLight
     }
 }

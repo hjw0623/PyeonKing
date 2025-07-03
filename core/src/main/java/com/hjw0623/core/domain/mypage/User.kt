@@ -1,9 +1,11 @@
 package com.hjw0623.core.domain.mypage
 
+private const val EMPTY = ""
+
 data class User(
-    val email: String = "",
-    val nickname: String = "",
-    val password: String = "",
-    val accessToken: String = "",
-    val refreshToken: String = "",
+    val email: String = EMPTY,
+    val nickname: String = EMPTY,
+    val password: String = EMPTY,
+    val accessToken: String = EMPTY,
+    val refreshToken: String = EMPTY
 )
