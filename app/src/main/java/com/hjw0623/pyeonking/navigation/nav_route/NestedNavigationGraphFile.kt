@@ -4,21 +4,21 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.hjw0623.pyeonking.auth.login.LoginScreenRoot
-import com.hjw0623.pyeonking.auth.register.presentation.RegisterScreenRoot
-import com.hjw0623.pyeonking.auth.register.presentation.RegisterSuccessScreen
-import com.hjw0623.pyeonking.change_nickname.ChangeNicknameScreenRoot
-import com.hjw0623.pyeonking.change_password.ChangePasswordScreenRoot
-import com.hjw0623.pyeonking.core.data.Product
-import com.hjw0623.pyeonking.core.data.SearchResultNavArgs
-import com.hjw0623.pyeonking.core.util.parcelableType
-import com.hjw0623.pyeonking.main_screen.mypage.presentation.MyPageScreenRoot
-import com.hjw0623.pyeonking.product_detail.presentation.ProductDetailScreenRoot
-import com.hjw0623.pyeonking.review.review_edit.ReviewEditScreenRoot
-import com.hjw0623.pyeonking.review.review_history.data.ReviewInfo
-import com.hjw0623.pyeonking.review.review_history.presentation.ReviewHistoryScreenRoot
-import com.hjw0623.pyeonking.review.review_write.presentation.ReviewWriteScreenRoot
-import com.hjw0623.pyeonking.search_result.presentation.SearchResultScreenRoot
+import com.hjw0623.presentation.screen.auth.login.LoginScreenRoot
+import com.hjw0623.presentation.screen.auth.register.RegisterScreenRoot
+import com.hjw0623.presentation.screen.auth.register.RegisterSuccessScreen
+import com.hjw0623.presentation.screen.mypage.change_nickname.ChangeNicknameScreenRoot
+import com.hjw0623.presentation.screen.mypage.change_password.ChangePasswordScreenRoot
+import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.pyeonking.navigation.parcelableType
+import com.hjw0623.presentation.screen.mypage.mypage_main.MyPageScreenRoot
+import com.hjw0623.presentation.screen.product.ProductDetailScreenRoot
+import com.hjw0623.presentation.screen.review.review_edit.ReviewEditScreenRoot
+import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenRoot
+import com.hjw0623.presentation.screen.review.review_write.ReviewWriteScreenRoot
+import com.hjw0623.presentation.screen.search.search_result.SearchResultScreenRoot
 import kotlin.reflect.typeOf
 
 

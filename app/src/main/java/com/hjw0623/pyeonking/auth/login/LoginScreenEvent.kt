@@ -1,7 +1,0 @@
-package com.hjw0623.pyeonking.auth.login
-
-sealed interface LoginScreenEvent {
-    data class Error(val error: String) : LoginScreenEvent
-    data object NavigateToMyPage : LoginScreenEvent
-    data object NavigateToRegister : LoginScreenEvent
-}

@@ -1,0 +1,8 @@
+package com.hjw0623.presentation.screen.search.search_result
+
+import com.hjw0623.core.domain.product.Product
+
+sealed interface SearchResultScreenEvent {
+    data class Error(val error: String) : SearchResultScreenEvent
+    data class NavigateToProductDetail(val product: Product) : SearchResultScreenEvent
+}

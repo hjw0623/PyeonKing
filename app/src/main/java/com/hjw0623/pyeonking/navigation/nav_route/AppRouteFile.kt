@@ -1,8 +1,8 @@
 package com.hjw0623.pyeonking.navigation.nav_route
 
-import com.hjw0623.pyeonking.core.data.Product
-import com.hjw0623.pyeonking.core.data.SearchResultNavArgs
-import com.hjw0623.pyeonking.review.review_history.data.ReviewInfo
+import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import kotlinx.serialization.Serializable
 
 sealed interface MainNavigationRoute {
