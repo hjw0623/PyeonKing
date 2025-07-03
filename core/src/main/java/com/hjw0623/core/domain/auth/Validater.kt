@@ -1,9 +1,10 @@
 package com.hjw0623.core.domain.auth
 
+import android.util.Patterns
 import java.util.regex.Pattern
 
 fun isEmailValid(email: String): Boolean {
-    val emailRegex = "^[A-Za-z0-9](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+    val emailRegex = Patterns.EMAIL_ADDRESS.toString()
     return email.isNotBlank() && Pattern.matches(emailRegex, email)
 }
 
