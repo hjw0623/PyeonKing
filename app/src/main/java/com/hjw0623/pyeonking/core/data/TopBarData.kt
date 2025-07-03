@@ -16,26 +16,24 @@ data class TopBarData(
     val visible: Boolean = true
 )
 
-
 val NavBackStackEntry.topBarAsRouteName: TopBarData
     get() {
-        val normalizedRoute = destination.route?.lowercase() ?: ""
-
+        val routeName = destination.route ?: return TopBarData()
         return when {
-            normalizedRoute.startsWith("home") -> TopBarData(visible = false)
-            normalizedRoute.startsWith("camera") -> TopBarData(visible = false)
-            normalizedRoute.startsWith("text_search") -> TopBarData(visible = false)
-            normalizedRoute.startsWith("mypage") -> TopBarData(visible = false)
-
-            "reviewedit" in normalizedRoute -> TopBarData(title = "리뷰 수정")
-            "reviewwrite" in normalizedRoute -> TopBarData(title = "리뷰 작성")
-            "searchresult" in normalizedRoute -> TopBarData(title = "검색 결과")
-            "productdetail" in normalizedRoute -> TopBarData(
+            routeName.contains("ReviewEdit") -> TopBarData(title = "리뷰 수정")
+            routeName.contains("ReviewWrite") -> TopBarData(title = "리뷰 작성")
+            routeName.contains("SearchResult") -> TopBarData(title = "검색 결과")
+            routeName.contains("ProductDetail") -> TopBarData(
                 iconTint = Color.White,
                 backgroundColor = primaryLight
             )
-            "registersuccess" in normalizedRoute -> TopBarData(visible = false)
 
+            routeName.contains("RegisterSuccess") -> TopBarData(visible = false)
+
+            routeName.contains("home") -> TopBarData(visible = false)
+            routeName.contains("camera_search") -> TopBarData(visible = false)
+            routeName.contains("text_search") -> TopBarData(visible = false)
+            routeName.contains("mypage") -> TopBarData(visible = false)
             else -> TopBarData()
         }
     }

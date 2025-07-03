@@ -25,209 +25,34 @@ import kotlin.reflect.typeOf
 fun NavGraphBuilder.homeNavGraph(
     navController: NavHostController
 ) {
-    composable<HomeNestedRoute.ProductDetail>(
+    composable<HomeTabNestedRoute.SearchResult>(
+        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
+    ) {
+        val navArgs = it.toRoute<HomeTabNestedRoute.SearchResult>().searchResultNavArgs
+        SearchResultScreenRoot(
+            navArgs = navArgs,
+            onNavigateToProductDetail = { product ->
+                navController.navigate(HomeTabNestedRoute.ProductDetail(product))
+            },
+        )
+    }
+
+    composable<HomeTabNestedRoute.ProductDetail>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
     ) {
-        val product = it.toRoute<HomeNestedRoute.ProductDetail>().product
+        val product = it.toRoute<HomeTabNestedRoute.ProductDetail>().product
         ProductDetailScreenRoot(
             product = product,
-            onNavigateToReviewWrite = {
-                navController.navigate(ProductDetailNestedRoute.ReviewWrite(product))
+            onNavigateToReviewWrite = { productData ->
+                navController.navigate(HomeTabNestedRoute.ReviewWrite(productData))
             }
         )
     }
 
-    composable<HomeNestedRoute.SearchResult>(
-        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val searchResultNavArgs = it.toRoute<HomeNestedRoute.SearchResult>().searchResultNavArgs
-        SearchResultScreenRoot(
-            navArgs = searchResultNavArgs,
-            onNavigateToProductDetail = { product ->
-                navController.navigate(SearchResultNestedRoute.ProductDetail(product))
-            },
-        )
-    }
-}
-
-fun NavGraphBuilder.cameraNavGraph(
-    navController: NavHostController
-) {
-    composable<CameraNestedRoute.SearchResult>(
-        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val searchResultNavArgs = it.toRoute<CameraNestedRoute.SearchResult>().searchResultNavArgs
-        SearchResultScreenRoot(
-            navArgs = searchResultNavArgs,
-            onNavigateToProductDetail = { product ->
-                navController.navigate(SearchResultNestedRoute.ProductDetail(product))
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.textSearchNavGraph(
-    navController: NavHostController
-) {
-    composable<TextSearchNestedRoute.SearchResult>(
-        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val searchResultNavArgs =
-            it.toRoute<TextSearchNestedRoute.SearchResult>().searchResultNavArgs
-        SearchResultScreenRoot(
-            navArgs = searchResultNavArgs,
-            onNavigateToProductDetail = { product ->
-                navController.navigate(SearchResultNestedRoute.ProductDetail(product))
-            },
-        )
-    }
-
-    composable<TextSearchNestedRoute.ProductDetail>(
+    composable<HomeTabNestedRoute.ReviewWrite>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
     ) {
-        val product = it.toRoute<TextSearchNestedRoute.ProductDetail>().product
-        ProductDetailScreenRoot(
-            product = product,
-            onNavigateToReviewWrite = {
-                navController.navigate(ProductDetailNestedRoute.ReviewWrite(product))
-            },
-        )
-    }
-}
-
-fun NavGraphBuilder.myPageNavGraph(
-    navController: NavHostController
-) {
-    composable<MyPageNestedRoute.ChangeNickname> {
-        ChangeNicknameScreenRoot(
-            onNavigateToMyPage = {
-                navController.navigate(ChangeNicknameNestedRoute.MyPage)
-            }
-        )
-    }
-    composable<MyPageNestedRoute.ChangePassword> {
-        ChangePasswordScreenRoot(
-            onNavigateToMyPage = {
-                navController.navigate(ChangeNicknameNestedRoute.MyPage)
-            }
-        )
-    }
-    composable<MyPageNestedRoute.ReviewHistory> {
-        ReviewHistoryScreenRoot(
-            onNavigateToReviewEdit = { reviewInfo ->
-                navController.navigate(ReviewHistoryNestedRoute.ReviewEdit(reviewInfo))
-            }
-        )
-    }
-    composable<MyPageNestedRoute.Login> {
-        LoginScreenRoot(
-            onNavigateToRegister = {
-                navController.navigate(LoginNestedRoute.Register)
-            },
-            onNavigateToMyPage = {
-                navController.navigate(ChangeNicknameNestedRoute.MyPage)
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.loginNavGraph(
-    navController: NavHostController
-) {
-    composable<LoginNestedRoute.Register> {
-        RegisterScreenRoot(
-            onNavigateToRegisterSuccess = {
-                navController.navigate(RegisterNestedRoute.RegisterSuccess)
-            }
-        )
-    }
-    composable<LoginNestedRoute.MyPage> {
-        MyPageScreenRoot(
-            onNavigateToChangeNickname = {
-                navController.navigate(MyPageNestedRoute.ChangeNickname)
-            },
-            onNavigateToChangePassword = {
-                navController.navigate(MyPageNestedRoute.ChangePassword)
-            },
-            onNavigateToLogin = {
-                navController.navigate(MyPageNestedRoute.Login)
-            },
-            onNavigateToReviewHistory = {
-                navController.navigate(MyPageNestedRoute.ReviewHistory)
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.registerNavGraph(
-    navController: NavHostController
-) {
-    composable<RegisterNestedRoute.Register> {
-        RegisterScreenRoot(
-            onNavigateToRegisterSuccess = {
-                navController.navigate(RegisterNestedRoute.RegisterSuccess)
-            }
-        )
-    }
-
-    composable<RegisterNestedRoute.RegisterSuccess> {
-        RegisterSuccessScreen(
-            onNavigateToLogin = {
-                navController.navigate(RegisterSuccessNestedRoute.Login)
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.changeNicknameNavGraph(
-    navController: NavHostController
-) {
-    composable<ChangeNicknameNestedRoute.MyPage> {
-        MyPageScreenRoot(
-            onNavigateToChangeNickname = {
-                navController.navigate(MyPageNestedRoute.ChangeNickname)
-            },
-            onNavigateToChangePassword = {
-                navController.navigate(MyPageNestedRoute.ChangePassword)
-            },
-            onNavigateToLogin = {
-                navController.navigate(MyPageNestedRoute.Login)
-            },
-            onNavigateToReviewHistory = {
-                navController.navigate(MyPageNestedRoute.ReviewHistory)
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.changePasswordNavGraph(
-    navController: NavHostController
-) {
-    composable<ChangePasswordNestedRoute.MyPage> {
-        MyPageScreenRoot(
-            onNavigateToChangeNickname = {
-                navController.navigate(MyPageNestedRoute.ChangeNickname)
-            },
-            onNavigateToChangePassword = {
-                navController.navigate(MyPageNestedRoute.ChangePassword)
-            },
-            onNavigateToLogin = {
-                navController.navigate(MyPageNestedRoute.Login)
-            },
-            onNavigateToReviewHistory = {
-                navController.navigate(MyPageNestedRoute.ReviewHistory)
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.productDetailNavGraph(
-    navController: NavHostController
-) {
-    composable<ProductDetailNestedRoute.ReviewWrite>(
-        typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<ProductDetailNestedRoute.ReviewWrite>().product
+        val product = it.toRoute<HomeTabNestedRoute.ReviewWrite>().product
         ReviewWriteScreenRoot(
             product = product,
             onReviewWriteComplete = {
@@ -237,90 +62,171 @@ fun NavGraphBuilder.productDetailNavGraph(
     }
 }
 
-fun NavGraphBuilder.reviewEditNavGraph(
+fun NavGraphBuilder.cameraNavGraph(
     navController: NavHostController
 ) {
-    composable<ReviewEditNestedRoute.ReviewHistory> {
-        ReviewHistoryScreenRoot(
-            onNavigateToReviewEdit = { reviewInfo ->
-                navController.navigate(ReviewHistoryNestedRoute.ReviewEdit(reviewInfo))
-            }
-        )
-    }
-}
-
-fun NavGraphBuilder.reviewHistoryNavGraph(
-    navController: NavHostController
-) {
-    composable<ReviewHistoryNestedRoute.ReviewEdit>(
-        typeMap = mapOf(typeOf<ReviewInfo>() to parcelableType<ReviewInfo>())
+    composable<CameraTabNestedRoute.SearchResult>(
+        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
     ) {
-        val reviewInfo = it.toRoute<ReviewHistoryNestedRoute.ReviewEdit>().reviewInfo
-        ReviewEditScreenRoot(
-            reviewInfo = reviewInfo,
-            onNavigateReviewHistory = {
-                navController.navigate(ReviewEditNestedRoute.ReviewHistory)
+        val navArgs = it.toRoute<CameraTabNestedRoute.SearchResult>().searchResultNavArgs
+        SearchResultScreenRoot(
+            navArgs = navArgs,
+            onNavigateToProductDetail = { product ->
+                navController.navigate(CameraTabNestedRoute.ProductDetail(product))
             }
         )
     }
-}
 
-fun NavGraphBuilder.reviewWriteNavGraph(
-    navController: NavHostController
-) {
-    composable<ReviewWriteNestedRoute.ProductDetail>(
+    composable<CameraTabNestedRoute.ProductDetail>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
     ) {
-        val product = it.toRoute<ReviewWriteNestedRoute.ProductDetail>().product
+        val product = it.toRoute<CameraTabNestedRoute.ProductDetail>().product
         ProductDetailScreenRoot(
             product = product,
-            onNavigateToReviewWrite = {
-                navController.navigate(ProductDetailNestedRoute.ReviewWrite(product))
-
+            onNavigateToReviewWrite = { productData ->
+                navController.navigate(CameraTabNestedRoute.ReviewWrite(productData))
             }
         )
     }
-}
 
-fun NavGraphBuilder.searchResultNavGraph(
-    navController: NavHostController
-) {
-    composable<SearchResultNestedRoute.ProductDetail>(
+    composable<CameraTabNestedRoute.ReviewWrite>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
     ) {
-        val product = it.toRoute<SearchResultNestedRoute.ProductDetail>().product
-        ProductDetailScreenRoot(
+        val product = it.toRoute<CameraTabNestedRoute.ReviewWrite>().product
+        ReviewWriteScreenRoot(
             product = product,
-            onNavigateToReviewWrite = {
-                navController.navigate(ProductDetailNestedRoute.ReviewWrite(product))
-            }
+            onReviewWriteComplete = {
+                navController.popBackStack()
+            },
         )
     }
 }
 
-fun NavGraphBuilder.registerSuccessNavGraph(
+fun NavGraphBuilder.textSearchNavGraph(
     navController: NavHostController
 ) {
-    composable<RegisterNestedRoute.RegisterSuccess> {
-        RegisterSuccessScreen(
+    composable<TextSearchTabNestedRoute.SearchResult>(
+        typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
+    ) {
+        val navArgs = it.toRoute<TextSearchTabNestedRoute.SearchResult>().searchResultNavArgs
+        SearchResultScreenRoot(
+            navArgs = navArgs,
+            onNavigateToProductDetail = { product ->
+                navController.navigate(TextSearchTabNestedRoute.ProductDetail(product))
+            },
+        )
+    }
+
+    composable<TextSearchTabNestedRoute.ProductDetail>(
+        typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
+    ) {
+        val product = it.toRoute<TextSearchTabNestedRoute.ProductDetail>().product
+        ProductDetailScreenRoot(
+            product = product,
+            onNavigateToReviewWrite = { productData ->
+                navController.navigate(TextSearchTabNestedRoute.ReviewWrite(productData))
+            },
+        )
+    }
+
+    composable<TextSearchTabNestedRoute.ReviewWrite>(
+        typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
+    ) {
+        val product = it.toRoute<TextSearchTabNestedRoute.ReviewWrite>().product
+        ReviewWriteScreenRoot(
+            product = product,
+            onReviewWriteComplete = {
+                navController.popBackStack()
+            },
+        )
+    }
+}
+
+fun NavGraphBuilder.myPageNavGraph(
+    navController: NavHostController
+) {
+    composable<MyPageTabNestedRoute.MyPage> {
+        MyPageScreenRoot(
+            onNavigateToChangeNickname = {
+                navController.navigate(MyPageTabNestedRoute.ChangeNickname)
+            },
+            onNavigateToChangePassword = {
+                navController.navigate(MyPageTabNestedRoute.ChangePassword)
+            },
             onNavigateToLogin = {
-                navController.navigate(MyPageNestedRoute.Login) {
-                    popUpTo(MainNavigationRoute.MyPage.route) {
-                        inclusive = false
-                    }
-                    launchSingleTop = true
+                navController.navigate(MyPageTabNestedRoute.Login)
+            },
+            onNavigateToReviewHistory = {
+                navController.navigate(MyPageTabNestedRoute.ReviewHistory)
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.Login> {
+        LoginScreenRoot(
+            onNavigateToRegister = {
+                navController.navigate(MyPageTabNestedRoute.Register)
+            },
+            onNavigateToMyPage = {
+                navController.navigate(MyPageTabNestedRoute.MyPage) {
+                    popUpTo(MyPageTabNestedRoute.MyPage.javaClass.simpleName) { inclusive = true }
                 }
             }
         )
     }
 
-    composable<RegisterSuccessNestedRoute.Login> {
-        LoginScreenRoot(
-            onNavigateToRegister = {
-                navController.navigate(LoginNestedRoute.Register)
-            },
+    composable<MyPageTabNestedRoute.Register> {
+        RegisterScreenRoot(
+            onNavigateToRegisterSuccess = {
+                navController.navigate(MyPageTabNestedRoute.RegisterSuccess)
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.RegisterSuccess> {
+        RegisterSuccessScreen(
+            onNavigateToLogin = {
+                navController.navigate(MyPageTabNestedRoute.Login) {
+                    popUpTo(MyPageTabNestedRoute.Login) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.ChangeNickname> {
+        ChangeNicknameScreenRoot(
             onNavigateToMyPage = {
-                navController.navigate(ChangeNicknameNestedRoute.MyPage)
+                navController.popBackStack()
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.ChangePassword> {
+        ChangePasswordScreenRoot(
+            onNavigateToMyPage = {
+                navController.popBackStack()
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.ReviewHistory> {
+        ReviewHistoryScreenRoot(
+            onNavigateToReviewEdit = { reviewInfo ->
+                navController.navigate(MyPageTabNestedRoute.ReviewEdit(reviewInfo))
+            }
+        )
+    }
+
+    composable<MyPageTabNestedRoute.ReviewEdit>(
+        typeMap = mapOf(typeOf<ReviewInfo>() to parcelableType<ReviewInfo>())
+    ) {
+        val reviewInfo = it.toRoute<MyPageTabNestedRoute.ReviewEdit>().reviewInfo
+        ReviewEditScreenRoot(
+            reviewInfo = reviewInfo,
+            onNavigateReviewHistory = {
+                navController.popBackStack()
             }
         )
     }

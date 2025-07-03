@@ -13,7 +13,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,33 +21,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
-import com.hjw0623.pyeonking.main_screen.camera.presentation.CameraScreenRoot
 import com.hjw0623.pyeonking.core.data.TopBarData
 import com.hjw0623.pyeonking.core.data.topBarAsRouteName
 import com.hjw0623.pyeonking.core.presentation.designsystem.util.BackBar
 import com.hjw0623.pyeonking.core.util.shouldShowBottomBar
+import com.hjw0623.pyeonking.main_screen.camera.presentation.CameraScreenRoot
 import com.hjw0623.pyeonking.main_screen.home.presentation.HomeScreenRoot
 import com.hjw0623.pyeonking.main_screen.mypage.presentation.MyPageScreenRoot
 import com.hjw0623.pyeonking.main_screen.text_sarch.presentation.TextSearchScreenRoot
-import com.hjw0623.pyeonking.navigation.nav_route.CameraNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.HomeNestedRoute
+import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
+import com.hjw0623.pyeonking.navigation.nav_route.CameraTabNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.HomeTabNestedRoute
 import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MyPageNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.TextSearchNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.MyPageTabNestedRoute
+import com.hjw0623.pyeonking.navigation.nav_route.TextSearchTabNestedRoute
 import com.hjw0623.pyeonking.navigation.nav_route.cameraNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.changeNicknameNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.changePasswordNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.loginNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.productDetailNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.registerNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.registerSuccessNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.reviewEditNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.reviewHistoryNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.reviewWriteNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.searchResultNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
 
 @Composable
@@ -119,12 +108,12 @@ fun MainScreen() {
             composable(MainNavigationRoute.Home.route) {
                 HomeScreenRoot(
                     onNavigateToProductDetail = { product ->
-                        navController.navigate(HomeNestedRoute.ProductDetail(product)) {
+                        navController.navigate(HomeTabNestedRoute.ProductDetail(product)) {
                             launchSingleTop = true
                         }
                     },
                     onNavigateToSearchResult = { args ->
-                        navController.navigate(HomeNestedRoute.SearchResult(args)) {
+                        navController.navigate(HomeTabNestedRoute.SearchResult(args)) {
                             launchSingleTop = true
                         }
                     }
@@ -133,7 +122,7 @@ fun MainScreen() {
             composable(MainNavigationRoute.Camera.route) {
                 CameraScreenRoot(
                     onNavigateToSearchResult = { args ->
-                        navController.navigate(CameraNestedRoute.SearchResult(args)) {
+                        navController.navigate(CameraTabNestedRoute.SearchResult(args)) {
                             launchSingleTop = true
                         }
                     }
@@ -142,12 +131,12 @@ fun MainScreen() {
             composable(MainNavigationRoute.TextSearch.route) {
                 TextSearchScreenRoot(
                     onNavigateToSearchResult = { args ->
-                        navController.navigate(TextSearchNestedRoute.SearchResult(args)) {
+                        navController.navigate(TextSearchTabNestedRoute.SearchResult(args)) {
                             launchSingleTop = true
                         }
                     },
                     onNavigateToProductDetail = { product ->
-                        navController.navigate(TextSearchNestedRoute.ProductDetail(product)) {
+                        navController.navigate(TextSearchTabNestedRoute.ProductDetail(product)) {
                             launchSingleTop = true
                         }
                     }
@@ -156,22 +145,22 @@ fun MainScreen() {
             composable(MainNavigationRoute.MyPage.route) {
                 MyPageScreenRoot(
                     onNavigateToChangeNickname = {
-                        navController.navigate(MyPageNestedRoute.ChangeNickname) {
+                        navController.navigate(MyPageTabNestedRoute.ChangeNickname) {
                             launchSingleTop = true
                         }
                     },
                     onNavigateToChangePassword = {
-                        navController.navigate(MyPageNestedRoute.ChangePassword) {
+                        navController.navigate(MyPageTabNestedRoute.ChangePassword) {
                             launchSingleTop = true
                         }
                     },
                     onNavigateToLogin = {
-                        navController.navigate(MyPageNestedRoute.Login) {
+                        navController.navigate(MyPageTabNestedRoute.Login) {
                             launchSingleTop = true
                         }
                     },
                     onNavigateToReviewHistory = {
-                        navController.navigate(MyPageNestedRoute.ReviewHistory) {
+                        navController.navigate(MyPageTabNestedRoute.ReviewHistory) {
                             launchSingleTop = true
                         }
                     }
@@ -181,16 +170,10 @@ fun MainScreen() {
             cameraNavGraph(navController)
             textSearchNavGraph(navController)
             myPageNavGraph(navController)
-            loginNavGraph(navController)
-            registerNavGraph(navController)
-            registerSuccessNavGraph(navController)
-            changeNicknameNavGraph(navController)
-            changePasswordNavGraph(navController)
-            productDetailNavGraph(navController)
-            reviewEditNavGraph(navController)
-            reviewHistoryNavGraph(navController)
-            reviewWriteNavGraph(navController)
-            searchResultNavGraph(navController)
+            homeNavGraph(navController)
+            cameraNavGraph(navController)
+            textSearchNavGraph(navController)
+            myPageNavGraph(navController)
         }
     }
 }

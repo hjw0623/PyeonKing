@@ -13,7 +13,7 @@ sealed interface MainNavigationRoute {
     }
 
     object Camera : MainNavigationRoute {
-        override val route = "camera"
+        override val route = "camera_search"
     }
 
     object TextSearch : MainNavigationRoute {
@@ -26,106 +26,65 @@ sealed interface MainNavigationRoute {
 }
 
 @Serializable
-sealed interface HomeNestedRoute {
+sealed interface HomeTabNestedRoute {
     @Serializable
-    data class ProductDetail(val product: Product) : HomeNestedRoute
+    data class ProductDetail(val product: Product) : HomeTabNestedRoute
 
     @Serializable
-    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : HomeNestedRoute
+    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : HomeTabNestedRoute
+
+    @Serializable
+    data class ReviewWrite(val product: Product) : HomeTabNestedRoute
 }
 
 @Serializable
-sealed interface CameraNestedRoute {
+sealed interface CameraTabNestedRoute {
     @Serializable
-    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : CameraNestedRoute
+    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : CameraTabNestedRoute
+
+    @Serializable
+    data class ProductDetail(val product: Product) : CameraTabNestedRoute
+
+    @Serializable
+    data class ReviewWrite(val product: Product) : CameraTabNestedRoute
+}
+
+
+@Serializable
+sealed interface TextSearchTabNestedRoute {
+    @Serializable
+    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : TextSearchTabNestedRoute
+
+    @Serializable
+    data class ProductDetail(val product: Product) : TextSearchTabNestedRoute
+
+    @Serializable
+    data class ReviewWrite(val product: Product) : TextSearchTabNestedRoute
 }
 
 @Serializable
-sealed interface TextSearchNestedRoute {
+sealed interface MyPageTabNestedRoute {
     @Serializable
-    data class SearchResult(val searchResultNavArgs: SearchResultNavArgs) : TextSearchNestedRoute
+    data object MyPage : MyPageTabNestedRoute
 
     @Serializable
-    data class ProductDetail(val product: Product) : TextSearchNestedRoute
-}
-
-@Serializable
-sealed interface MyPageNestedRoute {
-    @Serializable
-    data object ChangeNickname : MyPageNestedRoute
+    data object Login : MyPageTabNestedRoute
 
     @Serializable
-    data object ChangePassword : MyPageNestedRoute
+    data object Register : MyPageTabNestedRoute
 
     @Serializable
-    data object ReviewHistory : MyPageNestedRoute
+    data object RegisterSuccess : MyPageTabNestedRoute
 
     @Serializable
-    data object Login : MyPageNestedRoute
-}
-
-@Serializable
-sealed interface LoginNestedRoute {
-    @Serializable
-    data object Register : LoginNestedRoute
+    data object ChangeNickname : MyPageTabNestedRoute
 
     @Serializable
-    data object MyPage : LoginNestedRoute
-}
-
-@Serializable
-sealed interface RegisterNestedRoute {
-    @Serializable
-    data object Register : RegisterNestedRoute
+    data object ChangePassword : MyPageTabNestedRoute
 
     @Serializable
-    data object RegisterSuccess : RegisterNestedRoute
-}
+    data object ReviewHistory : MyPageTabNestedRoute
 
-@Serializable
-sealed interface ChangeNicknameNestedRoute {
     @Serializable
-    data object MyPage : ChangeNicknameNestedRoute
-}
-
-@Serializable
-sealed interface ChangePasswordNestedRoute {
-    @Serializable
-    data object MyPage : ChangePasswordNestedRoute
-}
-
-@Serializable
-sealed interface ProductDetailNestedRoute {
-    @Serializable
-    data class ReviewWrite(val product: Product) : ProductDetailNestedRoute
-}
-
-@Serializable
-sealed interface ReviewEditNestedRoute {
-    @Serializable
-    data object ReviewHistory : ReviewEditNestedRoute
-}
-
-@Serializable
-sealed interface ReviewHistoryNestedRoute {
-    @Serializable
-    data class ReviewEdit(val reviewInfo: ReviewInfo) : ReviewHistoryNestedRoute
-}
-
-@Serializable
-sealed interface ReviewWriteNestedRoute {
-    @Serializable
-    data class ProductDetail(val product: Product) : ReviewWriteNestedRoute
-}
-
-@Serializable
-sealed interface SearchResultNestedRoute {
-    @Serializable
-    data class ProductDetail(val product: Product) : SearchResultNestedRoute
-}
-
-@Serializable
-sealed interface RegisterSuccessNestedRoute {
-    @Serializable
-    data object Login : RegisterSuccessNestedRoute
+    data class ReviewEdit(val reviewInfo: ReviewInfo) : MyPageTabNestedRoute
 }
