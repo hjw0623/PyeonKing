@@ -78,3 +78,27 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin"}
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+
+[bundles]
+compose = [
+    "androidx-ui",
+    "androidx-ui-graphics",
+    "androidx-ui-tooling-preview",
+    "androidx-material3",
+    "androidx-activity-compose",
+    "ui-text-google-fonts",
+]
+lifecycle = ["androidx-lifecycle-runtime-ktx", "androidx-viewmodel-compose"]
+navigation = ["androidx-navigation-compose"]
+camerax = [
+    "androidx-camera-core",
+    "androidx-camera-camera2",
+    "androidx-camera-lifecycle",
+    "androidx-camera-view",
+    "androidx-camera-video",
+]
+retrofit = ["retrofit", "retrofit-converter-gson"]
+coroutines = ["kotlinx-coroutines-android"]
+testing = ["junit"]
+android-testing = ["androidx-junit", "androidx-espresso-core", "androidx-ui-test-junit4"]
+debug-tooling = ["androidx-ui-tooling", "androidx-ui-test-manifest"]

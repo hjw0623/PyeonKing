@@ -36,9 +36,24 @@ dependencies {
     implementation(project(":core"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
+    // Coroutines
+    implementation(libs.bundles.coroutines)
+
+    // Networking 
+    implementation(libs.bundles.retrofit)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Logging
+    implementation(libs.timber)
+
+    // Testing
+    testImplementation(libs.bundles.testing)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.bundles.android.testing)
+
+    // Debug
+    debugImplementation(libs.bundles.debug.tooling)
 }

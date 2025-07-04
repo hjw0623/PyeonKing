@@ -39,28 +39,35 @@ dependencies {
     implementation(project(":core"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+
+    //compose
+    implementation(libs.bundles.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.ui.text.google.fonts)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.timber)
     implementation(libs.androidx.material.icons.extended)
+
+    // Lifecycle & ViewModel
+    implementation(libs.bundles.lifecycle)
+
+    // Coroutines
+    implementation(libs.bundles.coroutines)
+
+    // CameraX
+    implementation(libs.bundles.camerax)
+
+    //coil
     implementation(libs.coil.compose)
 
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.view)
-    implementation(libs.androidx.camera.video)
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Logging
+    implementation(libs.timber)
+
+    // Testing
+    testImplementation(libs.bundles.testing)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.bundles.android.testing)
+
+    // Debug
+    debugImplementation(libs.bundles.debug.tooling)
 }
