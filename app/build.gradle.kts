@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":presentation"))
+    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -77,8 +80,4 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
-
-    implementation(project(":core"))
-    implementation(project(":presentation"))
-    implementation(project(":data"))
 }
