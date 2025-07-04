@@ -170,10 +170,6 @@ fun MainScreen() {
             cameraNavGraph(navController)
             textSearchNavGraph(navController)
             myPageNavGraph(navController)
-            homeNavGraph(navController)
-            cameraNavGraph(navController)
-            textSearchNavGraph(navController)
-            myPageNavGraph(navController)
         }
     }
 }
