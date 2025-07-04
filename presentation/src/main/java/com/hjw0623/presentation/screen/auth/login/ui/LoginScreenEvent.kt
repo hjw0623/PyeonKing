@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.auth.login
+package com.hjw0623.presentation.screen.auth.login.ui
 
 sealed interface LoginScreenEvent {
     data class Error(val error: String) : LoginScreenEvent

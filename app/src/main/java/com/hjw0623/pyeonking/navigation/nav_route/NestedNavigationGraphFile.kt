@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.hjw0623.presentation.screen.auth.login.LoginScreenRoot
+import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.RegisterScreenRoot
 import com.hjw0623.presentation.screen.auth.register.RegisterSuccessScreen
 import com.hjw0623.presentation.screen.mypage.change_nickname.ChangeNicknameScreenRoot

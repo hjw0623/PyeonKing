@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.auth.login.component
+package com.hjw0623.presentation.screen.auth.login.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
