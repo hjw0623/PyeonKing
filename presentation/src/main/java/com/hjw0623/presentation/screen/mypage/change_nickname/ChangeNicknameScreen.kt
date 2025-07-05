@@ -36,7 +36,7 @@ import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.auth.register.component.PyeonKingOutlinedTextField
+import com.hjw0623.presentation.screen.auth.register.ui.component.PyeonKingOutlinedTextField
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
