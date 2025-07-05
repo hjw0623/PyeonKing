@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.auth.register
+package com.hjw0623.presentation.screen.auth.register.ui
 
 sealed interface RegisterScreenEvent {
     data class Error(val error: String) : RegisterScreenEvent

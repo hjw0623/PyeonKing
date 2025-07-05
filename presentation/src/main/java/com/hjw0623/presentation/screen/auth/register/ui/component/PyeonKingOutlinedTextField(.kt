@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.auth.register.component
+package com.hjw0623.presentation.screen.auth.register.ui.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
