@@ -62,7 +62,7 @@ fun ChangeNicknameScreenRoot(
         viewModel.onChangeNicknameClick()
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = viewModel.changeNicknameEvent) { event ->
         when (event) {
             is ChangeNicknameScreenEvent.Error -> {
                 showToast(context, event.error)

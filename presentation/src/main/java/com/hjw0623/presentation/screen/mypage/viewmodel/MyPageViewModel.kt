@@ -19,7 +19,9 @@ import kotlinx.coroutines.launch
 class MyPageViewModel(
     //Todo: private val myPageRepository: MyPageRepository
 ) : ViewModel() {
-
+    /*
+    닉네임 변경 관련 상태
+     */
     private val _currentNickname = MutableStateFlow(mockUser.nickname)
 
     private val _newNickname = MutableStateFlow(mockUser.nickname)
@@ -46,8 +48,8 @@ class MyPageViewModel(
         initialValue = false
     )
 
-    private val _event = MutableSharedFlow<ChangeNicknameScreenEvent>()
-    val event = _event.asSharedFlow()
+    private val _changeNicknameEvent = MutableSharedFlow<ChangeNicknameScreenEvent>()
+    val changeNicknameEvent = _changeNicknameEvent.asSharedFlow()
 
     fun onNicknameCheckClick() {
         val newNicknameValue = newNickname.value
@@ -69,7 +71,7 @@ class MyPageViewModel(
                 }
             } catch (e: Exception) {
                 _nicknameValidationState.value = NicknameValidationState.Idle
-                _event.emit(ChangeNicknameScreenEvent.Error("확인 중 오류가 발생했습니다."))
+                _changeNicknameEvent.emit(ChangeNicknameScreenEvent.Error("확인 중 오류가 발생했습니다."))
             }
         }
     }
@@ -80,9 +82,9 @@ class MyPageViewModel(
             try {
                 delay(1500)
                 // TODO: 실제 닉네임 변경 API 호출
-                _event.emit(ChangeNicknameScreenEvent.NavigateToMyPage)
+                _changeNicknameEvent.emit(ChangeNicknameScreenEvent.NavigateToMyPage)
             } catch (e: Exception) {
-                _event.emit(ChangeNicknameScreenEvent.Error("닉네임 변경에 실패했습니다."))
+                _changeNicknameEvent.emit(ChangeNicknameScreenEvent.Error("닉네임 변경에 실패했습니다."))
             } finally {
                 _isChangingNickname.value = false
             }
