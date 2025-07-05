@@ -28,6 +28,7 @@ import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
+import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.login.ui.component.LoginGreetingSection
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
@@ -50,6 +51,14 @@ fun LoginScreenRoot(
     val isEmailValid by viewModel.isEmailValid.collectAsStateWithLifecycle()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
     val isLoginButtonEnabled by viewModel.isLoginButtonEnabled.collectAsStateWithLifecycle()
+
+    val throttledLoginClick = rememberThrottledOnClick {
+        viewModel.onLoginClick()
+    }
+
+    val throttledRegisterClick = rememberThrottledOnClick {
+        viewModel.onRegisterClick()
+    }
 
     ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
@@ -75,9 +84,10 @@ fun LoginScreenRoot(
         isPasswordVisible = isPasswordVisible,
         isLoginButtonEnabled = isLoginButtonEnabled,
         onEmailChange = viewModel::onEmailChange,
+        onEmailChangeDebounced = viewModel::onEmailChangeDebounced,
         onPasswordChange = viewModel::onPasswordChange,
-        onLoginClick = viewModel::onLoginClick,
-        onRegisterClick = viewModel::onRegisterClick,
+        onLoginClick = throttledLoginClick,
+        onRegisterClick = throttledRegisterClick,
         onTogglePasswordVisibility = viewModel::onTogglePasswordVisibility
     )
 }
@@ -91,6 +101,7 @@ private fun LoginScreen(
     isPasswordVisible: Boolean,
     isLoginButtonEnabled: Boolean,
     onEmailChange: (String) -> Unit,
+    onEmailChangeDebounced: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
@@ -109,6 +120,7 @@ private fun LoginScreen(
             PyeonKingTextField(
                 value = email,
                 onValueChange = onEmailChange,
+                onDebouncedValueChange = onEmailChangeDebounced,
                 startIcon = Icons.Default.Email,
                 endIcon = if (isEmailValid) Icons.Default.Check else null,
                 title = stringResource(R.string.label_email),
@@ -170,7 +182,8 @@ private fun LoginScreenPreview() {
             onPasswordChange = {},
             onLoginClick = {},
             onRegisterClick = {},
-            onTogglePasswordVisibility = {}
+            onTogglePasswordVisibility = {},
+            onEmailChangeDebounced = {}
         )
     }
 }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,10 +30,8 @@ class LoginViewModel(
 
     private val _isPasswordVisible = MutableStateFlow(false)
     val isPasswordVisible = _isPasswordVisible.asStateFlow()
-    val isEmailValid = email.map {
-        userDataValidator.isEmailValid(it)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
+    private val _isEmailValid = MutableStateFlow(false)
+    val isEmailValid = _isEmailValid.asStateFlow()
     val isLoginButtonEnabled = combine(isEmailValid, password) { isEmailValid, password ->
         isEmailValid && password.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -43,7 +40,15 @@ class LoginViewModel(
     val event = _event.asSharedFlow()
 
     fun onEmailChange(inputEmail: String) {
+        if (inputEmail != _email.value) {
+            _isEmailValid.value = false
+        }
         _email.value = inputEmail
+    }
+
+    fun onEmailChangeDebounced(debouncedEmail: String) {
+        val isValid = userDataValidator.isEmailValid(debouncedEmail)
+        _isEmailValid.value = isValid
     }
 
     fun onPasswordChange(inputPassword: String) {

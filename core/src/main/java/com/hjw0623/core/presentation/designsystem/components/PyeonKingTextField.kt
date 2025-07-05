@@ -23,13 +23,13 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -40,11 +40,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 
+const val DEBOUNCE_INTERVAL = 1000L
+
+@OptIn(FlowPreview::class)
 @Composable
 fun PyeonKingTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    onDebouncedValueChange: ((String) -> Unit)? = null,
+    debounceInterval: Long = DEBOUNCE_INTERVAL,
     modifier: Modifier = Modifier,
     startIcon: ImageVector? = null,
     endIcon: ImageVector? = null,
@@ -59,6 +68,25 @@ fun PyeonKingTextField(
     var isFocused by remember {
         mutableStateOf(false)
     }
+
+    val debounceFlow = remember { MutableStateFlow(value) }
+
+    LaunchedEffect(value) {
+        if (debounceFlow.value != value) {
+            debounceFlow.value = value
+        }
+    }
+    if (onDebouncedValueChange != null) {
+        LaunchedEffect(Unit) {
+            debounceFlow
+                .debounce(debounceInterval)
+                .distinctUntilChanged()
+                .collect { debouncedValue ->
+                    onDebouncedValueChange(debouncedValue)
+                }
+        }
+    }
+
     Column(
         modifier = modifier
     ) {
@@ -90,9 +118,13 @@ fun PyeonKingTextField(
         }
         Spacer(modifier = Modifier.height(4.dp))
 
-        Box(
+        // 이제 BasicTextField가 포커스 상태를 직접 관리합니다.
+        // 기존 Box의 수정자(modifier)는 BasicTextField로 옮겨집니다.
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+                .fillMaxWidth()
                 .background(
                     if (isFocused) {
                         MaterialTheme.colorScheme.primary.copy(
@@ -100,7 +132,8 @@ fun PyeonKingTextField(
                         )
                     } else {
                         MaterialTheme.colorScheme.surface
-                    }
+                    },
+                    RoundedCornerShape(16.dp)
                 )
                 .border(
                     width = 1.dp,
@@ -113,65 +146,65 @@ fun PyeonKingTextField(
                 )
                 .onFocusChanged {
                     isFocused = it.isFocused
-                }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (startIcon != null) {
-                    Icon(
-                        imageVector = startIcon,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
-                Box(
+                },
+            textStyle = LocalTextStyle.current.copy(
+                color = MaterialTheme.colorScheme.onBackground
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType
+            ),
+            singleLine = true,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
+            visualTransformation = visualTransformation,
+            decorationBox = { innerTextField ->
+                Row(
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (value.isEmpty() && !isFocused) {
-                        Text(
-                            text = hint,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                alpha = 0.4f
-                            ),
-                            modifier = Modifier.fillMaxWidth()
+                    if (startIcon != null) {
+                        Icon(
+                            imageVector = startIcon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        // 실제 텍스트 입력을 렌더링하는 innerTextField를 호출합니다.
+                        // innerTextField와 힌트를 같은 Box 안에 배치하여 겹쳐 보이게 합니다.
+                        if (value.isEmpty()) {
+                            Text(
+                                text = hint,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = 0.4f
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        innerTextField()
+                    }
+                    if (endIcon != null) {
+                        Spacer(modifier = Modifier.width(16.dp))
+                        val iconModifier = if (onEndIconClick != null) {
+                            Modifier.clickable(onClick = onEndIconClick)
+                        } else {
+                            Modifier
+                        }
+                        Icon(
+                            imageVector = endIcon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = iconModifier
                         )
                     }
-                    BasicTextField(
-                        value = value,
-                        onValueChange = onValueChange,
-                        textStyle = LocalTextStyle.current.copy(
-                            color = MaterialTheme.colorScheme.onBackground
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = keyboardType
-                        ),
-                        singleLine = true,
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
-                        visualTransformation = visualTransformation
-                    )
-                }
-                if (endIcon != null) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    val iconModifier = if (onEndIconClick != null) {
-                        Modifier.clickable(onClick = onEndIconClick)
-                    } else {
-                        Modifier
-                    }
-                    Icon(
-                        imageVector = endIcon,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = iconModifier
-                    )
                 }
             }
-        }
+        )
     }
 }
 @Preview(showBackground = true)

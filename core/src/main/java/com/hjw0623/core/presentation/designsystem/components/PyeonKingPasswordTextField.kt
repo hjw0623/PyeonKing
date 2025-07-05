@@ -12,11 +12,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun PyeonKingPasswordTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    onDebouncedValueChange: ((String) -> Unit)? = null,
+    debounceInterval: Long = DEBOUNCE_INTERVAL,
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
-    modifier: Modifier = Modifier,
     hint: String = "",
     title: String? = null,
     error: String? = null
@@ -36,6 +38,8 @@ fun PyeonKingPasswordTextField(
     PyeonKingTextField(
         value = value,
         onValueChange = onValueChange,
+        onDebouncedValueChange = onDebouncedValueChange,
+        debounceInterval = debounceInterval,
         modifier = modifier,
         startIcon = Icons.Default.Lock,
         endIcon = icon,
