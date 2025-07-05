@@ -40,7 +40,7 @@ fun LoginScreenRoot(
     onNavigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val userDataValidator = UserDataValidator(EmailPatternValidator())
+    val userDataValidator = UserDataValidator(EmailPatternValidator)
     val loginViewModelFactory = LoginViewModelFactory(userDataValidator)
     val viewModel: LoginViewModel = viewModel(factory = loginViewModelFactory)
 

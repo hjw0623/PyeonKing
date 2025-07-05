@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -62,12 +63,16 @@ class LoginViewModel(
     fun onLoginClick() {
         viewModelScope.launch {
             _isLoggingIn.value = true
-            // TODO: 실제 로그인 로직 구현
-            // 성공 시
-            _event.emit(LoginScreenEvent.NavigateToMyPage)
-            // 실패 시
-            // _event.emit(LoginEvent.Error("이메일 또는 비밀번호가 일치하지 않습니다."))
-            _isLoggingIn.value = false
+            try {
+                delay(1500)
+                // TODO: 실제 로그인 로직 호출
+                _event.emit(LoginScreenEvent.NavigateToMyPage)
+
+            } catch (e: Exception) {
+                _event.emit(LoginScreenEvent.Error("이메일 또는 비밀번호가 일치하지 않습니다."))
+            } finally {
+                _isLoggingIn.value = false
+            }
         }
     }
 
