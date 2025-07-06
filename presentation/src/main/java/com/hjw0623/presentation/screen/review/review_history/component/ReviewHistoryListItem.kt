@@ -28,7 +28,7 @@ import com.hjw0623.core.mockdata.mockReviewInfo
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.product.componet.RatingStars
+import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
 
 @Composable
 fun ReviewHistoryListItem(

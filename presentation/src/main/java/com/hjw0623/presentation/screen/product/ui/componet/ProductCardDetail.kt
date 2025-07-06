@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.product.componet
+package com.hjw0623.presentation.screen.product.ui.componet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

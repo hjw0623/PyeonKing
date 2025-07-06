@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.product
+package com.hjw0623.presentation.screen.product.ui
 
 import com.hjw0623.core.domain.product.Product
 

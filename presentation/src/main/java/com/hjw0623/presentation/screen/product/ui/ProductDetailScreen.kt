@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.product
+package com.hjw0623.presentation.screen.product.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,12 +33,13 @@ import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.product.componet.MapTab
-import com.hjw0623.presentation.screen.product.componet.ProductCardDetail
-import com.hjw0623.presentation.screen.product.componet.RatingDistribution
-import com.hjw0623.presentation.screen.product.componet.RatingStars
-import com.hjw0623.presentation.screen.product.componet.ReviewListItem
-import com.hjw0623.presentation.screen.product.componet.TabSection
+import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
+import com.hjw0623.presentation.screen.product.ui.componet.MapTab
+import com.hjw0623.presentation.screen.product.ui.componet.ProductCardDetail
+import com.hjw0623.presentation.screen.product.ui.componet.RatingDistribution
+import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
+import com.hjw0623.presentation.screen.product.ui.componet.ReviewListItem
+import com.hjw0623.presentation.screen.product.ui.componet.TabSection
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
