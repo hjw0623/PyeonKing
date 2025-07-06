@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -16,24 +15,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.search_result.SearchResultSource
 import com.hjw0623.core.domain.search.text_search.FilterType
-import com.hjw0623.core.domain.search.text_search.filterProducts
 import com.hjw0623.core.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.presentation.screen.search.text_search.TextSearchScreenAction
-import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
-import com.hjw0623.presentation.screen.search.text_search.TextSearchScreenState
+import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.presentation.screen.factory.TextSearchViewModelFactory
 import com.hjw0623.presentation.screen.search.text_search.ui.component.SearchTextField
 import com.hjw0623.presentation.screen.search.text_search.ui.component.focused.SearchHistorySection
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductListSection
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
-
+import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
 
 @Composable
 fun TextSearchScreenRoot(
@@ -41,106 +37,61 @@ fun TextSearchScreenRoot(
     onNavigateToProductDetail: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    var state by remember { mutableStateOf(TextSearchScreenState()) }
-    val eventFlow = remember { MutableSharedFlow<TextSearchScreenEvent>() }
+    val textSearchViewModelFactory = TextSearchViewModelFactory()
+    val viewModel: TextSearchViewModel = viewModel(factory = textSearchViewModelFactory)
 
-    ObserveAsEvents(flow = eventFlow) { event ->
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
+    val products by viewModel.products.collectAsStateWithLifecycle()
+    val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
+
+    val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
+    val throttledHistoryClick =
+        rememberThrottledOnClick<String>(onClick = viewModel::onHistoryClick)
+    val throttledDeleteHistoryClick =
+        rememberThrottledOnClick<String>(onClick = viewModel::onDeleteSearchHistory)
+    val throttledProductClick =
+        rememberThrottledOnClick<Product>(onClick = viewModel::onProductClick)
+
+    ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
-            is TextSearchScreenEvent.Error -> {
-                showToast(context, event.error)
-            }
-
-            is TextSearchScreenEvent.NavigateToSearchResult -> {
-                onNavigateToSearchResult(event.searchResultNavArgs)
-            }
-
-            is TextSearchScreenEvent.NavigateToProductDetail -> {
-                onNavigateToProductDetail(event.product)
-            }
+            is TextSearchScreenEvent.Error -> showToast(context, event.error)
+            is TextSearchScreenEvent.NavigateToSearchResult -> onNavigateToSearchResult(event.searchResultNavArgs)
+            is TextSearchScreenEvent.NavigateToProductDetail -> onNavigateToProductDetail(event.product)
         }
     }
 
     TextSearchScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                TextSearchScreenAction.OnClearClick -> {
-                    state = state.copy(query = "")
-                }
-
-                is TextSearchScreenAction.OnDeleteSearchHistory -> {
-                    state = state.copy(
-                        searchHistory = state.searchHistory.filterNot { it == action.historyQuery }
-                    )
-                }
-
-                is TextSearchScreenAction.OnHistoryClick -> {
-                    state = state.copy(query = action.historyInput)
-                }
-
-                is TextSearchScreenAction.OnSearchClick -> {
-                    if (state.query.isNotBlank()) {
-                        state = state.copy(
-                            query = action.searchInput,
-                            searchHistory = listOf(state.query) + state.searchHistory.filterNot { it == state.query }
-                        )
-                        scope.launch {
-                            eventFlow.emit(
-                                TextSearchScreenEvent.NavigateToSearchResult(
-                                    searchResultNavArgs = SearchResultNavArgs(
-                                        source = SearchResultSource.TEXT,
-                                        passedQuery = action.searchInput,
-                                        passedImagePath = null
-                                    )
-                                )
-                            )
-                        }
-                    } else {
-                        scope.launch {
-                            eventFlow.emit(TextSearchScreenEvent.Error("검색어를 입력해주세요."))
-                        }
-                    }
-                }
-
-                is TextSearchScreenAction.OnQueryChange -> {
-                    state = state.copy(query = action.query)
-                }
-
-                is TextSearchScreenAction.OnProductClick -> {
-                    state = state.copy(selectedProduct = action.product)
-                    scope.launch {
-                        eventFlow.emit(TextSearchScreenEvent.NavigateToProductDetail(action.product))
-                    }
-                }
-
-                is TextSearchScreenAction.OnToggleFilter -> {
-                    val updatedFilters = state.selectedFilters.toMutableMap()
-                    updatedFilters[action.filterType] =
-                        state.selectedFilters[action.filterType] != true
-
-                    val filteredProducts = filterProducts(
-                        allProducts = mockProductList,
-                        filters = updatedFilters
-                    )
-
-                    state = state.copy(
-                        selectedFilters = updatedFilters,
-                        products = filteredProducts
-                    )
-                }
-            }
-        },
-        modifier = modifier
+        modifier = modifier,
+        query = query,
+        searchHistory = searchHistory,
+        products = products,
+        selectedFilters = selectedFilters,
+        onQueryChange = viewModel::onQueryChange,
+        onClearClick = viewModel::onClearClick,
+        onSearchClick = throttledSearchClick,
+        onHistoryClick = throttledHistoryClick,
+        onDeleteSearchHistory = throttledDeleteHistoryClick,
+        onProductClick = throttledProductClick,
+        onFilterToggle = viewModel::onToggleFilter
     )
 }
 
 @Composable
 fun TextSearchScreen(
-    state: TextSearchScreenState,
-    onAction: (TextSearchScreenAction) -> Unit,
     modifier: Modifier = Modifier,
+    query: String,
+    searchHistory: List<String>,
+    products: List<Product>,
+    selectedFilters: Map<FilterType, Boolean>,
+    onQueryChange: (String) -> Unit,
+    onClearClick: () -> Unit,
+    onSearchClick: () -> Unit,
+    onHistoryClick: (String) -> Unit,
+    onDeleteSearchHistory: (String) -> Unit,
+    onProductClick: (Product) -> Unit,
+    onFilterToggle: (FilterType) -> Unit,
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -153,33 +104,30 @@ fun TextSearchScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         SearchTextField(
-            searchQuery = state.query,
-            onQueryChange = { onAction(TextSearchScreenAction.OnQueryChange(it)) },
-            onClearClick = { onAction(TextSearchScreenAction.OnClearClick) },
+            searchQuery = query,
+            onQueryChange = onQueryChange,
+            onClearClick = onClearClick,
             onBackClick = {
                 focusManager.clearFocus(force = true)
                 keyboardController?.hide()
             },
-            onSearchClick = {
-                onAction(TextSearchScreenAction.OnSearchClick(state.query))
-                keyboardController?.hide()
-            },
+            onSearchClick = onSearchClick,
             onFocusChange = { isFocused = it },
             focusRequester = focusRequester
         )
 
         if (isFocused) {
             SearchHistorySection(
-                searchHistory = state.searchHistory,
-                onHistoryClick = { onAction(TextSearchScreenAction.OnHistoryClick(it)) },
-                onRemoveClick = { onAction(TextSearchScreenAction.OnDeleteSearchHistory(it)) }
+                searchHistory = searchHistory,
+                onHistoryClick = onHistoryClick,
+                onRemoveClick = onDeleteSearchHistory
             )
         } else {
             ProductListSection(
-                selectedFilter = state.selectedFilters,
-                products = state.products,
-                onProductClick = { onAction(TextSearchScreenAction.OnProductClick(it)) },
-                onFilterToggle = { onAction(TextSearchScreenAction.OnToggleFilter(it)) }
+                selectedFilter = selectedFilters,
+                products = products,
+                onProductClick = onProductClick,
+                onFilterToggle = onFilterToggle
             )
         }
     }
@@ -191,21 +139,17 @@ fun TextSearchScreen(
 private fun TextSearchScreenPreview() {
     PyeonKingTheme {
         TextSearchScreen(
-            state = TextSearchScreenState(
-                selectedFilters = mapOf(
-                    FilterType.ONE_PLUS_ONE to true,
-                    FilterType.CU to false,
-                    FilterType.GS25 to false
-                ),
-                searchHistory = listOf(
-                    "11111",
-                    "11111",
-                    "11111",
-                    "11111",
-                ),
-                products = mockProductList
-            ),
-            onAction = {},
+            query = "라면",
+            searchHistory = listOf("콜라", "아이스크림", "도시락"),
+            products = mockProductList,
+            selectedFilters = mapOf(FilterType.ONE_PLUS_ONE to true),
+            onQueryChange = {},
+            onClearClick = {},
+            onSearchClick = {},
+            onHistoryClick = {},
+            onDeleteSearchHistory = {},
+            onProductClick = {},
+            onFilterToggle = {}
         )
     }
 }
