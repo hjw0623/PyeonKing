@@ -92,5 +92,7 @@
     <string name="contains_uppercase_char">영어 대문자 포함</string>
     <string name="at_max_x_characters">%d자리 이하</string>
     <string name="contains_special_char">특수 문자 포함</string>
+    <string name="prompt_require_login">로그인이 필요한 서비스예요</string>
+    <string name="prompt_recommend_login">로그인하고 나에게 맞는\n편의점 상품을 추천받아 보세요!</string>
 
 </resources>
