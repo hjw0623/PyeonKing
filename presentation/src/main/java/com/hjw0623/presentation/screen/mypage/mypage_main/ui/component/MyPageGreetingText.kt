@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.mypage.mypage_main.component
+package com.hjw0623.presentation.screen.mypage.mypage_main.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme

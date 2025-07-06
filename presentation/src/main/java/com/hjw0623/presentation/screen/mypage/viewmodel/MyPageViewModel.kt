@@ -2,6 +2,7 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.core.domain.auth.NicknameValidationState
 import com.hjw0623.core.domain.auth.PasswordValidationState
 import com.hjw0623.core.domain.auth.UserDataValidator
@@ -9,6 +10,7 @@ import com.hjw0623.core.mockdata.mockTakenNicknames
 import com.hjw0623.core.mockdata.mockUser
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent
+import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,9 @@ class MyPageViewModel(
     private val userDataValidator: UserDataValidator
 ) : ViewModel() {
     /*
-    닉네임 변경 관련 상태
+    ============================================================
+    닉네임 변경 관련 상태 및 로직
+    ============================================================
      */
     private val _currentNickname = MutableStateFlow(mockUser.nickname)
 
@@ -231,5 +235,42 @@ class MyPageViewModel(
 
     fun onToggleConfirmPasswordVisibility() {
         _isConfirmPasswordVisible.update { !it }
+    }
+
+    /*
+    ============================================================
+    마이페이지 관련 상태 및 로직
+    ============================================================
+     */
+
+    private val _myPageScreenEvent = MutableSharedFlow<MyPageScreenEvent>()
+    val myPageScreenEvent = _myPageScreenEvent.asSharedFlow()
+
+    fun onLoginClick() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToLogin)
+        }
+    }
+
+    fun onLogoutClick() {
+        AuthManager.logout()
+    }
+
+    fun navigateToChangePassword() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToChangePassword)
+        }
+    }
+
+    fun navigateToChangeNickname() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToChangeNickname)
+        }
+    }
+
+    fun navigateToReviewHistory() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToReviewHistory)
+        }
     }
 }

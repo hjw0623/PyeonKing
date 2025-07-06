@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.mypage.mypage_main
+package com.hjw0623.presentation.screen.mypage.mypage_main.ui
 
 sealed interface MyPageScreenEvent {
     data class Error(val error: String) : MyPageScreenEvent
