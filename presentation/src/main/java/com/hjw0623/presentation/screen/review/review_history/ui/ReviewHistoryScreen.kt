@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.review.review_history
+package com.hjw0623.presentation.screen.review.review_history.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +27,10 @@ import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.review.review_history.component.ReviewHistoryListItem
+import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenAction
+import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenEvent
+import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenState
+import com.hjw0623.presentation.screen.review.review_history.ui.component.ReviewHistoryListItem
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

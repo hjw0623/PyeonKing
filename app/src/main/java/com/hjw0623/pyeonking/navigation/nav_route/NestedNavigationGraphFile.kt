@@ -14,10 +14,10 @@ import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.pyeonking.navigation.parcelableType
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenRoot
-import com.hjw0623.presentation.screen.review.review_edit.ReviewEditScreenRoot
+import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenRoot
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenRoot
-import com.hjw0623.presentation.screen.review.review_write.ReviewWriteScreenRoot
+import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenRoot
+import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenRoot
 import com.hjw0623.presentation.screen.search.search_result.SearchResultScreenRoot
 import kotlin.reflect.typeOf
 

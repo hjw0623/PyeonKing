@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.review.review_write
+package com.hjw0623.presentation.screen.review.review_write.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,8 +34,11 @@ import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.review.review_write.component.StarRatingSelector
-import com.hjw0623.presentation.screen.review.review_write.component.WritingSection
+import com.hjw0623.presentation.screen.review.review_write.ReviewWriteScreenAction
+import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenEvent
+import com.hjw0623.presentation.screen.review.review_write.ReviewWriteScreenState
+import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector
+import com.hjw0623.presentation.screen.review.review_write.ui.component.WritingSection
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

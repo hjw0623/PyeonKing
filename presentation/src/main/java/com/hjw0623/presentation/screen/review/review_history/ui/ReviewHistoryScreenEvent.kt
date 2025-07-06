@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.review.review_history
+package com.hjw0623.presentation.screen.review.review_history.ui
 
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 

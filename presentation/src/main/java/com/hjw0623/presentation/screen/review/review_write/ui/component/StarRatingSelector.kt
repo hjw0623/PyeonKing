@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.review.review_write.component
+package com.hjw0623.presentation.screen.review.review_write.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

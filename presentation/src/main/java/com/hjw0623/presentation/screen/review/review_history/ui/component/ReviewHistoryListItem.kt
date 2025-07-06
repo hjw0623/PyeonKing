@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.review.review_history.component
+package com.hjw0623.presentation.screen.review.review_history.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
