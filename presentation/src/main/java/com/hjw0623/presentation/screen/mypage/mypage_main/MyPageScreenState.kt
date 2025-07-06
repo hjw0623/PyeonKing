@@ -4,7 +4,7 @@ import com.hjw0623.core.domain.mypage.User
 import com.hjw0623.core.mockdata.mockUser
 
 data class MyPageScreenState(
-    val isLoggedIn: Boolean = false,
+    val isLoggedIn: Boolean = true,
     val isLoading: Boolean = false,
     val userData: User? = mockUser
 )
