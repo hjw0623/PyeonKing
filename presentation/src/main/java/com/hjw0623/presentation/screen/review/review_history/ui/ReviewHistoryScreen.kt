@@ -1,6 +1,8 @@
 package com.hjw0623.presentation.screen.review.review_history.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,31 +10,30 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.core.mockdata.mockReviewHistoryList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
+import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenAction
-import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenEvent
-import com.hjw0623.presentation.screen.review.review_history.ReviewHistoryScreenState
+import com.hjw0623.presentation.screen.factory.ReviewHistoryViewModelFactory
 import com.hjw0623.presentation.screen.review.review_history.ui.component.ReviewHistoryListItem
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 
 @Composable
 fun ReviewHistoryScreenRoot(
@@ -40,16 +41,17 @@ fun ReviewHistoryScreenRoot(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var state by remember { mutableStateOf(ReviewHistoryScreenState()) }
-    val eventFlow = remember { MutableSharedFlow<ReviewHistoryScreenEvent>() }
+    val reviewHistoryViewModelFactory = ReviewHistoryViewModelFactory()
+    val viewModel: ReviewHistoryViewModel = viewModel(factory = reviewHistoryViewModelFactory)
 
-    ObserveAsEvents(flow = eventFlow) { event ->
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val reviewHistoryList by viewModel.reviewHistoryList.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
             is ReviewHistoryScreenEvent.Error -> {
                 showToast(context, event.error)
             }
-
             is ReviewHistoryScreenEvent.NavigateToReviewEdit -> {
                 onNavigateToReviewEdit(event.reviewInfo)
             }
@@ -57,69 +59,73 @@ fun ReviewHistoryScreenRoot(
     }
 
     ReviewHistoryScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is ReviewHistoryScreenAction.OnEditReviewClick -> {
-                    scope.launch {
-                        eventFlow.emit(ReviewHistoryScreenEvent.NavigateToReviewEdit(action.reviewInfo))
-                    }
-                }
-            }
-        },
-        modifier = modifier
+        modifier = modifier,
+        isLoading = isLoading,
+        reviewHistoryList = reviewHistoryList,
+        onEditReviewClick = viewModel::onEditReviewClick
     )
 }
 
 @Composable
 private fun ReviewHistoryScreen(
-    state: ReviewHistoryScreenState,
-    onAction: (ReviewHistoryScreenAction) -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean,
+    reviewHistoryList: List<ReviewInfo>,
+    onEditReviewClick: (ReviewInfo) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxSize()
-    ) {
-        item {
-            Text(
-                text = stringResource(R.string.label_review_history),
-                style = MaterialTheme.typography.headlineLarge
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-        }
-
-        items(
-            items = state.reviewHistoryList,
-            key = { it.reviewId }
+    if (isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            ReviewHistoryListItem(
-                reviewInfo = it,
-                onEditClick = { onAction(ReviewHistoryScreenAction.OnEditReviewClick(it)) }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (state.reviewHistoryList.last() != it) {
-                Spacer(
-                    modifier = Modifier
-                        .height(1.dp)
-                        .fillMaxWidth()
-                        .background(Color.LightGray)
+            CircularProgressIndicator()
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxSize()
+        ) {
+            item {
+                Text(
+                    text = stringResource(R.string.label_review_history),
+                    style = MaterialTheme.typography.headlineLarge
                 )
+                Spacer(modifier = Modifier.height(40.dp))
+            }
+
+            items(
+                items = reviewHistoryList,
+                key = { it.reviewId }
+            ) { reviewItem ->
+                ReviewHistoryListItem(
+                    reviewInfo = reviewItem,
+                    onEditClick = { onEditReviewClick(reviewItem) }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                if (reviewHistoryList.last() != reviewItem) {
+                    Spacer(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .fillMaxWidth()
+                            .background(Color.LightGray)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
     }
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ReviewHistoryScreenPreview() {
     PyeonKingTheme {
         ReviewHistoryScreen(
-            state = ReviewHistoryScreenState(),
-            onAction = {}
+            isLoading = false,
+            reviewHistoryList = mockReviewHistoryList,
+            onEditReviewClick = {}
         )
     }
 }
