@@ -12,7 +12,7 @@ import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordS
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.pyeonking.navigation.parcelableType
-import com.hjw0623.presentation.screen.mypage.mypage_main.MyPageScreenRoot
+import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.product.ProductDetailScreenRoot
 import com.hjw0623.presentation.screen.review.review_edit.ReviewEditScreenRoot
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
