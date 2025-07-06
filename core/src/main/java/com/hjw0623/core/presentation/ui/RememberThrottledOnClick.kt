@@ -23,3 +23,19 @@ fun rememberThrottledOnClick(
         }
     }
 }
+
+@Composable
+fun <T> rememberThrottledOnClick(
+    intervalTime: Long = DEFAULT_INTERVAL_TIME,
+    onClick: (T) -> Unit
+): (T) -> Unit {
+    var lastClickTime by remember { mutableLongStateOf(0L) }
+
+    return { param ->
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime > intervalTime) {
+            lastClickTime = currentTime
+            onClick(param)
+        }
+    }
+}
