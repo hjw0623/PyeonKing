@@ -17,13 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.presentation.screen.search.camera_search.CameraScreenAction
-
 
 @Composable
 fun TackingPictureScreen(
     cameraController: LifecycleCameraController,
-    onAction: (CameraScreenAction) -> Unit,
+    onCaptureClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -51,9 +49,7 @@ fun TackingPictureScreen(
             contentAlignment = Alignment.Center
         ) {
             CaptureButton(
-                onClick = {
-                    onAction(CameraScreenAction.OnCaptureClick)
-                },
+                onClick = onCaptureClick,
                 modifier = Modifier.size(80.dp)
             )
         }
@@ -66,7 +62,7 @@ private fun ScreenPreview() {
     PyeonKingTheme {
         TackingPictureScreen(
             cameraController = LifecycleCameraController(LocalContext.current),
-            onAction = {}
+            onCaptureClick = {}
         )
     }
 }

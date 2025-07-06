@@ -9,29 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.search.camera_search.takePictureAndSave
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.search_result.SearchResultSource
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.hasCameraPermission
+import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.search.camera_search.CameraScreenAction
-import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
-import com.hjw0623.presentation.screen.search.camera_search.CameraScreenState
+import com.hjw0623.presentation.screen.factory.CameraSearchViewModelFactory
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.CapturedImageScreen
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.NoPermissionScreen
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.TackingPictureScreen
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 
 @Composable
 fun CameraScreenRoot(
@@ -39,18 +35,38 @@ fun CameraScreenRoot(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val eventFlow = remember { MutableSharedFlow<CameraScreenEvent>() }
+    val cameraSearchViewModelFactory = CameraSearchViewModelFactory()
+    val viewModel: CameraSearchViewModel = viewModel(factory = cameraSearchViewModelFactory)
+
+    val hasPermission by viewModel.hasCameraPermission.collectAsStateWithLifecycle()
+    val capturedImagePath by viewModel.capturedImagePath.collectAsStateWithLifecycle()
+
     val cameraController = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(CameraController.IMAGE_CAPTURE)
         }
     }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        viewModel.onPermissionResult(granted)
+        if (!granted) {
+            showToast(context, context.getString(R.string.camera_permission_required))
+        }
+    }
 
-    var state by remember { mutableStateOf(CameraScreenState()) }
+    val throttledRetakeClick = rememberThrottledOnClick(onClick = viewModel::onRetakeClick)
+    val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
 
+    LaunchedEffect(Unit) {
+        val isGranted = hasCameraPermission(context)
+        viewModel.onPermissionResult(isGranted)
+        if (!isGranted) {
+            permissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
 
-    ObserveAsEvents(flow = eventFlow) { event ->
+    ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
             is CameraScreenEvent.NavigateToSearchResult -> {
                 onNavigateToSearchResult(event.searchResultNavArgs)
@@ -62,65 +78,18 @@ fun CameraScreenRoot(
         }
     }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            state = state.copy(hasCameraPermission = true)
-        } else {
-            showToast(context, context.getString(R.string.camera_permission_required))
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        if (hasCameraPermission(context)) {
-            state = state.copy(hasCameraPermission = true)
-        } else {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-    if (state.hasCameraPermission) {
+    if (hasPermission) {
         CameraScreen(
             modifier = modifier,
             cameraController = cameraController,
-            savedImagePath = state.capturedImagePath,
-            onAction = { action ->
-                when (action) {
-                    CameraScreenAction.OnCaptureClick -> {
-                        takePictureAndSave(context, cameraController) { path ->
-                            state = state.copy(capturedImagePath = path)
-                        }
-                    }
-
-                    CameraScreenAction.OnRetakeClick -> {
-                        state = state.copy(capturedImagePath = null)
-                    }
-
-                    is CameraScreenAction.OnSearchClick -> {
-                        scope.launch {
-                            val path = state.capturedImagePath
-                            if (path != null) {
-                                eventFlow.emit(
-                                    CameraScreenEvent.NavigateToSearchResult(
-                                        SearchResultNavArgs(
-                                            source = SearchResultSource.CAMERA,
-                                            passedQuery = "",
-                                            passedImagePath = path
-                                        )
-                                    )
-                                )
-                            } else {
-                                eventFlow.emit(CameraScreenEvent.Error("이미지가 없습니다."))
-                            }
-                        }
-                    }
-
-                    CameraScreenAction.OnRequestCameraPermission -> {
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }
+            capturedImagePath = capturedImagePath,
+            onCaptureClick = {
+                takePictureAndSave(context, cameraController) { path ->
+                    viewModel.onPhotoTaken(path)
                 }
             },
+            onRetakeClick = throttledRetakeClick,
+            onSearchClick = throttledSearchClick
         )
     } else {
         NoPermissionScreen(
@@ -136,29 +105,26 @@ fun CameraScreenRoot(
 @Composable
 fun CameraScreen(
     cameraController: LifecycleCameraController,
-    onAction: (CameraScreenAction) -> Unit,
+    capturedImagePath: String?,
+    onCaptureClick: () -> Unit,
+    onRetakeClick: () -> Unit,
+    onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
-    savedImagePath: String?
 ) {
-    if (savedImagePath != null) {
+    if (capturedImagePath != null) {
         CapturedImageScreen(
             modifier = modifier.fillMaxSize(),
-            imagePath = savedImagePath,
-            onRetake = {
-                onAction(CameraScreenAction.OnRetakeClick)
-            },
-            onSearchClick = {
-                onAction(CameraScreenAction.OnSearchClick)
-            }
+            imagePath = capturedImagePath,
+            onRetake = onRetakeClick,
+            onSearchClick = onSearchClick
         )
     } else {
         TackingPictureScreen(
             modifier = modifier.fillMaxSize(),
             cameraController = cameraController,
-            onAction = onAction
+            onCaptureClick = onCaptureClick
         )
     }
-
 }
 
 @Preview(showBackground = true)
@@ -167,8 +133,10 @@ private fun CameraScreenPreview() {
     PyeonKingTheme {
         CameraScreen(
             cameraController = LifecycleCameraController(LocalContext.current),
-            onAction = {},
-            savedImagePath = null
+            capturedImagePath = null,
+            onCaptureClick = {},
+            onRetakeClick = {},
+            onSearchClick = {}
         )
     }
 }

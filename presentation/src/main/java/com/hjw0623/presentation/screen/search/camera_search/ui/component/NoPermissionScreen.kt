@@ -23,12 +23,11 @@ import androidx.compose.ui.unit.dp
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.search.camera_search.CameraScreenAction
 
 @Composable
 fun NoPermissionScreen(
     modifier: Modifier = Modifier,
-    onRequestPermission: (CameraScreenAction) -> Unit
+    onRequestPermission: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -67,9 +66,7 @@ fun NoPermissionScreen(
 
             PyeonKingButton(
                 text = stringResource(R.string.action_request_permission_again),
-                onClick = {
-                    onRequestPermission(CameraScreenAction.OnRequestCameraPermission)
-                }
+                onClick = onRequestPermission
             )
         }
     }
