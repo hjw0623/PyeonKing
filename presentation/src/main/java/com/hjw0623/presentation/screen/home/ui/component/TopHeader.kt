@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.home.component
+package com.hjw0623.presentation.screen.home.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,15 +35,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun TopHeader(
     query: String,
     onQueryChange: (String) -> Unit,
-    onSearchClick: (String) -> Unit,
+    onSearchClick: () -> Unit,
+    onSearchQueryChangeDebounced: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(key1 = query) {
+        delay(300L)
+        onSearchQueryChangeDebounced(query)
+    }
 
     Column(
         modifier = modifier
@@ -66,66 +74,72 @@ fun TopHeader(
 
         BasicTextField(
             value = query,
-            onValueChange = {
-                onQueryChange(it)
-            },
+            onValueChange = onQueryChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(28.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(12.dp)
-                ,
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             singleLine = true,
             textStyle = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             ),
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(modifier = Modifier.weight(1f)) {
-                        if (query.isEmpty()) {
-                            Text(text = stringResource(R.string.search_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        innerTextField()
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    if (query.isNotEmpty()) {
-                        Icon(
-                            modifier = Modifier.clickable {
-                                onQueryChange("")
-                            },
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = null
-                        )
-                    }
-                }
-            },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
                     if (query.isNotBlank()) {
-                        onSearchClick(query)
+                        onSearchClick()
                         keyboardController?.hide()
                     }
                 }
-            )
+            ),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.search_hint),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (query.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.search_hint),
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
+                            )
+                        }
+                        innerTextField()
+                    }
+                    if (query.isNotEmpty()) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            modifier = Modifier.clickable { onQueryChange("") },
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+            }
         )
-
     }
 }
+
+
 @Preview
 @Composable
 private fun TopHeaderPreview() {
     PyeonKingTheme {
-        TopHeader(
-            query = "",
-            onQueryChange = {},
-            onSearchClick = {}
-        )
+        Column {
+            TopHeader(
+                query = "",
+                onQueryChange = {},
+                onSearchClick = {},
+                onSearchQueryChangeDebounced = {}
+            )
+        }
     }
 }
