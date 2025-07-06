@@ -26,7 +26,7 @@ import com.hjw0623.pyeonking.navigation.topBarAsRouteName
 import com.hjw0623.core.presentation.designsystem.components.BackBar
 import com.hjw0623.core.presentation.ui.shouldShowBottomBar
 import com.hjw0623.presentation.screen.search.camera_search.CameraScreenRoot
-import com.hjw0623.presentation.screen.home.HomeScreenRoot
+import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.search.text_search.TextSearchScreenRoot
 import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem

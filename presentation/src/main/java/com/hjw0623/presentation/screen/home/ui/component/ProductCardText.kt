@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.home.component
+package com.hjw0623.presentation.screen.home.ui.component
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

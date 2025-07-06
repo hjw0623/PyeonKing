@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.home.component
+package com.hjw0623.presentation.screen.home.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
