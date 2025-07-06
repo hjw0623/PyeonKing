@@ -1,25 +1,8 @@
 package com.hjw0623.presentation.screen.review.review_edit.ui
 
-
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,19 +11,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
+import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.review.review_edit.ReviewEditScreenAction
-import com.hjw0623.presentation.screen.review.review_edit.ReviewEditScreenState
+import com.hjw0623.presentation.screen.factory.ReviewViewModelFactory
 import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector
-
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewViewModel
 
 @Composable
 fun ReviewEditScreenRoot(
@@ -49,16 +32,28 @@ fun ReviewEditScreenRoot(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var state by remember { mutableStateOf(ReviewEditScreenState(reviewInfo = reviewInfo)) }
-    val eventFlow = remember { MutableSharedFlow<ReviewEditScreenEvent>() }
+    val reviewViewModelFactory = ReviewViewModelFactory()
+    val viewModel: ReviewViewModel = viewModel(factory = reviewViewModelFactory)
 
-    ObserveAsEvents(flow = eventFlow) { event ->
+    val productName by viewModel.productName.collectAsStateWithLifecycle()
+    val productImgUrl by viewModel.productImgUrl.collectAsStateWithLifecycle()
+    val newContent by viewModel.newContent.collectAsStateWithLifecycle()
+    val newStarRating by viewModel.newStarRating.collectAsStateWithLifecycle()
+    val isEditButtonEnabled by viewModel.isEditButtonEnabled.collectAsStateWithLifecycle()
+
+    val throttledEditClick = rememberThrottledOnClick {
+        viewModel.onEditClick()
+    }
+
+    LaunchedEffect(key1 = reviewInfo) {
+        viewModel.init(reviewInfo)
+    }
+
+    ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
             is ReviewEditScreenEvent.Error -> {
                 showToast(context, event.error)
             }
-
             ReviewEditScreenEvent.NavigateReviewHistory -> {
                 onNavigateReviewHistory()
             }
@@ -66,33 +61,29 @@ fun ReviewEditScreenRoot(
     }
 
     ReviewEditScreen(
-        state = state,
-        onAction = { action ->
-            when (action) {
-                is ReviewEditScreenAction.OnContentChanged -> {
-                    state = state.copy(newContent = action.content)
-                }
-
-                is ReviewEditScreenAction.OnStarRatingChanged -> {
-                    state = state.copy(newStarRating = action.starRating)
-                }
-
-                is ReviewEditScreenAction.OnEditClick -> {
-                    scope.launch {
-                        eventFlow.emit(ReviewEditScreenEvent.NavigateReviewHistory)
-                    }
-                }
-            }
-        },
-        modifier = modifier
+        modifier = modifier,
+        productName = productName,
+        productImgUrl = productImgUrl,
+        newContent = newContent,
+        newStarRating = newStarRating,
+        isEditButtonEnabled = isEditButtonEnabled,
+        onContentChanged = viewModel::onContentChanged,
+        onStarRatingChanged = viewModel::onStarRatingChanged,
+        onEditClick = throttledEditClick
     )
 }
 
 @Composable
 fun ReviewEditScreen(
-    state: ReviewEditScreenState,
-    onAction: (ReviewEditScreenAction) -> Unit,
     modifier: Modifier = Modifier,
+    productName: String,
+    productImgUrl: String,
+    newContent: String,
+    newStarRating: Int,
+    isEditButtonEnabled: Boolean,
+    onContentChanged: (String) -> Unit,
+    onStarRatingChanged: (Int) -> Unit,
+    onEditClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -107,49 +98,42 @@ fun ReviewEditScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
-                model = state.reviewInfo.productImgUrl,
+                model = productImgUrl,
                 contentDescription = null,
                 modifier = Modifier.size(100.dp),
                 contentScale = ContentScale.Fit
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
-            Column(
-                modifier = Modifier.padding(8.dp)
-            ) {
+            Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = state.reviewInfo.productName,
+                    text = productName,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 StarRatingSelector(
-                    rating = if (state.newStarRating == 0) state.reviewInfo.starRating else state.newStarRating,
-                    onRatingChange = { onAction(ReviewEditScreenAction.OnStarRatingChanged(it)) }
+                    rating = newStarRating,
+                    onRatingChange = onStarRatingChanged
                 )
             }
         }
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
             Text(
                 text = stringResource(R.string.prompt_edit_review),
                 style = MaterialTheme.typography.bodyMedium
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             OutlinedTextField(
-                value = state.newContent,
-                onValueChange = { onAction(ReviewEditScreenAction.OnContentChanged(it)) },
+                value = newContent,
+                onValueChange = onContentChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp),
                 placeholder = {
                     Text(
-                        text = state.reviewInfo.content,
+                        text = stringResource(R.string.hint_review_input),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
@@ -161,8 +145,8 @@ fun ReviewEditScreen(
 
         PyeonKingButton(
             text = stringResource(R.string.action_edit_review_complete),
-            onClick = { onAction(ReviewEditScreenAction.OnEditClick) },
-            enabled = state.isEditButtonEnabled,
+            onClick = onEditClick,
+            enabled = isEditButtonEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(32.dp)
@@ -170,14 +154,19 @@ fun ReviewEditScreen(
     }
 }
 
-
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ReviewEditScreenPreview() {
     PyeonKingTheme {
         ReviewEditScreen(
-            state = ReviewEditScreenState(),
-            onAction = {}
+            productName = "스팸 김치볶음밥",
+            productImgUrl = "",
+            newContent = "이거 정말 맛있네요! 최고!",
+            newStarRating = 5,
+            isEditButtonEnabled = true,
+            onContentChanged = {},
+            onStarRatingChanged = {},
+            onEditClick = {}
         )
     }
 }
