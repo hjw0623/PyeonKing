@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.camera_search.component
+package com.hjw0623.presentation.screen.search.camera_search.ui.component
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView

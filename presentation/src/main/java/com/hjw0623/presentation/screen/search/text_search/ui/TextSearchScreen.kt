@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.text_search
+package com.hjw0623.presentation.screen.search.text_search.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -25,9 +25,12 @@ import com.hjw0623.core.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.presentation.screen.search.text_search.component.SearchTextField
-import com.hjw0623.presentation.screen.search.text_search.component.focused.SearchHistorySection
-import com.hjw0623.presentation.screen.search.text_search.component.unFocused.ProductListSection
+import com.hjw0623.presentation.screen.search.text_search.TextSearchScreenAction
+import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
+import com.hjw0623.presentation.screen.search.text_search.TextSearchScreenState
+import com.hjw0623.presentation.screen.search.text_search.ui.component.SearchTextField
+import com.hjw0623.presentation.screen.search.text_search.ui.component.focused.SearchHistorySection
+import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductListSection
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.search_result
+package com.hjw0623.presentation.screen.search.search_result.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,9 @@ import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.home.ui.component.ProductCardLarge
+import com.hjw0623.presentation.screen.search.search_result.SearchResultScreenAction
+import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
+import com.hjw0623.presentation.screen.search.search_result.SearchResultScreenState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

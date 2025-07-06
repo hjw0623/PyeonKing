@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.text_search.component.focused
+package com.hjw0623.presentation.screen.search.text_search.ui.component.focused
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

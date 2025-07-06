@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.search_result
+package com.hjw0623.presentation.screen.search.search_result.ui
 
 import com.hjw0623.core.domain.product.Product
 

@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.text_search.component
+package com.hjw0623.presentation.screen.search.text_search.ui.component
 
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource

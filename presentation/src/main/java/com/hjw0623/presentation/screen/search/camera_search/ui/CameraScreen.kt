@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.camera_search
+package com.hjw0623.presentation.screen.search.camera_search.ui
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,9 +24,12 @@ import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.hasCameraPermission
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.search.camera_search.component.CapturedImageScreen
-import com.hjw0623.presentation.screen.search.camera_search.component.NoPermissionScreen
-import com.hjw0623.presentation.screen.search.camera_search.component.TackingPictureScreen
+import com.hjw0623.presentation.screen.search.camera_search.CameraScreenAction
+import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
+import com.hjw0623.presentation.screen.search.camera_search.CameraScreenState
+import com.hjw0623.presentation.screen.search.camera_search.ui.component.CapturedImageScreen
+import com.hjw0623.presentation.screen.search.camera_search.ui.component.NoPermissionScreen
+import com.hjw0623.presentation.screen.search.camera_search.ui.component.TackingPictureScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

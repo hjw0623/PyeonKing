@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.screen.search.text_search.component.unFocused
+package com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
