@@ -8,7 +8,7 @@ import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterSuccessScreen
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenRoot
-import com.hjw0623.presentation.screen.mypage.change_password.ChangePasswordScreenRoot
+import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenRoot
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.pyeonking.navigation.parcelableType
