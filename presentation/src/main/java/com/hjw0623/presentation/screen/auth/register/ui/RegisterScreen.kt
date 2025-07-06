@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
@@ -168,7 +169,7 @@ fun RegisterScreen(
                 } else {
                     null
                 },
-                keyboardType = KeyboardType.Text,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.weight(1f)
             )
 
@@ -206,7 +207,7 @@ fun RegisterScreen(
             error = if (email.isNotBlank() && !isEmailValid) stringResource(
                 R.string.email_input_error
             ) else null,
-            keyboardType = KeyboardType.Email,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth()
         )
 

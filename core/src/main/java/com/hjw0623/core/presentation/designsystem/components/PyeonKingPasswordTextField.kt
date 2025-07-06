@@ -1,5 +1,6 @@
 package com.hjw0623.core.presentation.designsystem.components
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
@@ -47,7 +48,7 @@ fun PyeonKingPasswordTextField(
         hint = hint,
         title = title,
         error = error,
-        keyboardType = KeyboardType.Password,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = visualTransformation
     )
 }

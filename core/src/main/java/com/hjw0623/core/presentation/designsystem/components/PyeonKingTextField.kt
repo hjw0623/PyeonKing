@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -34,7 +35,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,17 +52,18 @@ const val DEBOUNCE_INTERVAL = 1000L
 fun PyeonKingTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     onDebouncedValueChange: ((String) -> Unit)? = null,
     debounceInterval: Long = DEBOUNCE_INTERVAL,
-    modifier: Modifier = Modifier,
     startIcon: ImageVector? = null,
     endIcon: ImageVector? = null,
     onEndIconClick: (() -> Unit)? = null,
     hint: String = "",
     title: String? = null,
     error: String? = null,
-    keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     additionalInfo: String? = null
 ) {
     var isFocused by remember {
@@ -76,8 +77,9 @@ fun PyeonKingTextField(
             debounceFlow.value = value
         }
     }
+
     if (onDebouncedValueChange != null) {
-        LaunchedEffect(Unit) {
+        LaunchedEffect(true) {
             debounceFlow
                 .debounce(debounceInterval)
                 .distinctUntilChanged()
@@ -118,8 +120,6 @@ fun PyeonKingTextField(
         }
         Spacer(modifier = Modifier.height(4.dp))
 
-        // 이제 BasicTextField가 포커스 상태를 직접 관리합니다.
-        // 기존 Box의 수정자(modifier)는 BasicTextField로 옮겨집니다.
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
@@ -150,9 +150,8 @@ fun PyeonKingTextField(
             textStyle = LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onBackground
             ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
-            ),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             singleLine = true,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
             visualTransformation = visualTransformation,
@@ -175,8 +174,6 @@ fun PyeonKingTextField(
                         modifier = Modifier
                             .weight(1f)
                     ) {
-                        // 실제 텍스트 입력을 렌더링하는 innerTextField를 호출합니다.
-                        // innerTextField와 힌트를 같은 Box 안에 배치하여 겹쳐 보이게 합니다.
                         if (value.isEmpty()) {
                             Text(
                                 text = hint,
@@ -207,6 +204,7 @@ fun PyeonKingTextField(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PyeonKingTextFieldPreview() {
