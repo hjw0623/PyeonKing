@@ -59,7 +59,7 @@ fun CameraScreenRoot(
     val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
 
     LaunchedEffect(Unit) {
-        val isGranted = hasCameraPermission(context)
+        val isGranted = context.hasCameraPermission()
         viewModel.onPermissionResult(isGranted)
         if (!isGranted) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
