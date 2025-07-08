@@ -27,6 +27,7 @@ import com.hjw0623.presentation.R
 @Composable
 fun NoPermissionScreen(
     modifier: Modifier = Modifier,
+    permissionString: String,
     onRequestPermission: () -> Unit
 ) {
     Box(
@@ -56,7 +57,7 @@ fun NoPermissionScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.permission_camera_required),
+                text = permissionString,
                 color = Color.LightGray,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
@@ -77,6 +78,7 @@ fun NoPermissionScreen(
 private fun NoPermissionScreenPreview() {
     PyeonKingTheme {
         NoPermissionScreen(
+            permissionString = "권한이 필요합니다.",
             onRequestPermission = {}
         )
     }

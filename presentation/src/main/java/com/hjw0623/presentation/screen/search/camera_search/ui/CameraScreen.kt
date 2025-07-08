@@ -94,6 +94,7 @@ fun CameraScreenRoot(
     } else {
         NoPermissionScreen(
             modifier = modifier,
+            permissionString = context.getString(R.string.camera_permission_required),
             onRequestPermission = {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
