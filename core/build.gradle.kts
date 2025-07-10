@@ -54,6 +54,9 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    //GoogleMap
+    implementation(libs.bundles.googlemap)
+
     // Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))

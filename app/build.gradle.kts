@@ -55,17 +55,13 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material.icons.extended)
 
-    // Lifecycle & ViewModel
-    implementation(libs.bundles.lifecycle)
-
-    // Navigation
-    implementation(libs.bundles.navigation)
-
     // Coroutines
-    implementation(libs.bundles.coroutines)
+    implementation(libs.kotlinx.coroutines.android)
 
-    // Networking (Retrofit & Coil)
+    // Networking
     implementation(libs.bundles.retrofit)
+
+    // Coil
     implementation(libs.coil.compose)
 
     // CameraX
@@ -77,11 +73,14 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    //GoogleMap
+    implementation(libs.bundles.googlemap)
+
     // Testing
-    testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.testing)
 
     // Debug
+    testImplementation(libs.bundles.testing)
     debugImplementation(libs.bundles.debug.tooling)
 }

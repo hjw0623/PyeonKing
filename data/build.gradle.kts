@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     // Coroutines
-    implementation(libs.bundles.coroutines)
+    implementation(libs.kotlinx.coroutines.android)
 
     // Networking 
     implementation(libs.bundles.retrofit)

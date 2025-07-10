@@ -30,6 +30,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    buildFeatures {
+        compose = true
+    }
     /*kotlinOptions {
         jvmTarget = "17"
     }*/
@@ -48,11 +51,8 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material.icons.extended)
 
-    // Lifecycle & ViewModel
-    implementation(libs.bundles.lifecycle)
-
     // Coroutines
-    implementation(libs.bundles.coroutines)
+    implementation(libs.kotlinx.coroutines.android)
 
     // CameraX
     implementation(libs.bundles.camerax)
@@ -73,4 +73,6 @@ dependencies {
 
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
+    //GoogleMap
+    implementation(libs.bundles.googlemap)
 }
