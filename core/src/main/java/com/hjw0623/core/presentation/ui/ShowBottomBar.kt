@@ -1,6 +1,6 @@
 package com.hjw0623.core.presentation.ui
 
-import com.hjw0623.core.util.constants.ScreenRoutes
+import com.hjw0623.core.constants.ScreenRoutes
 
 fun shouldShowBottomBar(route: String?): Boolean {
     return route in listOf(
