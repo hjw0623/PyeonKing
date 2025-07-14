@@ -67,6 +67,9 @@ dependencies {
     // CameraX
     implementation(libs.bundles.camerax)
 
+    //Rest
+    implementation(libs.bundles.retrofit)
+
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
