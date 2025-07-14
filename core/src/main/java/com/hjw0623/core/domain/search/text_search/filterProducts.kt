@@ -1,7 +1,7 @@
 package com.hjw0623.core.domain.search.text_search
 
-import com.hjw0623.core.constants.Brand
-import com.hjw0623.core.constants.Promotion
+import com.hjw0623.core.util.constants.Brand
+import com.hjw0623.core.util.constants.Promotion
 import com.hjw0623.core.domain.product.Product
 
 

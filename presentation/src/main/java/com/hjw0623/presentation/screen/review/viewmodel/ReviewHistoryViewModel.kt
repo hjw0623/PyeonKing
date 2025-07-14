@@ -3,7 +3,7 @@ package com.hjw0623.presentation.screen.review.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.core.mockdata.mockReviewHistoryList
+import com.hjw0623.core.util.mockdata.mockReviewHistoryList
 import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.hjw0623.core.constants.MainScreenTitle
+import com.hjw0623.core.util.constants.MainScreenTitle
 import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
 
 data class BottomNavItem(

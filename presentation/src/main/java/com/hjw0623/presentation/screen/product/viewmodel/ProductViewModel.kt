@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductDetailTab
 import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.mockdata.mockReviewList
+import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

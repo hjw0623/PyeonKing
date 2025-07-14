@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.search.search_result.SearchResultSource
-import com.hjw0623.core.mockdata.mockProductList
+import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.presentation.screen.home.ui.HomeScreenEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

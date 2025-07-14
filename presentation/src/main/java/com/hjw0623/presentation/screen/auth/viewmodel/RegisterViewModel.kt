@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.domain.auth.NicknameValidationState
 import com.hjw0623.core.domain.auth.PasswordValidationState
 import com.hjw0623.core.domain.auth.UserDataValidator
-import com.hjw0623.core.mockdata.mockTakenNicknames
+import com.hjw0623.core.util.mockdata.mockTakenNicknames
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow

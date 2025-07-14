@@ -1,7 +1,7 @@
 package com.hjw0623.core.domain
 
 import com.hjw0623.core.domain.mypage.User
-import com.hjw0623.core.mockdata.mockUser
+import com.hjw0623.core.util.mockdata.mockUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

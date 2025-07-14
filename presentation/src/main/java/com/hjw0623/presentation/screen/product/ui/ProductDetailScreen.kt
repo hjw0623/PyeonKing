@@ -28,8 +28,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductDetailTab
 import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.mockdata.mockProduct
-import com.hjw0623.core.mockdata.mockReviewList
+import com.hjw0623.core.util.mockdata.mockProduct
+import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.TopRoundedBackground
 import com.hjw0623.core.presentation.designsystem.components.showToast

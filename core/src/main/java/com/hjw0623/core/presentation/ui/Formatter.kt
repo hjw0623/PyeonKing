@@ -1,7 +1,7 @@
 package com.hjw0623.core.presentation.ui
 
 import androidx.compose.ui.graphics.Color
-import com.hjw0623.core.constants.Brand
+import com.hjw0623.core.util.constants.Brand
 import com.hjw0623.core.presentation.designsystem.theme.Cu
 import com.hjw0623.core.presentation.designsystem.theme.Emart24
 import com.hjw0623.core.presentation.designsystem.theme.Gs25

@@ -1,4 +1,4 @@
-package com.hjw0623.core.mockdata
+package com.hjw0623.core.util.mockdata
 
 import com.hjw0623.core.domain.mypage.User
 import com.hjw0623.core.domain.product.Product
@@ -111,9 +111,9 @@ val mockReviewHistoryList = listOf(
 val mockTakenNicknames = setOf("닉네임1", "닉네임2", "닉네임3", "닉네임4", "닉네임5")
 
 val mockUser = User(
-    email = "test1234@test.com",
-    nickname = "testNickName",
-    password = "test1234!!",
-    accessToken = "accessToken",
-    refreshToken = "refreshToken"
+    email = "newuser@test.com",
+    nickname = "신규회원",
+    password = "Aa123456",
+    accessToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzU4NDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.RywnIQ_m2KbuXUZbxYJ36q1FS__GUKw3Dxo4giiSCMA",
+    refreshToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzcwNDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.AWi_qMm9DGACW9CXQQ1e3hDmZjn3vs8UoSCAc-9qccs"
 )

@@ -1,6 +1,5 @@
 package com.hjw0623.presentation.screen.review.review_history.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -25,11 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.core.mockdata.mockReviewHistoryList
+import com.hjw0623.core.util.mockdata.mockReviewHistoryList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.factory.ReviewHistoryViewModelFactory
 import com.hjw0623.presentation.screen.review.review_history.ui.component.ReviewHistoryListItem

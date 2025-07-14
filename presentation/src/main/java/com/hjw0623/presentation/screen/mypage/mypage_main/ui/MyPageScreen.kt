@@ -14,7 +14,7 @@ import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.core.domain.auth.EmailPatternValidator
 import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.domain.mypage.User
-import com.hjw0623.core.mockdata.mockUser
+import com.hjw0623.core.util.mockdata.mockUser
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick

@@ -1,4 +1,4 @@
-package com.hjw0623.core.mockdata
+package com.hjw0623.core.util.mockdata
 
 import android.annotation.SuppressLint
 
