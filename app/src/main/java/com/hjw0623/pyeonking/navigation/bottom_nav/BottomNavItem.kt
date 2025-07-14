@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.hjw0623.core.util.constants.MainScreenTitle
 import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
 
 data class BottomNavItem(
@@ -15,10 +16,26 @@ data class BottomNavItem(
 ) {
     companion object {
         fun fetchBottomNavItems(): List<BottomNavItem> = listOf(
-            BottomNavItem("홈", Icons.Default.Home, MainNavigationRoute.Home),
-            BottomNavItem("카메라 검색", Icons.Default.CameraAlt, MainNavigationRoute.Camera),
-            BottomNavItem("검색", Icons.Default.Search, MainNavigationRoute.TextSearch),
-            BottomNavItem("마이페이지", Icons.Default.Person, MainNavigationRoute.MyPage)
+            BottomNavItem(
+                MainScreenTitle.HOME,
+                Icons.Default.Home,
+                MainNavigationRoute.Home
+            ),
+            BottomNavItem(
+                MainScreenTitle.CAMERA_SEARCH,
+                Icons.Default.CameraAlt,
+                MainNavigationRoute.Camera
+            ),
+            BottomNavItem(
+                MainScreenTitle.TEXT_SEARCH,
+                Icons.Default.Search,
+                MainNavigationRoute.TextSearch
+            ),
+            BottomNavItem(
+                MainScreenTitle.MYPAGE,
+                Icons.Default.Person,
+                MainNavigationRoute.MyPage
+            )
         )
     }
 }
