@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterSuccessScreen
@@ -17,6 +18,7 @@ import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenRoot
 import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenRoot
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
+import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenRoot
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenRoot
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
@@ -144,7 +146,9 @@ fun NavGraphBuilder.textSearchNavGraph(
 }
 
 fun NavGraphBuilder.myPageNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    registerViewModel: RegisterViewModel
 ) {
     composable<MyPageTabNestedRoute.MyPage> {
         MyPageScreenRoot(
@@ -172,7 +176,8 @@ fun NavGraphBuilder.myPageNavGraph(
                 navController.navigate(MyPageTabNestedRoute.MyPage) {
                     popUpTo(MyPageTabNestedRoute.MyPage.javaClass.simpleName) { inclusive = true }
                 }
-            }
+            },
+            loginViewModel = loginViewModel
         )
     }
 
@@ -180,7 +185,8 @@ fun NavGraphBuilder.myPageNavGraph(
         RegisterScreenRoot(
             onNavigateToRegisterSuccess = {
                 navController.navigate(MyPageTabNestedRoute.RegisterSuccess)
-            }
+            },
+            registerViewModel = registerViewModel
         )
     }
 
