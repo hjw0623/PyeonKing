@@ -20,9 +20,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hjw0623.core.domain.auth.EmailPatternValidator
-import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingPasswordTextField
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
@@ -33,19 +30,17 @@ import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.login.ui.component.LoginGreetingSection
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
-import com.hjw0623.presentation.screen.factory.LoginViewModelFactory
 
 @Composable
 fun LoginScreenRoot(
     onNavigateToRegister: () -> Unit,
     onNavigateToMyPage: () -> Unit,
-    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel,
+    modifier: Modifier = Modifier
 ) {
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val loginViewModelFactory = LoginViewModelFactory(userDataValidator)
-    val viewModel: LoginViewModel = viewModel(factory = loginViewModelFactory)
 
     val context = LocalContext.current
+    val viewModel = loginViewModel
 
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
