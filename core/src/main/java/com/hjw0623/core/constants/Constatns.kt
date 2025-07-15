@@ -35,7 +35,12 @@ object Brand {
     const val EMART24 = "EMART24"
     const val SEVEN = "SEVENELEVEN"
 }
+
 object Promotion {
     const val ONE_PLUS_ONE = "1+1"
     const val TWO_PLUS_ONE = "2+1"
+}
+
+object Api {
+    const val BASE_URL = "http://10.0.2.2:8081/"
 }
