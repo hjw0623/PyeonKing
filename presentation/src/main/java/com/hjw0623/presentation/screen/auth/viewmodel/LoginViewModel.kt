@@ -2,21 +2,26 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.data.model.AuthRequest
+import com.hjw0623.core.data.model.AuthResponse
+import com.hjw0623.core.data.model.BaseResponse
+import com.hjw0623.core.domain.auth.AuthRepository
 import com.hjw0623.core.domain.auth.UserDataValidator
+import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    //private val authRepository: AuthRepository,
+    private val authRepository: AuthRepository,
     private val userDataValidator: UserDataValidator
 ) : ViewModel() {
 
@@ -36,7 +41,9 @@ class LoginViewModel(
     val isLoginButtonEnabled = combine(isEmailValid, password) { isEmailValid, password ->
         isEmailValid && password.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-
+    private val _loginResult =
+        MutableStateFlow<DataResourceResult<BaseResponse<AuthResponse>>>(DataResourceResult.DummyConstructor)
+    val loginResult = _loginResult.asStateFlow()
     private val _event = MutableSharedFlow<LoginScreenEvent>()
     val event = _event.asSharedFlow()
 
@@ -63,15 +70,29 @@ class LoginViewModel(
     fun onLoginClick() {
         viewModelScope.launch {
             _isLoggingIn.value = true
-            try {
-                delay(1500)
-                // TODO: 실제 로그인 로직 호출
-                _event.emit(LoginScreenEvent.NavigateToMyPage)
+            _loginResult.value = DataResourceResult.Loading
 
-            } catch (e: Exception) {
-                _event.emit(LoginScreenEvent.Error("이메일 또는 비밀번호가 일치하지 않습니다."))
-            } finally {
+            val authRequest = AuthRequest(
+                email = email.value,
+                password = password.value
+            )
+
+            authRepository.login(authRequest).collectLatest { result ->
+                _loginResult.value = result
                 _isLoggingIn.value = false
+
+                when (result) {
+                    is DataResourceResult.Success -> {
+                        _event.emit(LoginScreenEvent.NavigateToMyPage)
+                    }
+
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message ?: "알 수 없는 오류가 발생했습니다."
+                        _event.emit(LoginScreenEvent.Error(message))
+                    }
+
+                    else -> Unit
+                }
             }
         }
     }
