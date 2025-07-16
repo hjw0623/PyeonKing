@@ -46,7 +46,7 @@ interface PyeonKingApiService {
 
     //비밀번호 변경
     @PATCH("/member/password")
-    suspend fun changePassWord(
+    suspend fun changePassword(
         @Body updateRequest: ChangePasswordRequestDto
     ): Response<BaseResponseDto<Boolean>>
 
