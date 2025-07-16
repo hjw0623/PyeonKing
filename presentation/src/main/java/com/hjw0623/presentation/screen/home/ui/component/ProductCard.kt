@@ -53,7 +53,7 @@ fun ProductCardLarge(
                 model = product.imgUrl,
                 contentDescription = null,
                 modifier = Modifier.size(160.dp),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
             )
         }
         Column(
