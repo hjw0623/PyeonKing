@@ -4,8 +4,8 @@ import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.BaseResponseDto
 import com.hjw0623.data.model.ChangePasswordRequestDto
+import com.hjw0623.data.model.ItemDto
 import com.hjw0623.data.model.ItemResponseDto
-import com.hjw0623.data.model.RecommendListResponseDto
 import com.hjw0623.data.model.ReviewPostBodyDto
 import com.hjw0623.data.model.ReviewResponseDto
 import com.hjw0623.data.model.UpdateReviewBodyDto
@@ -109,7 +109,5 @@ interface PyeonKingApiService {
     //추천상품 조회
     @Headers("Authorization: required")
     @GET("/member/promotions/recommend")
-    suspend fun getRecommendList(
-        @Header("Authorization") accessToken: String
-    ): Response<BaseResponseDto<RecommendListResponseDto>>
+    suspend fun getRecommendList(): Response<BaseResponseDto<ItemResponseDto>>
 }
