@@ -21,3 +21,13 @@ data class ProductDto(
     @field:Json(name = "imageUrl") val imageUrl: String,
     @field:Json(name = "brand") val brand: String
 )
+
+@JsonClass(generateAdapter = true)
+data class ReviewPageDto(
+    @field:Json(name = "content") val content: List<ReviewResponseDto>,
+    @field:Json(name = "totalElements") val totalElements: Int,
+    @field:Json(name = "totalPages") val totalPages: Int,
+    @field:Json(name = "last") val last: Boolean,
+    @field:Json(name = "number") val number: Int,
+    @field:Json(name = "size") val size: Int
+)
