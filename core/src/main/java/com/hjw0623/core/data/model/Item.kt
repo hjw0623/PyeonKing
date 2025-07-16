@@ -7,5 +7,6 @@ data class Item(
     val brand: String,
     val promotion: String,
     val pricePerUnit: Int,
-    val pricePerGroup: Int
+    val pricePerGroup: Int,
+    val discountedUnitPrice: Int
 )
