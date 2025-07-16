@@ -49,3 +49,10 @@ object Api {
     const val BASE_URL = "http://10.0.2.2:8081/"
     const val IMAGE_URL = "http://10.0.2.2:8082/image/"
 }
+
+object Error {
+    const val UNKNOWN_ERROR = "알 수 없는 오류가 발생했습니다. \n 잠시 후 다시 시도해 주세요."
+
+    const val DUPLICATED_NICKNAME = "이미 사용 중인 닉네임입니다."
+
+}
