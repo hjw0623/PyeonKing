@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +27,7 @@ import com.hjw0623.presentation.R
 
 @Composable
 fun RecommendSection(
+    isLoading: Boolean,
     recommendList: List<Product>,
     onCardClick: (Product) -> Unit,
     modifier: Modifier = Modifier
@@ -47,18 +50,26 @@ fun RecommendSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(
-                items = recommendList,
-                key = { it.id }
-            ) { product ->
-                ProductCardLarge(
-                    product = product,
-                    onCardClick = { onCardClick(product) }
-                )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    items = recommendList,
+                    key = { it.id }
+                ) { product ->
+                    ProductCardLarge(
+                        product = product,
+                        onCardClick = { onCardClick(product) }
+                    )
+                }
             }
         }
     }
@@ -69,6 +80,7 @@ fun RecommendSection(
 private fun RecommendSectionPreview() {
     PyeonKingTheme {
         RecommendSection(
+            isLoading = true,
             recommendList = mockProductList,
             onCardClick = {},
         )
