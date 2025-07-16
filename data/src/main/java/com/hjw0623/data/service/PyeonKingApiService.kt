@@ -5,7 +5,7 @@ import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.BaseResponseDto
 import com.hjw0623.data.model.ChangePasswordRequestDto
 import com.hjw0623.data.model.ItemDto
-import com.hjw0623.data.model.ItemResponseDto
+import com.hjw0623.data.model.SearchItemResponseDto
 import com.hjw0623.data.model.ReviewPostBodyDto
 import com.hjw0623.data.model.ReviewResponseDto
 import com.hjw0623.data.model.UpdateReviewBodyDto
@@ -60,21 +60,21 @@ interface PyeonKingApiService {
     suspend fun getAllItems(
         @Query("name") name: String = "",
         @Query("strength") strength: String = "STRONG"
-    ): Response<BaseResponseDto<ItemResponseDto>>
+    ): Response<BaseResponseDto<SearchItemResponseDto>>
 
     //상품 검색
     @GET("konbini/items")
     suspend fun searchItems(
         @Query("name") name: String,
         @Query("strength") strength: String = "STRONG"
-    ): Response<BaseResponseDto<ItemResponseDto>>
+    ): Response<BaseResponseDto<SearchItemResponseDto>>
 
     //이미지 상품 검색
     @Multipart
     @POST("konbini/items/image")
     suspend fun searchItemsByImg(
         @Part image: MultipartBody.Part
-    ): Response<BaseResponseDto<ItemResponseDto>>
+    ): Response<BaseResponseDto<SearchItemResponseDto>>
 
     //상품별 리뷰 조회
     @Headers("Authorization: required")
@@ -109,5 +109,5 @@ interface PyeonKingApiService {
     //추천상품 조회
     @Headers("Authorization: required")
     @GET("/member/promotions/recommend")
-    suspend fun getRecommendList(): Response<BaseResponseDto<ItemResponseDto>>
+    suspend fun getRecommendList(): Response<BaseResponseDto<List<ItemDto>>>
 }
