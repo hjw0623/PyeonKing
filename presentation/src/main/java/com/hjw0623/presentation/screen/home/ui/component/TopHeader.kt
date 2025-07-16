@@ -88,10 +88,8 @@ fun TopHeader(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    if (query.isNotBlank()) {
-                        onSearchClick()
-                        keyboardController?.hide()
-                    }
+                    onSearchClick()
+                    keyboardController?.hide()
                 }
             ),
             decorationBox = { innerTextField ->
