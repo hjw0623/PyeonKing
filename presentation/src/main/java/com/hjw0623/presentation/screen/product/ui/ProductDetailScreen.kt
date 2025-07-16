@@ -16,6 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,14 +31,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductDetailTab
 import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.util.mockdata.mockProduct
-import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.TopRoundedBackground
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.core.util.mockdata.mockProduct
+import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.factory.ProductViewModelFactory
 import com.hjw0623.presentation.screen.product.ui.componet.MapTab
@@ -106,86 +109,117 @@ fun ProductDetailScreen(
     onTabClick: (ProductDetailTab) -> Unit,
     onWriteReviewClick: () -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 70.dp)
-    ) {
-        item {
-            TopRoundedBackground {
-                product?.let { ProductCardDetail(product = it) }
-            }
-        }
-        item {
-            TabSection(
-                selectedTab = selectedTab,
-                onTabClick = onTabClick
-            )
-        }
-        when (selectedTab) {
-            ProductDetailTab.REVIEW -> {
-                if (isLoading) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 100.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                } else {
-                    // 로딩 완료 후
-                    item {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                text = avgRating.toString(),
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                RatingStars(
-                                    rating = avgRating.toFloat(),
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = stringResource(R.string.text_total_reviews, reviewSum),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            RatingDistribution(
-                                ratingList = ratingList.mapIndexed { index, count -> (5 - index) to count },
-                            )
-                            Spacer(modifier = Modifier.height(24.dp))
-                        }
-                    }
-                    items(reviewList.size) { index ->
-                        ReviewListItem(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            review = reviewList[index]
-                        )
-                    }
-                    item {
-                        PyeonKingButton(
-                            text = stringResource(R.string.action_write_review),
-                            onClick = onWriteReviewClick,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        )
-                    }
+    var visibleCount by remember { mutableIntStateOf(5) }
+    val visibleReviewList = reviewList.take(visibleCount)
+
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 80.dp),
+            contentPadding = PaddingValues(bottom = 24.dp)
+        ) {
+            item {
+                TopRoundedBackground {
+                    product?.let { ProductCardDetail(product = it) }
                 }
             }
 
-            ProductDetailTab.MAP -> {
-                item { MapTab() }
+            item {
+                TabSection(
+                    selectedTab = selectedTab,
+                    onTabClick = onTabClick
+                )
             }
+
+            when (selectedTab) {
+                ProductDetailTab.REVIEW -> {
+                    if (isLoading) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 100.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    } else {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    text = avgRating.toString(),
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RatingStars(
+                                        rating = avgRating.toFloat(),
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = stringResource(R.string.text_total_reviews, reviewSum),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                RatingDistribution(
+                                    ratingList = ratingList.mapIndexed { index, count -> (5 - index) to count },
+                                )
+                                Spacer(modifier = Modifier.height(24.dp))
+                            }
+                        }
+
+                        items(visibleReviewList.size) { index ->
+                            ReviewListItem(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                review = visibleReviewList[index]
+                            )
+                        }
+
+                        if (visibleCount < reviewList.size) {
+                            item {
+                                PyeonKingButton(
+                                    text = stringResource(
+                                        R.string.action_seemore_review,
+                                        visibleCount,
+                                        reviewList.size
+                                    ),
+                                    onClick = { visibleCount += 5 },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                )
+                            }
+                        }
+
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                    }
+                }
+
+                ProductDetailTab.MAP -> {
+                    item { MapTab() }
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            PyeonKingButton(
+                text = stringResource(R.string.action_write_review),
+                onClick = onWriteReviewClick,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
