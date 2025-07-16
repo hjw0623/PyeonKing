@@ -110,7 +110,7 @@ fun SearchResultScreen(
             ) {
                 items(
                     items = products,
-                    key = { it.uuid }
+                    key = { it.id }
                 ) { product ->
                     ProductCardLarge(
                         onCardClick = { onProductClick(product) },

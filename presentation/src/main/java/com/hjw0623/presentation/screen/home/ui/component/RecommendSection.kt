@@ -53,7 +53,7 @@ fun RecommendSection(
         ) {
             items(
                 items = recommendList,
-                key = { it.uuid }
+                key = { it.id }
             ) { product ->
                 ProductCardLarge(
                     product = product,

@@ -25,7 +25,7 @@ fun ProductList(
     ) {
         items(
             items = products,
-            key = { it.uuid }
+            key = { it.id }
         ) {
             ProductCardSmall(
                 onClick = { onProductClick(it) },
