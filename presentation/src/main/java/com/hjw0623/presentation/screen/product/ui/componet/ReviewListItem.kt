@@ -1,6 +1,7 @@
 package com.hjw0623.presentation.screen.product.ui.componet
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +37,8 @@ fun ReviewListItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.inversePrimary)
+            .background(MaterialTheme.colorScheme.background)
+            .border(2.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
         Row(
