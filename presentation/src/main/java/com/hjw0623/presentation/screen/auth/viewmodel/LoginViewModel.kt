@@ -2,6 +2,7 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.core.data.model.AuthRequest
 import com.hjw0623.core.data.model.AuthResponse
 import com.hjw0623.core.data.model.BaseResponse
@@ -87,7 +88,7 @@ class LoginViewModel(
                     }
 
                     is DataResourceResult.Failure -> {
-                        val message = result.exception.message ?: "알 수 없는 오류가 발생했습니다."
+                        val message = result.exception.message ?: UNKNOWN_ERROR
                         _event.emit(LoginScreenEvent.Error(message))
                     }
 
