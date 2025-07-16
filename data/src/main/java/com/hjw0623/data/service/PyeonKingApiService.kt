@@ -5,6 +5,7 @@ import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.BaseResponseDto
 import com.hjw0623.data.model.ChangePasswordRequestDto
 import com.hjw0623.data.model.ItemDto
+import com.hjw0623.data.model.ReviewPageDto
 import com.hjw0623.data.model.SearchItemResponseDto
 import com.hjw0623.data.model.ReviewPostBodyDto
 import com.hjw0623.data.model.ReviewResponseDto
@@ -82,14 +83,14 @@ interface PyeonKingApiService {
     suspend fun getReviewByItemId(
         @Path("itemID") itemID: Int,
         @Path("page") page: Int,
-    ): Response<BaseResponseDto<ReviewResponseDto>>
+    ): Response<BaseResponseDto<ReviewPageDto>>
 
     //유저별 리뷰 조회
     @Headers("Authorization: required")
     @GET("/comment/list/{page}")
     suspend fun getReviewByUserId(
         @Path("page") page: Int,
-    ): Response<BaseResponseDto<ReviewResponseDto>>
+    ): Response<BaseResponseDto<ReviewPageDto>>
 
     //리뷰 작성하기
     @Headers("Authorization: required")
