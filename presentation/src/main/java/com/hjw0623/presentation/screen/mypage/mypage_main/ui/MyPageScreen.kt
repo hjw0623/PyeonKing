@@ -9,16 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.AuthManager
-import com.hjw0623.core.domain.auth.EmailPatternValidator
-import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.domain.mypage.User
-import com.hjw0623.core.util.mockdata.mockUser
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
-import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
+import com.hjw0623.core.util.mockdata.mockUser
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedInScreen
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedOutScreen
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
@@ -26,23 +22,25 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 @Composable
 fun MyPageScreenRoot(
     modifier: Modifier = Modifier,
+    myPageViewModel: MyPageViewModel,
     onNavigateToChangeNickname: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToReviewHistory: () -> Unit
 ) {
     val context = LocalContext.current
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val myPageViewModel = MyPageViewModelFactory(userDataValidator)
-    val viewModel: MyPageViewModel = viewModel(factory = myPageViewModel)
+    val viewModel = myPageViewModel
 
     val isLoggedIn by AuthManager.isLoggedIn.collectAsStateWithLifecycle()
     val userData by AuthManager.userData.collectAsStateWithLifecycle()
     val throttledLoginClick = rememberThrottledOnClick { viewModel.onLoginClick() }
     val throttledLogoutClick = rememberThrottledOnClick { viewModel.onLogoutClick() }
-    val throttledChangePasswordClick = rememberThrottledOnClick { viewModel.navigateToChangePassword() }
-    val throttledChangeNicknameClick = rememberThrottledOnClick { viewModel.navigateToChangeNickname() }
-    val throttledReviewHistoryClick = rememberThrottledOnClick { viewModel.navigateToReviewHistory() }
+    val throttledChangePasswordClick =
+        rememberThrottledOnClick { viewModel.navigateToChangePassword() }
+    val throttledChangeNicknameClick =
+        rememberThrottledOnClick { viewModel.navigateToChangeNickname() }
+    val throttledReviewHistoryClick =
+        rememberThrottledOnClick { viewModel.navigateToReviewHistory() }
 
     ObserveAsEvents(flow = viewModel.myPageScreenEvent) { event ->
         when (event) {
@@ -77,7 +75,7 @@ fun MyPageScreenRoot(
         onLogoutClick = throttledLogoutClick,
         onChangePasswordClick = throttledChangePasswordClick,
         onChangeNicknameClick = throttledChangeNicknameClick,
-        onReviewHistoryClick =  throttledReviewHistoryClick
+        onReviewHistoryClick = throttledReviewHistoryClick
     )
 }
 
