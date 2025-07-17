@@ -36,13 +36,12 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 
 @Composable
 fun ChangePasswordScreenRoot(
+    myPageViewModel: MyPageViewModel,
     onNavigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val myPageViewModel = MyPageViewModelFactory(userDataValidator)
-    val viewModel: MyPageViewModel = viewModel(factory = myPageViewModel)
+    val viewModel = myPageViewModel
 
     val currentPassword by viewModel.currentPassword.collectAsStateWithLifecycle()
     val newPassword by viewModel.newPassword.collectAsStateWithLifecycle()
@@ -67,7 +66,8 @@ fun ChangePasswordScreenRoot(
                 showToast(context, event.error)
             }
 
-            ChangePasswordScreenEvent.NavigateToMyPage -> {
+            is ChangePasswordScreenEvent.NavigateToMyPage -> {
+                showToast(context, event.message)
                 onNavigateToMyPage()
             }
         }

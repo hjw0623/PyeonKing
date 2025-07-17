@@ -47,12 +47,11 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 @Composable
 fun ChangeNicknameScreenRoot(
     modifier: Modifier = Modifier,
+    myPageViewModel: MyPageViewModel,
     onNavigateToMyPage: () -> Unit,
 ) {
     val context = LocalContext.current
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val myPageViewModel = MyPageViewModelFactory(userDataValidator)
-    val viewModel: MyPageViewModel = viewModel(factory = myPageViewModel)
+    val viewModel = myPageViewModel
 
     val newNickname by viewModel.newNickname.collectAsStateWithLifecycle()
     val nicknameValidationState by viewModel.nicknameValidationState.collectAsStateWithLifecycle()
@@ -71,7 +70,8 @@ fun ChangeNicknameScreenRoot(
                 showToast(context, event.error)
             }
 
-            ChangeNicknameScreenEvent.NavigateToMyPage -> {
+            is ChangeNicknameScreenEvent.NavigateToMyPage -> {
+                showToast(context, event.message)
                 onNavigateToMyPage()
             }
         }
