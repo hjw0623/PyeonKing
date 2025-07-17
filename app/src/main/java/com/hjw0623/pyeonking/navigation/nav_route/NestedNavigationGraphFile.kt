@@ -19,6 +19,7 @@ import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenRoo
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
+import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenRoot
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenRoot
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
@@ -147,11 +148,13 @@ fun NavGraphBuilder.textSearchNavGraph(
 
 fun NavGraphBuilder.myPageNavGraph(
     navController: NavHostController,
+    myPageViewModel: MyPageViewModel,
     loginViewModel: LoginViewModel,
     registerViewModel: RegisterViewModel
 ) {
     composable<MyPageTabNestedRoute.MyPage> {
         MyPageScreenRoot(
+            myPageViewModel = myPageViewModel,
             onNavigateToChangeNickname = {
                 navController.navigate(MyPageTabNestedRoute.ChangeNickname)
             },
@@ -204,6 +207,7 @@ fun NavGraphBuilder.myPageNavGraph(
 
     composable<MyPageTabNestedRoute.ChangeNickname> {
         ChangeNicknameScreenRoot(
+            myPageViewModel = myPageViewModel,
             onNavigateToMyPage = {
                 navController.popBackStack()
             }
@@ -212,6 +216,7 @@ fun NavGraphBuilder.myPageNavGraph(
 
     composable<MyPageTabNestedRoute.ChangePassword> {
         ChangePasswordScreenRoot(
+            myPageViewModel = myPageViewModel,
             onNavigateToMyPage = {
                 navController.popBackStack()
             }

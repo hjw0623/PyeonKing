@@ -27,15 +27,18 @@ import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.BackBar
 import com.hjw0623.core.presentation.ui.shouldShowBottomBar
 import com.hjw0623.data.repository.AuthRepositoryImpl
+import com.hjw0623.data.repository.MyPageRepositoryImpl
 import com.hjw0623.data.repository.ProductRepositoryImpl
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 import com.hjw0623.presentation.screen.factory.HomeViewModelFactory
 import com.hjw0623.presentation.screen.factory.LoginViewModelFactory
+import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
 import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
 import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
+import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenRoot
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoot
 import com.hjw0623.pyeonking.navigation.TopBarData
@@ -76,6 +79,13 @@ fun MainScreen() {
         productRepository = ProductRepositoryImpl(),
     )
     val homeViewModel: HomeViewModel = viewModel(factory = homeViewModelFactory)
+
+    val myPageViewModelFactory = MyPageViewModelFactory(
+        myPageRepository = MyPageRepositoryImpl(),
+        userDataValidator = UserDataValidator(EmailPatternValidator)
+    )
+
+    val myPageViewModel: MyPageViewModel = viewModel(factory = myPageViewModelFactory)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -172,6 +182,7 @@ fun MainScreen() {
             }
             composable(MainNavigationRoute.MyPage.route) {
                 MyPageScreenRoot(
+                    myPageViewModel = myPageViewModel,
                     onNavigateToChangeNickname = {
                         navController.navigate(MyPageTabNestedRoute.ChangeNickname) {
                             launchSingleTop = true
@@ -197,7 +208,12 @@ fun MainScreen() {
             homeNavGraph(navController)
             cameraNavGraph(navController)
             textSearchNavGraph(navController)
-            myPageNavGraph(navController, loginViewModel, registerViewModel)
+            myPageNavGraph(
+                navController = navController,
+                myPageViewModel = myPageViewModel,
+                loginViewModel = loginViewModel,
+                registerViewModel = registerViewModel
+            )
         }
     }
 }
