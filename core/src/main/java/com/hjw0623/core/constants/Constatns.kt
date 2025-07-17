@@ -58,4 +58,6 @@ object Error {
     const val BLANK_INPUT = "한글 자 이상 입력해주세요."
 
     const val TOO_SHORT_SEARCH_QUERY_INPUT = "검색어는 2글자 이상 입력해주세요"
+
+    const val UNCHANGED_NICKNAME = "현재 닉네임과 동일합니다."
 }
