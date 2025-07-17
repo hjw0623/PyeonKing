@@ -3,7 +3,9 @@ package com.hjw0623.data.service
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.BaseResponseDto
+import com.hjw0623.data.model.ChangeNicknameRequestDto
 import com.hjw0623.data.model.ChangePasswordRequestDto
+import com.hjw0623.data.model.ChangePasswordResponseDto
 import com.hjw0623.data.model.ItemDto
 import com.hjw0623.data.model.ReviewPageDto
 import com.hjw0623.data.model.SearchItemResponseDto
@@ -48,12 +50,13 @@ interface PyeonKingApiService {
     @PATCH("/member/password")
     suspend fun changePassword(
         @Body updateRequest: ChangePasswordRequestDto
-    ): Response<BaseResponseDto<Boolean>>
+    ): Response<BaseResponseDto<ChangePasswordResponseDto>>
 
     //닉네임 변경
+    @Headers("Authorization: required")
     @PATCH("/member/nickname")
     suspend fun changeNickname(
-        @Body updateRequest: String
+        @Body updateRequest: ChangeNicknameRequestDto
     ): Response<BaseResponseDto<Boolean>>
 
     //전체 상품 조회
