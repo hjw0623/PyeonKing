@@ -7,6 +7,9 @@ import com.hjw0623.core.data.model.ChangeNicknameRequest
 import com.hjw0623.core.data.model.ChangePasswordRequest
 import com.hjw0623.core.data.model.ChangePasswordResponse
 import com.hjw0623.core.data.model.Item
+import com.hjw0623.core.data.model.ReviewPage
+import com.hjw0623.core.data.model.ReviewProduct
+import com.hjw0623.core.data.model.ReviewResponse
 import com.hjw0623.core.data.model.SearchItemResponse
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
@@ -14,6 +17,9 @@ import com.hjw0623.data.model.ChangeNicknameRequestDto
 import com.hjw0623.data.model.ChangePasswordRequestDto
 import com.hjw0623.data.model.ChangePasswordResponseDto
 import com.hjw0623.data.model.ItemDto
+import com.hjw0623.data.model.ReviewPageDto
+import com.hjw0623.data.model.ReviewProductDto
+import com.hjw0623.data.model.ReviewResponseDto
 import com.hjw0623.data.model.SearchItemResponseDto
 
 
@@ -70,4 +76,36 @@ fun ChangePasswordRequest.toDto(): ChangePasswordRequestDto {
 }
 fun ChangePasswordResponseDto.toDomain(): ChangePasswordResponse {
     return ChangePasswordResponse(result = this.result)
+}
+
+fun ReviewPageDto.toDomain(): ReviewPage {
+    return ReviewPage(
+        content = this.content.map { it.toDomain() },
+        totalElements = this.totalElements,
+        totalPages = this.totalPages,
+        last = this.last,
+        number = this.number,
+        size = this.size
+    )
+}
+
+fun ReviewResponseDto.toDomain(): ReviewResponse {
+    return ReviewResponse(
+        commentId = this.commentId,
+        promotionId = this.promotionId,
+        star = this.star,
+        content = this.content,
+        userName = this.userName,
+        createdAt = this.createdAt,
+        product = this.product.toDomain()
+    )
+}
+
+fun ReviewProductDto.toDomain(): ReviewProduct {
+    return ReviewProduct(
+        id = this.id,
+        name = this.name,
+        imageUrl = this.imageUrl,
+        brand = this.brand
+    )
 }
