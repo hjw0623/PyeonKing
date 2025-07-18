@@ -1,4 +1,4 @@
-package com.hjw0623.core.domain.home
+package com.hjw0623.core.domain.product
 
 import com.hjw0623.core.data.model.BaseResponse
 import com.hjw0623.core.data.model.Item

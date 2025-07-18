@@ -2,7 +2,7 @@ package com.hjw0623.presentation.screen.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hjw0623.core.domain.home.ProductRepository
+import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 
 class HomeViewModelFactory(

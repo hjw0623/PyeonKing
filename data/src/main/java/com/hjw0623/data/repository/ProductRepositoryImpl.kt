@@ -3,7 +3,7 @@ package com.hjw0623.data.repository
 import com.hjw0623.core.data.model.BaseResponse
 import com.hjw0623.core.data.model.Item
 import com.hjw0623.core.data.model.SearchItemResponse
-import com.hjw0623.core.domain.home.ProductRepository
+import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.remote.PyeonKingApiClient
