@@ -8,9 +8,10 @@ import com.hjw0623.data.model.ChangePasswordRequestDto
 import com.hjw0623.data.model.ChangePasswordResponseDto
 import com.hjw0623.data.model.ItemDto
 import com.hjw0623.data.model.ReviewPageDto
-import com.hjw0623.data.model.SearchItemResponseDto
 import com.hjw0623.data.model.ReviewPostBodyDto
 import com.hjw0623.data.model.ReviewResponseDto
+import com.hjw0623.data.model.ReviewSummaryResponseDto
+import com.hjw0623.data.model.SearchItemResponseDto
 import com.hjw0623.data.model.UpdateReviewBodyDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -84,9 +85,15 @@ interface PyeonKingApiService {
     @Headers("Authorization: required")
     @GET("/comment/list/{itemID}/{page}")
     suspend fun getReviewByItemId(
-        @Path("itemID") itemID: Int,
+        @Path("itemID") itemID: Long,
         @Path("page") page: Int,
     ): Response<BaseResponseDto<ReviewPageDto>>
+
+    @Headers("Authorization: required")
+    @GET ("/comment/summary/{promotionId}")
+    suspend fun getReviewSummaryByItemId(
+        @Path("promotionId") promotionId: Long
+    ): Response<BaseResponseDto<ReviewSummaryResponseDto>>
 
     //유저별 리뷰 조회
     @Headers("Authorization: required")
