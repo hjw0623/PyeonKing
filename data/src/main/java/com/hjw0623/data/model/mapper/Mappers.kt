@@ -10,6 +10,7 @@ import com.hjw0623.core.data.model.Item
 import com.hjw0623.core.data.model.ReviewPage
 import com.hjw0623.core.data.model.ReviewProduct
 import com.hjw0623.core.data.model.ReviewResponse
+import com.hjw0623.core.data.model.ReviewSummaryResponse
 import com.hjw0623.core.data.model.SearchItemResponse
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
@@ -20,6 +21,7 @@ import com.hjw0623.data.model.ItemDto
 import com.hjw0623.data.model.ReviewPageDto
 import com.hjw0623.data.model.ReviewProductDto
 import com.hjw0623.data.model.ReviewResponseDto
+import com.hjw0623.data.model.ReviewSummaryResponseDto
 import com.hjw0623.data.model.SearchItemResponseDto
 
 
@@ -107,5 +109,13 @@ fun ReviewProductDto.toDomain(): ReviewProduct {
         name = this.name,
         imageUrl = this.imageUrl,
         brand = this.brand
+    )
+}
+
+fun ReviewSummaryResponseDto.toDomain(): ReviewSummaryResponse {
+    return ReviewSummaryResponse(
+        totalCount = this.totalCount,
+        averageRating = this.averageRating,
+        ratingDistribution = this.ratingDistribution
     )
 }
