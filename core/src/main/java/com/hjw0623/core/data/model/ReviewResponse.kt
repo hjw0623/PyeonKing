@@ -1,6 +1,7 @@
 package com.hjw0623.core.data.model
 
 import com.hjw0623.core.domain.product.ReviewItem
+import com.hjw0623.core.domain.review.review_history.ReviewInfo
 
 data class ReviewPage(
     val content: List<ReviewResponse>,
@@ -35,5 +36,16 @@ fun ReviewResponse.toReviewItem(): ReviewItem {
         content = this.content,
         userName = this.userName,
         createdAt = this.createdAt
+    )
+}
+
+fun ReviewResponse.toReviewInfo(): ReviewInfo {
+    return ReviewInfo(
+        reviewId = this.commentId,
+        content = this.content,
+        starRating = this.star,
+        createdAt = this.createdAt,
+        productName = this.product.name,
+        productImgUrl = this.product.imageUrl
     )
 }
