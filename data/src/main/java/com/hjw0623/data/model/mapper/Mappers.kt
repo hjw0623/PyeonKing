@@ -8,6 +8,7 @@ import com.hjw0623.core.data.model.ChangePasswordRequest
 import com.hjw0623.core.data.model.ChangePasswordResponse
 import com.hjw0623.core.data.model.Item
 import com.hjw0623.core.data.model.ReviewPage
+import com.hjw0623.core.data.model.ReviewPostBody
 import com.hjw0623.core.data.model.ReviewProduct
 import com.hjw0623.core.data.model.ReviewResponse
 import com.hjw0623.core.data.model.ReviewSummaryResponse
@@ -20,6 +21,7 @@ import com.hjw0623.data.model.ChangePasswordRequestDto
 import com.hjw0623.data.model.ChangePasswordResponseDto
 import com.hjw0623.data.model.ItemDto
 import com.hjw0623.data.model.ReviewPageDto
+import com.hjw0623.data.model.ReviewPostBodyDto
 import com.hjw0623.data.model.ReviewProductDto
 import com.hjw0623.data.model.ReviewResponseDto
 import com.hjw0623.data.model.ReviewSummaryResponseDto
@@ -132,6 +134,14 @@ fun UpdateReviewBodyDto.toDomain(): UpdateReviewBody {
 fun UpdateReviewBody.toDto(): UpdateReviewBodyDto {
     return UpdateReviewBodyDto(
         commentId = this.commentId,
+        star = this.star,
+        content = this.content
+    )
+}
+
+fun ReviewPostBody.toDto(): ReviewPostBodyDto {
+    return ReviewPostBodyDto(
+        promotionId = this.promotionId,
         star = this.star,
         content = this.content
     )
