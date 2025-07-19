@@ -1,5 +1,7 @@
 package com.hjw0623.core.data.model
 
+import com.hjw0623.core.domain.product.ReviewItem
+
 data class ReviewPage(
     val content: List<ReviewResponse>,
     val totalElements: Int,
@@ -25,3 +27,13 @@ data class ReviewProduct(
     val imageUrl: String,
     val brand: String
 )
+
+fun ReviewResponse.toReviewItem(): ReviewItem {
+    return ReviewItem(
+        reviewId = this.commentId.toString(),
+        rating = this.star.toFloat(),
+        content = this.content,
+        userName = this.userName,
+        createdAt = this.createdAt
+    )
+}
