@@ -24,9 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.core.util.mockdata.mockReviewInfo
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.presentation.ui.getFullImageUrl
+import com.hjw0623.core.util.mockdata.mockReviewInfo
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
 
@@ -46,9 +47,9 @@ fun ReviewHistoryListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = reviewInfo.productImgUrl,
+                model = getFullImageUrl(reviewInfo.productImgUrl),
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp))
