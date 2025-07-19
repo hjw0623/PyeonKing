@@ -2,6 +2,7 @@ package com.hjw0623.presentation.screen.review.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.domain.review.ReviewRepository
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenEvent
 import kotlinx.coroutines.delay
@@ -14,8 +15,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ReviewViewModel(
-    //private val repository: ReviewRepository
+class ReviewEditViewModel(
+    private val repository: ReviewRepository
 ): ViewModel() {
 
     // 원본 리뷰 정보를 저장 (내부 로직용)
