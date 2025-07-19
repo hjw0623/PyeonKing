@@ -129,3 +129,10 @@ fun UpdateReviewBodyDto.toDomain(): UpdateReviewBody {
         content = this.content
     )
 }
+fun UpdateReviewBody.toDto(): UpdateReviewBodyDto {
+    return UpdateReviewBodyDto(
+        commentId = this.commentId,
+        star = this.star,
+        content = this.content
+    )
+}
