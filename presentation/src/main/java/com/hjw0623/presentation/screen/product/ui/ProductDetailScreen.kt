@@ -199,7 +199,7 @@ fun ProductDetailScreen(
                                 item {
                                     PyeonKingButton(
                                         text = stringResource(
-                                            R.string.action_seemore_review,
+                                            R.string.action_see_more_review,
                                             currentPage,
                                             lastPage
                                         ),
