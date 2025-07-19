@@ -114,7 +114,6 @@ interface PyeonKingApiService {
     @PUT("/comment")
     suspend fun updateReview(
         @Body updateReviewBodyDto: UpdateReviewBodyDto,
-        @Header("Authorization") accessToken: String
     ): Response<BaseResponseDto<ReviewResponseDto>>
 
     //추천상품 조회
