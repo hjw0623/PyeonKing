@@ -2,6 +2,7 @@ package com.hjw0623.data.repository
 
 import com.hjw0623.core.data.model.BaseResponse
 import com.hjw0623.core.data.model.ReviewPage
+import com.hjw0623.core.data.model.ReviewPostBody
 import com.hjw0623.core.data.model.ReviewResponse
 import com.hjw0623.core.data.model.UpdateReviewBody
 import com.hjw0623.core.domain.review.ReviewRepository
@@ -35,6 +36,24 @@ class ReviewRepositoryImpl: ReviewRepository {
     override suspend fun getReviewByUserId(page: Int): Flow<DataResourceResult<BaseResponse<ReviewPage>>> {
         return safeApiFlow {
             val response = apiService.getReviewByUserId(page)
+
+            if (!response.isSuccessful || response.body() == null) {
+                throw retrofit2.HttpException(response)
+            }
+
+            val body = response.body()!!
+
+            BaseResponse(
+                data = body.data.toDomain(),
+                message = body.message
+            )
+        }
+    }
+
+    override suspend fun postReview(reviewPostBody: ReviewPostBody): Flow<DataResourceResult<BaseResponse<ReviewResponse>>> {
+        return safeApiFlow {
+            val dto = reviewPostBody.toDto()
+            val response = apiService.postReview(dto)
 
             if (!response.isSuccessful || response.body() == null) {
                 throw retrofit2.HttpException(response)
