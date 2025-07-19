@@ -34,11 +34,13 @@ import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 import com.hjw0623.presentation.screen.factory.HomeViewModelFactory
 import com.hjw0623.presentation.screen.factory.LoginViewModelFactory
 import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
+import com.hjw0623.presentation.screen.factory.ProductViewModelFactory
 import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
 import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
+import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenRoot
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoot
 import com.hjw0623.pyeonking.navigation.TopBarData
@@ -86,6 +88,13 @@ fun MainScreen() {
     )
 
     val myPageViewModel: MyPageViewModel = viewModel(factory = myPageViewModelFactory)
+
+    val productViewModelFactory = ProductViewModelFactory(
+        productRepository = ProductRepositoryImpl()
+    )
+    val productViewModel: ProductViewModel = viewModel(
+        factory = productViewModelFactory
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -205,9 +214,9 @@ fun MainScreen() {
                     }
                 )
             }
-            homeNavGraph(navController)
-            cameraNavGraph(navController)
-            textSearchNavGraph(navController)
+            homeNavGraph(navController, productViewModel)
+            cameraNavGraph(navController, productViewModel)
+            textSearchNavGraph(navController, productViewModel)
             myPageNavGraph(
                 navController = navController,
                 myPageViewModel = myPageViewModel,
