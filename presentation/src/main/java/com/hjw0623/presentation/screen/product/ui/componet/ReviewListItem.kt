@@ -38,7 +38,11 @@ fun ReviewListItem(
             .padding(vertical = 8.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.background)
-            .border(2.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), RoundedCornerShape(12.dp))
+            .border(
+                2.dp,
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                RoundedCornerShape(12.dp)
+            )
             .padding(16.dp)
     ) {
         Row(
@@ -82,7 +86,7 @@ fun ReviewListItem(
             contentAlignment = Alignment.BottomEnd
         ) {
             Text(
-                text = review.createdAt,
+                text = review.createdAt.substringBefore("T"),
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
