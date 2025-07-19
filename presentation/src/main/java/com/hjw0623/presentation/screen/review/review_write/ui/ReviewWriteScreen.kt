@@ -1,8 +1,16 @@
 package com.hjw0623.presentation.screen.review.review_write.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,17 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.factory.ReviewWriteViewModelFactory
 import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector
 import com.hjw0623.presentation.screen.review.review_write.ui.component.WritingSection
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
@@ -34,11 +40,11 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 fun ReviewWriteScreenRoot(
     modifier: Modifier = Modifier,
     product: Product,
+    reviewWriteViewModel: ReviewWriteViewModel,
     onReviewWriteComplete: () -> Unit
 ) {
     val context = LocalContext.current
-    val reviewWriteViewModelFactory = ReviewWriteViewModelFactory()
-    val viewModel: ReviewWriteViewModel = viewModel(factory = reviewWriteViewModelFactory)
+    val viewModel = reviewWriteViewModel
 
     val productState by viewModel.product.collectAsStateWithLifecycle()
     val rating by viewModel.rating.collectAsStateWithLifecycle()
@@ -58,6 +64,7 @@ fun ReviewWriteScreenRoot(
             is ReviewWriteScreenEvent.Error -> {
                 showToast(context, event.error)
             }
+
             is ReviewWriteScreenEvent.NavigateBackToProductDetail -> {
                 onReviewWriteComplete()
             }
