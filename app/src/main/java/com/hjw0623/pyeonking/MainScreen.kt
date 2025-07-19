@@ -29,6 +29,7 @@ import com.hjw0623.core.presentation.ui.shouldShowBottomBar
 import com.hjw0623.data.repository.AuthRepositoryImpl
 import com.hjw0623.data.repository.MyPageRepositoryImpl
 import com.hjw0623.data.repository.ProductRepositoryImpl
+import com.hjw0623.data.repository.ReviewRepositoryImpl
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 import com.hjw0623.presentation.screen.factory.HomeViewModelFactory
@@ -36,11 +37,17 @@ import com.hjw0623.presentation.screen.factory.LoginViewModelFactory
 import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
 import com.hjw0623.presentation.screen.factory.ProductViewModelFactory
 import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
+import com.hjw0623.presentation.screen.factory.ReviewEditViewModelFactory
+import com.hjw0623.presentation.screen.factory.ReviewHistoryViewModelFactory
+import com.hjw0623.presentation.screen.factory.ReviewWriteViewModelFactory
 import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewEditViewModel
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenRoot
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoot
 import com.hjw0623.pyeonking.navigation.TopBarData
@@ -94,6 +101,27 @@ fun MainScreen() {
     )
     val productViewModel: ProductViewModel = viewModel(
         factory = productViewModelFactory
+    )
+
+    val reviewEditViewModelFactory = ReviewEditViewModelFactory(
+        reviewRepository = ReviewRepositoryImpl()
+    )
+    val reviewEditViewModel: ReviewEditViewModel = viewModel(
+        factory = reviewEditViewModelFactory
+    )
+
+    val reviewHistoryViewModelFactory = ReviewHistoryViewModelFactory(
+        reviewRepository = ReviewRepositoryImpl()
+    )
+    val reviewHistoryViewModel: ReviewHistoryViewModel = viewModel(
+        factory = reviewHistoryViewModelFactory
+    )
+
+    val reviewWriteViewModelFactory = ReviewWriteViewModelFactory(
+        reviewRepository = ReviewRepositoryImpl()
+    )
+    val reviewWriteViewModel: ReviewWriteViewModel = viewModel(
+        factory = reviewWriteViewModelFactory
     )
 
     Scaffold(
@@ -214,14 +242,16 @@ fun MainScreen() {
                     }
                 )
             }
-            homeNavGraph(navController, productViewModel)
-            cameraNavGraph(navController, productViewModel)
-            textSearchNavGraph(navController, productViewModel)
+            homeNavGraph(navController, productViewModel, reviewWriteViewModel)
+            cameraNavGraph(navController, productViewModel, reviewWriteViewModel)
+            textSearchNavGraph(navController, productViewModel, reviewWriteViewModel)
             myPageNavGraph(
                 navController = navController,
                 myPageViewModel = myPageViewModel,
                 loginViewModel = loginViewModel,
-                registerViewModel = registerViewModel
+                registerViewModel = registerViewModel,
+                reviewEditViewModel = reviewEditViewModel,
+                reviewHistoryViewModel = reviewHistoryViewModel
             )
         }
     }
