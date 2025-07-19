@@ -12,6 +12,7 @@ import com.hjw0623.core.data.model.ReviewProduct
 import com.hjw0623.core.data.model.ReviewResponse
 import com.hjw0623.core.data.model.ReviewSummaryResponse
 import com.hjw0623.core.data.model.SearchItemResponse
+import com.hjw0623.core.data.model.UpdateReviewBody
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.ChangeNicknameRequestDto
@@ -23,6 +24,7 @@ import com.hjw0623.data.model.ReviewProductDto
 import com.hjw0623.data.model.ReviewResponseDto
 import com.hjw0623.data.model.ReviewSummaryResponseDto
 import com.hjw0623.data.model.SearchItemResponseDto
+import com.hjw0623.data.model.UpdateReviewBodyDto
 
 
 fun AuthResponseDto.toDomain(): AuthResponse {
@@ -117,5 +119,13 @@ fun ReviewSummaryResponseDto.toDomain(): ReviewSummaryResponse {
         totalCount = this.totalCount,
         averageRating = this.averageRating,
         ratingDistribution = this.ratingDistribution
+    )
+}
+
+fun UpdateReviewBodyDto.toDomain(): UpdateReviewBody {
+    return UpdateReviewBody(
+        commentId = this.commentId,
+        star = this.star,
+        content = this.content
     )
 }
