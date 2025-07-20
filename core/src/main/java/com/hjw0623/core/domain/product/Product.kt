@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 data class Product(
     val id: String,
-    val imgUrl: String,
+    val imgUrl: String?,
     val name: String,
     val price: String,
     val priceForEach: String,

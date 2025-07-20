@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class ItemDto(
     @field:Json(name = "id") val id: Long,
     @field:Json(name = "name") val name: String,
-    @field:Json(name = "imgUrl") val imgUrl: String,
+    @field:Json(name = "imgUrl") val imgUrl: String?,
     @field:Json(name = "brand") val brand: String,
     @field:Json(name = "promotion") val promotion: String,
     @field:Json(name = "pricePerUnit") val pricePerUnit: Int,

@@ -2,6 +2,7 @@ package com.hjw0623.core.data.model
 
 import com.hjw0623.core.domain.product.ReviewItem
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.core.presentation.ui.getFullImageUrl
 
 data class ReviewPage(
     val content: List<ReviewResponse>,
@@ -25,7 +26,7 @@ data class ReviewResponse(
 data class ReviewProduct(
     val id: Long,
     val name: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val brand: String
 )
 
@@ -46,6 +47,6 @@ fun ReviewResponse.toReviewInfo(): ReviewInfo {
         starRating = this.star,
         createdAt = this.createdAt,
         productName = this.product.name,
-        productImgUrl = this.product.imageUrl
+        productImgUrl = getFullImageUrl(this.product.imageUrl)
     )
 }

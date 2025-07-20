@@ -12,5 +12,5 @@ data class ReviewInfo(
     val starRating: Int,
     val createdAt: String,
     val productName: String,
-    val productImgUrl: String
+    val productImgUrl: String?
 ): Parcelable

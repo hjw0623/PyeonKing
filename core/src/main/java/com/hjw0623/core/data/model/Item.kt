@@ -5,9 +5,9 @@ import com.hjw0623.core.presentation.ui.changePromotionName
 import com.hjw0623.core.presentation.ui.getFullImageUrl
 
 data class Item(
-     val id: Long,
+    val id: Long,
     val name: String,
-    val imgUrl: String,
+    val imgUrl: String?,
     val brand: String,
     val promotion: String,
     val pricePerUnit: Int,
@@ -16,8 +16,9 @@ data class Item(
 )
 
 fun Item.toProduct(): Product {
-    val fullImgUrl = getFullImageUrl(this.imgUrl)
+    val fullImgUrl = this.imgUrl?.let { getFullImageUrl(it) }
     val promotion = changePromotionName(this.promotion)
+
     return Product(
         id = this.id.toString(),
         imgUrl = fullImgUrl,

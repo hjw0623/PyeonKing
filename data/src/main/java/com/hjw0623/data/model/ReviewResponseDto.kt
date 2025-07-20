@@ -28,6 +28,6 @@ data class ReviewResponseDto(
 data class ReviewProductDto(
     @field:Json(name = "id") val id: Long,
     @field:Json(name = "name") val name: String,
-    @field:Json(name = "imageUrl") val imageUrl: String,
+    @field:Json(name = "imageUrl") val imageUrl: String?,
     @field:Json(name = "brand") val brand: String
 )
