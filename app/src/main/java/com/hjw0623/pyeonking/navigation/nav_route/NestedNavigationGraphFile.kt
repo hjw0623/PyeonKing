@@ -25,6 +25,7 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewEditViewModel
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
+import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 import com.hjw0623.pyeonking.navigation.parcelableType
 import kotlin.reflect.typeOf
 
@@ -32,7 +33,8 @@ import kotlin.reflect.typeOf
 fun NavGraphBuilder.homeNavGraph(
     navController: NavHostController,
     productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel
+    reviewWriteViewModel: ReviewWriteViewModel,
+    searchResultViewModel: SearchResultViewModel
 ) {
     composable<HomeTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
@@ -40,6 +42,7 @@ fun NavGraphBuilder.homeNavGraph(
         val navArgs = it.toRoute<HomeTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
+            searchResultViewModel = searchResultViewModel,
             onNavigateToProductDetail = { product ->
                 navController.navigate(HomeTabNestedRoute.ProductDetail(product))
             },
@@ -76,7 +79,8 @@ fun NavGraphBuilder.homeNavGraph(
 fun NavGraphBuilder.cameraNavGraph(
     navController: NavHostController,
     productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel
+    reviewWriteViewModel: ReviewWriteViewModel,
+    searchResultViewModel: SearchResultViewModel
 ) {
     composable<CameraTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
@@ -84,6 +88,7 @@ fun NavGraphBuilder.cameraNavGraph(
         val navArgs = it.toRoute<CameraTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
+            searchResultViewModel = searchResultViewModel,
             onNavigateToProductDetail = { product ->
                 navController.navigate(CameraTabNestedRoute.ProductDetail(product))
             }
@@ -120,7 +125,8 @@ fun NavGraphBuilder.cameraNavGraph(
 fun NavGraphBuilder.textSearchNavGraph(
     navController: NavHostController,
     productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel
+    reviewWriteViewModel: ReviewWriteViewModel,
+    searchResultViewModel: SearchResultViewModel
 ) {
     composable<TextSearchTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
@@ -128,6 +134,7 @@ fun NavGraphBuilder.textSearchNavGraph(
         val navArgs = it.toRoute<TextSearchTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
+            searchResultViewModel = searchResultViewModel,
             onNavigateToProductDetail = { product ->
                 navController.navigate(TextSearchTabNestedRoute.ProductDetail(product))
             },
