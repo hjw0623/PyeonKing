@@ -31,12 +31,12 @@ import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 
 @Composable
 fun CameraScreenRoot(
+    cameraSearchViewModel: CameraSearchViewModel,
     onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val cameraSearchViewModelFactory = CameraSearchViewModelFactory()
-    val viewModel: CameraSearchViewModel = viewModel(factory = cameraSearchViewModelFactory)
+    val viewModel = cameraSearchViewModel
 
     val hasPermission by viewModel.hasCameraPermission.collectAsStateWithLifecycle()
     val capturedImagePath by viewModel.capturedImagePath.collectAsStateWithLifecycle()
