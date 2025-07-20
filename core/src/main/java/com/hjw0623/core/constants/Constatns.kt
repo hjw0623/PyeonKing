@@ -46,8 +46,8 @@ object Promotion {
 }
 
 object Api {
-    const val BASE_URL = "http://10.0.2.2:8081/"
-    const val IMAGE_URL = "http://10.0.2.2:8082/image/"
+    const val BASE_URL = "http://192.168.0.13:8081"
+    const val IMAGE_URL = "http://192.168.0.13:8082/image/"
 }
 
 object Error {
