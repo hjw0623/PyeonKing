@@ -21,27 +21,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
-import com.hjw0623.presentation.screen.factory.SearchResultViewModelFactory
+import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.presentation.screen.home.ui.component.ProductCardLarge
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 
 @Composable
 fun SearchResultScreenRoot(
     navArgs: SearchResultNavArgs,
+    searchResultViewModel: SearchResultViewModel,
     onNavigateToProductDetail: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val searchResultViewModelFactory = SearchResultViewModelFactory()
-    val viewModel: SearchResultViewModel = viewModel(factory = searchResultViewModelFactory)
+    val viewModel = searchResultViewModel
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val products by viewModel.products.collectAsStateWithLifecycle()
@@ -50,7 +48,7 @@ fun SearchResultScreenRoot(
     val throttledProductClick = rememberThrottledOnClick<Product> { product ->
         viewModel.onProductClick(product)
     }
-    
+
     LaunchedEffect(key1 = navArgs) {
         viewModel.searchProducts(navArgs)
     }
