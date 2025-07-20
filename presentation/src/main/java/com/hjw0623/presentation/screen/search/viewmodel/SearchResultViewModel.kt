@@ -2,21 +2,24 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.data.model.toProduct
 import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.domain.search.SearchRepository
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.search.search_result.SearchResultSource
-import com.hjw0623.core.util.mockdata.mockProductList
+import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 
 class SearchResultViewModel(
-    // private val searchRepository: SearchRepository
-): ViewModel() {
+    private val searchRepository: SearchRepository
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -36,22 +39,71 @@ class SearchResultViewModel(
             when (navArgs.source) {
                 SearchResultSource.TEXT -> {
                     _searchTitle.value = "'${navArgs.passedQuery}' 검색 결과"
-                    // TODO: searchRepository.searchByText(navArgs.passedQuery)
+                    searchRepository.searchItems(navArgs.passedQuery!!).collectLatest { result ->
+                        when (result) {
+                            DataResourceResult.Loading -> {
+                                _isLoading.value = true
+                            }
+
+                            is DataResourceResult.Success -> {
+                                if (result.data.data.searchItems.isEmpty()) {
+                                    _event.emit(SearchResultScreenEvent.Error("검색 결과가 없습니다."))
+                                    _isLoading.value = false
+                                    return@collectLatest
+                                }
+                                _products.value =
+                                    result.data.data.searchItems.map { it.toProduct() }
+                                _isLoading.value = false
+                            }
+
+                            is DataResourceResult.Failure -> {
+                                val message = result.exception.message.toString()
+                                _event.emit(SearchResultScreenEvent.Error(message))
+                            }
+
+                            else -> Unit
+                        }
+                    }
                 }
+
                 SearchResultSource.CAMERA -> {
                     _searchTitle.value = "사진으로 검색한 결과"
-                    // TODO: searchRepository.searchByImage(navArgs.passedImagePath)
+
+                    val path = navArgs.passedImagePath
+                    if (path == null) {
+                        _event.emit(SearchResultScreenEvent.Error("이미지 경로가 없습니다."))
+                        _isLoading.value = false
+                        return@launch
+                    }
+
+                    val file = File(path)
+
+                    searchRepository.searchItemsByImg(file).collectLatest { result ->
+                        when (result) {
+                            is DataResourceResult.Loading -> _isLoading.value = true
+
+                            is DataResourceResult.Success -> {
+                                if (result.data.data.searchItems.isEmpty()) {
+                                    _event.emit(SearchResultScreenEvent.Error("검색 결과가 없습니다."))
+                                    _isLoading.value = false
+                                    return@collectLatest
+                                }
+                                _products.value =
+                                    result.data.data.searchItems.map { it.toProduct() }
+                                _isLoading.value = false
+                            }
+
+                            is DataResourceResult.Failure -> {
+                                _event.emit(SearchResultScreenEvent.Error("이미지 검색 실패: ${result.exception.message}"))
+                            }
+
+                            else -> Unit
+                        }
+                    }
                 }
             }
 
-            try {
-                delay(1500)
-                _products.value = mockProductList.shuffled()
-            } catch (e: Exception) {
-                _event.emit(SearchResultScreenEvent.Error("검색 결과를 불러오는 데 실패했습니다."))
-            } finally {
-                _isLoading.value = false
-            }
+            _isLoading.value = false
         }
     }
 
