@@ -32,8 +32,10 @@ fun changePromotionName(promotion: String): String {
     }
 }
 
-fun getFullImageUrl(imgUrl: String): String {
-    return if (imgUrl.startsWith("http")) {
+fun getFullImageUrl(imgUrl: String?): String {
+    return if (imgUrl.isNullOrBlank()) {
+        ""
+    } else if (imgUrl.startsWith("http")) {
         imgUrl
     } else {
         IMAGE_URL + imgUrl
