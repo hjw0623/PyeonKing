@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,7 +92,7 @@ fun ReviewEditScreenRoot(
 fun ReviewEditScreen(
     modifier: Modifier = Modifier,
     productName: String,
-    productImgUrl: String,
+    productImgUrl: String?,
     newContent: String,
     newStarRating: Int,
     isEditButtonEnabled: Boolean,
@@ -114,6 +115,7 @@ fun ReviewEditScreen(
             AsyncImage(
                 model = getFullImageUrl(productImgUrl),
                 contentDescription = null,
+                fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 modifier = Modifier.size(100.dp),
                 contentScale = ContentScale.Fit
             )
