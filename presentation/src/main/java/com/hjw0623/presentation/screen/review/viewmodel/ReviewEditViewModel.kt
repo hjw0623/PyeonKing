@@ -26,7 +26,7 @@ class ReviewEditViewModel(
     private val _productName = MutableStateFlow("")
     val productName = _productName.asStateFlow()
 
-    private val _productImgUrl = MutableStateFlow("")
+    private val _productImgUrl = MutableStateFlow<String?>("")
     val productImgUrl = _productImgUrl.asStateFlow()
 
     private val _newContent = MutableStateFlow("")
