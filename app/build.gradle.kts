@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -33,11 +34,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    /*kotlinOptions {
-    jvmTarget = "17"
-    }*/
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    secrets {
+        propertiesFileName = "secret.properties"
     }
 }
 kotlin {
