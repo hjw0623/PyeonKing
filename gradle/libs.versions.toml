@@ -1,16 +1,16 @@
 [versions]
-agp = "8.11.0"
+agp = "8.11.1"
 kotlin = "2.2.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
+lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
-composeBom = "2025.06.01"
-navigation = "2.9.1"
+composeBom = "2025.07.00"
+navigation = "2.9.2"
 coil = "2.7.0"
-viewmodelCompose = "2.9.1"
+viewmodelCompose = "2.9.2"
 coroutines = "1.10.2"
 retrofit = "3.0.0"
 cameraX = "1.4.2"
@@ -26,10 +26,11 @@ ksp = "2.2.0-2.0.2"
 loggingInterceptor = "5.1.0"
 moshi = "1.15.2"
 
-mapsCompose = "6.6.0"
-mapsComposeUtils = "6.6.0"
-places = "4.3.1"
+mapsCompose = "6.7.0"
+mapsComposeUtils = "6.7.0"
+places = "4.4.1"
 playServicesMaps = "19.2.0"
+secretsGradlePlugin = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -94,6 +95,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 
 [bundles]
 compose = [
