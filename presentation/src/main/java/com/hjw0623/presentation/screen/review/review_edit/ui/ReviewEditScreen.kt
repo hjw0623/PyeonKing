@@ -113,7 +113,7 @@ fun ReviewEditScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
-                model = getFullImageUrl(productImgUrl),
+                model = getFullImageUrl(productImgUrl).takeIf { it.isNotBlank() },
                 contentDescription = null,
                 fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 modifier = Modifier.size(100.dp),

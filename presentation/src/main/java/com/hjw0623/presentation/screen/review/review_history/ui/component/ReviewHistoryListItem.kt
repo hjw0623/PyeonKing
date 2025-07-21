@@ -48,7 +48,7 @@ fun ReviewHistoryListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = reviewInfo.productImgUrl,
+                model = getFullImageUrl(reviewInfo.productImgUrl).takeIf { it.isNotBlank() },
                 contentDescription = null,
                 fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 contentScale = ContentScale.Fit,
