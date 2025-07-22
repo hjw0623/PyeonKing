@@ -33,9 +33,6 @@ android {
     buildFeatures {
         compose = true
     }
-    /*kotlinOptions {
-        jvmTarget = "17"
-    }*/
 }
 kotlin {
     jvmToolchain(17)
@@ -58,7 +55,7 @@ dependencies {
     implementation(libs.bundles.camerax)
 
     //coil
-    implementation(libs.coil.compose)
+    implementation(libs.bundles.coil)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)

@@ -30,9 +30,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    /*kotlinOptions {
-        jvmTarget = "17"
-    }*/
 }
 kotlin {
     jvmToolchain(17)
@@ -56,6 +53,9 @@ dependencies {
 
     //GoogleMap
     implementation(libs.bundles.googlemap)
+
+    //Coil
+    implementation(libs.bundles.coil)
 
     // Testing
     testImplementation(libs.bundles.testing)

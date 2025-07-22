@@ -9,7 +9,8 @@ lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
 composeBom = "2025.07.00"
 navigation = "2.9.2"
-coil = "2.7.0"
+coilCompose = "3.3.0"
+coilNetworkOkhttp = "3.3.0"
 viewmodelCompose = "2.9.2"
 coroutines = "1.10.2"
 retrofit = "3.0.0"
@@ -64,7 +65,8 @@ ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-f
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
 # Coil
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 
 # ViewModel
 androidx-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodelCompose" }
@@ -124,6 +126,11 @@ retrofit = [
     "moshi-kotlin",
     "moshi-codegen",
     "logging-interceptor"
+]
+
+coil = [
+    "coil-compose",
+    "coil-network-okhttp"
 ]
 
 googlemap = [

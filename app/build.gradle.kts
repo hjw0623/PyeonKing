@@ -64,7 +64,7 @@ dependencies {
     implementation(libs.bundles.retrofit)
 
     // Coil
-    implementation(libs.coil.compose)
+    implementation(libs.bundles.coil)
 
     // CameraX
     implementation(libs.bundles.camerax)
