@@ -33,17 +33,7 @@ import com.hjw0623.data.repository.ReviewRepositoryImpl
 import com.hjw0623.data.repository.SearchRepositoryImpl
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
-import com.hjw0623.presentation.screen.factory.CameraSearchViewModelFactory
-import com.hjw0623.presentation.screen.factory.HomeViewModelFactory
-import com.hjw0623.presentation.screen.factory.LoginViewModelFactory
-import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
-import com.hjw0623.presentation.screen.factory.ProductViewModelFactory
-import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
-import com.hjw0623.presentation.screen.factory.ReviewEditViewModelFactory
-import com.hjw0623.presentation.screen.factory.ReviewHistoryViewModelFactory
-import com.hjw0623.presentation.screen.factory.ReviewWriteViewModelFactory
-import com.hjw0623.presentation.screen.factory.SearchResultViewModelFactory
-import com.hjw0623.presentation.screen.factory.TextSearchViewModelFactory
+import com.hjw0623.presentation.screen.factory.PyeonKingViewModelFactory
 import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
@@ -79,76 +69,27 @@ fun MainScreen() {
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
 
-    val loginViewModelFactory = LoginViewModelFactory(
-        authRepository = AuthRepositoryImpl(),
-        userDataValidator = UserDataValidator(EmailPatternValidator)
-    )
-    val loginViewModel: LoginViewModel = viewModel(factory = loginViewModelFactory)
+    val loginViewModel = viewModel<LoginViewModel>(factory = PyeonKingViewModelFactory)
 
-    val registerViewModelFactory = RegisterViewModelFactory(
-        authRepository = AuthRepositoryImpl(),
-        userDataValidator = UserDataValidator(EmailPatternValidator)
-    )
-    val registerViewModel: RegisterViewModel = viewModel(factory = registerViewModelFactory)
+    val registerViewModel = viewModel<RegisterViewModel>(factory = PyeonKingViewModelFactory)
 
-    val homeViewModelFactory = HomeViewModelFactory(
-        productRepository = ProductRepositoryImpl(),
-    )
-    val homeViewModel: HomeViewModel = viewModel(factory = homeViewModelFactory)
+    val homeViewModel = viewModel<HomeViewModel>(factory = PyeonKingViewModelFactory)
 
-    val myPageViewModelFactory = MyPageViewModelFactory(
-        myPageRepository = MyPageRepositoryImpl(),
-        userDataValidator = UserDataValidator(EmailPatternValidator)
-    )
+    val myPageViewModel = viewModel<MyPageViewModel>(factory = PyeonKingViewModelFactory)
 
-    val myPageViewModel: MyPageViewModel = viewModel(factory = myPageViewModelFactory)
+    val productViewModel = viewModel<ProductViewModel>(factory = PyeonKingViewModelFactory)
 
-    val productViewModelFactory = ProductViewModelFactory(
-        productRepository = ProductRepositoryImpl()
-    )
-    val productViewModel: ProductViewModel = viewModel(
-        factory = productViewModelFactory
-    )
+    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = PyeonKingViewModelFactory)
 
-    val reviewEditViewModelFactory = ReviewEditViewModelFactory(
-        reviewRepository = ReviewRepositoryImpl()
-    )
-    val reviewEditViewModel: ReviewEditViewModel = viewModel(
-        factory = reviewEditViewModelFactory
-    )
+    val reviewHistoryViewModel = viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
 
-    val reviewHistoryViewModelFactory = ReviewHistoryViewModelFactory(
-        reviewRepository = ReviewRepositoryImpl()
-    )
-    val reviewHistoryViewModel: ReviewHistoryViewModel = viewModel(
-        factory = reviewHistoryViewModelFactory
-    )
+    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = PyeonKingViewModelFactory)
 
-    val reviewWriteViewModelFactory = ReviewWriteViewModelFactory(
-        reviewRepository = ReviewRepositoryImpl()
-    )
-    val reviewWriteViewModel: ReviewWriteViewModel = viewModel(
-        factory = reviewWriteViewModelFactory
-    )
+    val cameraSearchViewModel = viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
 
-    val cameraSearchViewModelFactory = CameraSearchViewModelFactory()
-    val cameraSearchViewModel: CameraSearchViewModel = viewModel(
-        factory = cameraSearchViewModelFactory
-    )
+    val searchResultViewModel = viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
 
-    val searchResultViewModelFactory = SearchResultViewModelFactory(
-        searchRepository = SearchRepositoryImpl()
-    )
-    val searchResultViewModel: SearchResultViewModel = viewModel(
-        factory = searchResultViewModelFactory
-    )
-
-    val textSearchViewModelFactory = TextSearchViewModelFactory(
-        searchRepository = SearchRepositoryImpl()
-    )
-    val textSearchViewModel: TextSearchViewModel = viewModel(
-        factory = textSearchViewModelFactory
-    )
+    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = PyeonKingViewModelFactory)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
