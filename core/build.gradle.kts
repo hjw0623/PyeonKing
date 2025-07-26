@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.hjw0623.core"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

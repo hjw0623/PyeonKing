@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.hjw0623.pyeonking"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hjw0623.pyeonking"

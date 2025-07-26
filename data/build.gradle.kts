@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.hjw0623.data"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

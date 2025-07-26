@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.hjw0623.presentation"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -40,6 +40,7 @@ kotlin {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
 
