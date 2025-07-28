@@ -1,7 +1,8 @@
 package com.hjw0623.data.remote
 
+import android.util.Log
 import com.hjw0623.core.constants.Api
-import com.hjw0623.core.util.mockdata.mockUser
+import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.data.service.PyeonKingApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -23,7 +24,8 @@ object PyeonKingApiClient {
         val authHeader = originalRequest.header("Authorization")
 
         if (authHeader == "required") {
-            val token = mockUser.accessToken
+            val token = AuthManager.accessToken
+            Log.d("accessToken", token)
             val newRequest = originalRequest.newBuilder()
                 .removeHeader("Authorization")
                 .header("Authorization", "Bearer $token")
