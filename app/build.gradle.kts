@@ -81,6 +81,9 @@ dependencies {
     //GoogleMap
     implementation(libs.bundles.googlemap)
 
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.testing)
