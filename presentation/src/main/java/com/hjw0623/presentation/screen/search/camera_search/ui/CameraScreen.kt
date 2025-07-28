@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.search.camera_search.takePictureAndSave
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -23,7 +22,6 @@ import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.hasCameraPermission
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.factory.CameraSearchViewModelFactory
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.CapturedImageScreen
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.NoPermissionScreen
 import com.hjw0623.presentation.screen.search.camera_search.ui.component.TackingPictureScreen
