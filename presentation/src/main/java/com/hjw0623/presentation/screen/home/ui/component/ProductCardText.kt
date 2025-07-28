@@ -14,8 +14,9 @@ fun ProductCardTextLarge(
 ) {
     Text(
         text = string,
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.bodyMedium,
         color = color,
+        maxLines = 1,
         modifier = modifier
     )
 }
