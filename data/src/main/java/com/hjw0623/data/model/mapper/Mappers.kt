@@ -32,7 +32,8 @@ import com.hjw0623.data.model.UpdateReviewBodyDto
 fun AuthResponseDto.toDomain(): AuthResponse {
     return AuthResponse(
         accessToken = this.accessToken,
-        refreshToken = this.refreshToken
+        refreshToken = this.refreshToken,
+        nickname = this.nickname
     )
 }
 
@@ -80,6 +81,7 @@ fun ChangePasswordRequest.toDto(): ChangePasswordRequestDto {
         newPassword = this.newPassword
     )
 }
+
 fun ChangePasswordResponseDto.toDomain(): ChangePasswordResponse {
     return ChangePasswordResponse(result = this.result)
 }
@@ -131,6 +133,7 @@ fun UpdateReviewBodyDto.toDomain(): UpdateReviewBody {
         content = this.content
     )
 }
+
 fun UpdateReviewBody.toDto(): UpdateReviewBodyDto {
     return UpdateReviewBodyDto(
         commentId = this.commentId,
