@@ -46,7 +46,6 @@ import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.register.ui.component.PasswordRequirement
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
-import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
 
 @Composable
 fun RegisterScreenRoot(
