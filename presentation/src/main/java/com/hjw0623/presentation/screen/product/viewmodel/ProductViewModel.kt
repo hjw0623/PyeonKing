@@ -2,9 +2,9 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.data.model.BaseResponse
-import com.hjw0623.core.data.model.ReviewPage
-import com.hjw0623.core.data.model.toReviewItem
+import com.hjw0623.core.domain.model.BaseResponse
+import com.hjw0623.core.domain.model.ReviewPage
+import com.hjw0623.core.domain.model.toReviewItem
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductDetailTab
 import com.hjw0623.core.domain.product.ProductRepository

@@ -3,7 +3,7 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
-import com.hjw0623.core.data.model.ChangePasswordRequest
+import com.hjw0623.core.domain.model.ChangePasswordRequest
 import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.core.domain.auth.NicknameValidationState
 import com.hjw0623.core.domain.auth.PasswordValidationState

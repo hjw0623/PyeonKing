@@ -1,7 +1,7 @@
 package com.hjw0623.core.domain.search
 
-import com.hjw0623.core.data.model.BaseResponse
-import com.hjw0623.core.data.model.SearchItemResponse
+import com.hjw0623.core.domain.model.BaseResponse
+import com.hjw0623.core.domain.model.SearchItemResponse
 import com.hjw0623.core.network.DataResourceResult
 import kotlinx.coroutines.flow.Flow
 import java.io.File

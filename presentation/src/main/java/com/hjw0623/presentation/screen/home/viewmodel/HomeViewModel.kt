@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.constants.Error.BLANK_INPUT
 import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
-import com.hjw0623.core.data.model.BaseResponse
-import com.hjw0623.core.data.model.Item
-import com.hjw0623.core.data.model.toProduct
+import com.hjw0623.core.domain.model.BaseResponse
+import com.hjw0623.core.domain.model.Item
+import com.hjw0623.core.domain.model.toProduct
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs

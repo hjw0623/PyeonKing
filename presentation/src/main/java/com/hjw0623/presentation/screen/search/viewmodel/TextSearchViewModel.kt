@@ -2,7 +2,7 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.data.model.toProduct
+import com.hjw0623.core.domain.model.toProduct
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.SearchRepository
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs

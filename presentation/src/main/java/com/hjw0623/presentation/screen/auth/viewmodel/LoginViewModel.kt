@@ -3,9 +3,9 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
-import com.hjw0623.core.data.model.AuthRequest
-import com.hjw0623.core.data.model.AuthResponse
-import com.hjw0623.core.data.model.BaseResponse
+import com.hjw0623.core.domain.model.AuthRequest
+import com.hjw0623.core.domain.model.AuthResponse
+import com.hjw0623.core.domain.model.BaseResponse
 import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.core.domain.auth.AuthRepository
 import com.hjw0623.core.domain.auth.UserDataValidator
