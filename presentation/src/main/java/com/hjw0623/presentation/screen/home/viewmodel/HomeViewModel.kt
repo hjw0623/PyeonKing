@@ -8,8 +8,8 @@ import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.core.data.model.BaseResponse
 import com.hjw0623.core.data.model.Item
 import com.hjw0623.core.data.model.toProduct
-import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.search.search_result.SearchResultSource
 import com.hjw0623.core.network.DataResourceResult
@@ -42,11 +42,8 @@ class HomeViewModel(
     private val _event = MutableSharedFlow<HomeScreenEvent>()
     val event = _event.asSharedFlow()
 
-    init {
-        fetchRecommendList()
-    }
 
-    private fun fetchRecommendList() {
+    fun fetchRecommendList() {
         viewModelScope.launch {
             _isLoading.value = true
             _recommendItemList.value = DataResourceResult.Loading
@@ -58,6 +55,10 @@ class HomeViewModel(
 
                         val items = result.data
                         val products = items.data.map { it.toProduct() }
+
+                        if (products.isEmpty()) {
+                            _event.emit(HomeScreenEvent.Error("추천 상품이 없습니다"))
+                        }
 
                         _recommendProductList.value = products
                         _isLoading.value = false
