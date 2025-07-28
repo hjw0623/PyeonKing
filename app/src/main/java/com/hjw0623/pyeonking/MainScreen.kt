@@ -22,15 +22,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hjw0623.core.domain.auth.EmailPatternValidator
-import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.BackBar
 import com.hjw0623.core.presentation.ui.shouldShowBottomBar
-import com.hjw0623.data.repository.AuthRepositoryImpl
-import com.hjw0623.data.repository.MyPageRepositoryImpl
-import com.hjw0623.data.repository.ProductRepositoryImpl
-import com.hjw0623.data.repository.ReviewRepositoryImpl
-import com.hjw0623.data.repository.SearchRepositoryImpl
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 import com.hjw0623.presentation.screen.factory.PyeonKingViewModelFactory
@@ -81,13 +74,16 @@ fun MainScreen() {
 
     val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = PyeonKingViewModelFactory)
 
-    val reviewHistoryViewModel = viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
+    val reviewHistoryViewModel =
+        viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
 
     val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = PyeonKingViewModelFactory)
 
-    val cameraSearchViewModel = viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
+    val cameraSearchViewModel =
+        viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
 
-    val searchResultViewModel = viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
+    val searchResultViewModel =
+        viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
 
     val textSearchViewModel = viewModel<TextSearchViewModel>(factory = PyeonKingViewModelFactory)
 
@@ -112,14 +108,13 @@ fun MainScreen() {
                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                     bottomNavItems.forEach { bottomItem ->
                         NavigationBarItem(
-                            selected = currentRoute?.startsWith(bottomItem.destination.route) == true,
+                            selected = currentRoute?.startsWith(bottomItem.destination.toString()) == true,
                             onClick = {
-                                navController.navigate(bottomItem.destination.route) {
+                                navController.navigate(bottomItem.destination) {
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
                                     }
                                     launchSingleTop = true
-                                    restoreState = true
                                 }
                             },
                             icon = {
@@ -144,9 +139,9 @@ fun MainScreen() {
                 .fillMaxSize()
                 .padding(innerPadding),
             navController = navController,
-            startDestination = MainNavigationRoute.Home.route
+            startDestination = MainNavigationRoute.Home
         ) {
-            composable(MainNavigationRoute.Home.route) {
+            composable<MainNavigationRoute.Home> {
                 HomeScreenRoot(
                     homeViewModel = homeViewModel,
                     onNavigateToProductDetail = { product ->
@@ -161,7 +156,7 @@ fun MainScreen() {
                     }
                 )
             }
-            composable(MainNavigationRoute.Camera.route) {
+            composable<MainNavigationRoute.Camera> {
                 CameraScreenRoot(
                     cameraSearchViewModel = cameraSearchViewModel,
                     onNavigateToSearchResult = { args ->
@@ -171,7 +166,7 @@ fun MainScreen() {
                     }
                 )
             }
-            composable(MainNavigationRoute.TextSearch.route) {
+            composable<MainNavigationRoute.TextSearch> {
                 TextSearchScreenRoot(
                     textSearchViewModel = textSearchViewModel,
                     onNavigateToSearchResult = { args ->
@@ -186,7 +181,7 @@ fun MainScreen() {
                     }
                 )
             }
-            composable(MainNavigationRoute.MyPage.route) {
+            composable<MainNavigationRoute.MyPage> {
                 MyPageScreenRoot(
                     myPageViewModel = myPageViewModel,
                     onNavigateToChangeNickname = {

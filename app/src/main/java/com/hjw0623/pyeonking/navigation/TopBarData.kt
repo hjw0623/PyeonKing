@@ -22,20 +22,24 @@ data class TopBarData(
 val NavBackStackEntry.topBarAsRouteName: TopBarData
     get() {
         val routeName = destination.route ?: return TopBarData()
-        return when {
-            routeName.contains(ScreenRoutes.REVIEW_EDIT) -> TopBarData(title = TopBarTitle.TITLE_REVIEW_EDIT)
-            routeName.contains(ScreenRoutes.REVIEW_WRITE) -> TopBarData(title = TopBarTitle.TITLE_REVIEW_WRITE)
-            routeName.contains(ScreenRoutes.SEARCH_RESULT) -> TopBarData(title = TopBarTitle.TITLE_SEARCH_RESULT)
-            routeName.contains(ScreenRoutes.PRODUCT_DETAIL) -> TopBarData(
+        val simpleRoute = routeName.substringAfterLast(".")
+
+        return when (simpleRoute) {
+            ScreenRoutes.REVIEW_EDIT -> TopBarData(title = TopBarTitle.TITLE_REVIEW_EDIT)
+            ScreenRoutes.REVIEW_WRITE -> TopBarData(title = TopBarTitle.TITLE_REVIEW_WRITE)
+            ScreenRoutes.SEARCH_RESULT -> TopBarData(title = TopBarTitle.TITLE_SEARCH_RESULT)
+            ScreenRoutes.PRODUCT_DETAIL -> TopBarData(
                 iconTint = Color.White, backgroundColor = primaryLight
             )
 
-            routeName.contains(ScreenRoutes.REGISTER_SUCCESS) -> TopBarData(visible = false)
-            routeName.contains(ScreenRoutes.HOME) -> TopBarData(visible = false)
-            routeName.contains(ScreenRoutes.CAMERA_SEARCH) -> TopBarData(visible = false)
-            routeName.contains(ScreenRoutes.TEXT_SEARCH) -> TopBarData(visible = false)
-            routeName.contains(ScreenRoutes.MYPAGE) -> TopBarData(visible = false)
+            ScreenRoutes.REGISTER_SUCCESS -> TopBarData(visible = false)
+            ScreenRoutes.HOME -> TopBarData(visible = false)
+            ScreenRoutes.CAMERA_SEARCH -> TopBarData(visible = false)
+            ScreenRoutes.TEXT_SEARCH -> TopBarData(visible = false)
+            ScreenRoutes.MY_PAGE -> TopBarData(visible = false)
+
             else -> TopBarData()
         }
     }
+
 
