@@ -6,8 +6,10 @@ import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.core.data.model.AuthRequest
 import com.hjw0623.core.data.model.AuthResponse
 import com.hjw0623.core.data.model.BaseResponse
+import com.hjw0623.core.domain.AuthManager
 import com.hjw0623.core.domain.auth.AuthRepository
 import com.hjw0623.core.domain.auth.UserDataValidator
+import com.hjw0623.core.domain.mypage.User
 import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +25,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authRepository: AuthRepository,
-    private val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator,
+    private val authManager: AuthManager = AuthManager
 ) : ViewModel() {
 
     private val _email = MutableStateFlow("")
@@ -84,6 +87,16 @@ class LoginViewModel(
 
                 when (result) {
                     is DataResourceResult.Success -> {
+                        val response = result.data.data
+
+                        val user = User(
+                            email = email.value,
+                            nickname = response.nickname,
+                            password = password.value,
+                            accessToken = response.accessToken,
+                            refreshToken = response.refreshToken
+                        )
+                        authManager.login(user)
                         _event.emit(LoginScreenEvent.NavigateToMyPage)
                     }
 

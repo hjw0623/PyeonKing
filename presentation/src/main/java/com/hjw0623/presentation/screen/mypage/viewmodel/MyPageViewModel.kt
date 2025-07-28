@@ -10,7 +10,6 @@ import com.hjw0623.core.domain.auth.PasswordValidationState
 import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.domain.mypage.MyPageRepository
 import com.hjw0623.core.network.DataResourceResult
-import com.hjw0623.core.util.mockdata.mockUser
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenEvent
@@ -27,15 +26,16 @@ import kotlinx.coroutines.launch
 
 class MyPageViewModel(
     private val myPageRepository: MyPageRepository,
-    private val userDataValidator: UserDataValidator
+    private val userDataValidator: UserDataValidator,
+    private val authManager: AuthManager = AuthManager
 ) : ViewModel() {
 
     // --------------------------------------------------
     // 닉네임 변경 관련
     // --------------------------------------------------
 
-    private val _currentNickname = MutableStateFlow(mockUser.nickname)
-    private val _newNickname = MutableStateFlow(mockUser.nickname)
+    private val _currentNickname = MutableStateFlow(authManager.userData.value?.nickname ?: "")
+    private val _newNickname = MutableStateFlow(authManager.userData.value?.nickname ?: "")
     val newNickname = _newNickname.asStateFlow()
 
     private val _nicknameValidationState =
@@ -105,6 +105,9 @@ class MyPageViewModel(
                 when (result) {
                     is DataResourceResult.Success -> {
                         if (result.data.data) {
+                            authManager.userData.value?.let { user ->
+                                authManager.updateUserData(user.copy(nickname = _newNickname.value))
+                            }
                             _changeNicknameEvent.emit(
                                 ChangeNicknameScreenEvent.NavigateToMyPage(result.data.message)
                             )
@@ -114,6 +117,7 @@ class MyPageViewModel(
                             )
                         }
                     }
+
                     is DataResourceResult.Failure -> {
                         val errorMsg = result.exception.message.toString()
                         _changeNicknameEvent.emit(ChangeNicknameScreenEvent.Error(errorMsg))
@@ -130,7 +134,7 @@ class MyPageViewModel(
     // 비밀번호 변경 관련
     // --------------------------------------------------
 
-    private val _userEmail = MutableStateFlow(mockUser.email)
+    private val _userEmail = MutableStateFlow(authManager.userData.value?.email ?: "")
     private val _currentPassword = MutableStateFlow("")
     val currentPassword = _currentPassword.asStateFlow()
 
@@ -207,7 +211,8 @@ class MyPageViewModel(
     }
 
     fun onCurrentPasswordChangeDebounced(password: String) {
-        _isCurrentPasswordValid.value = password == mockUser.password
+        val stored = AuthManager.userData.value?.password ?: ""
+        _isCurrentPasswordValid.value = password == stored
     }
 
     fun onNewPasswordChange(password: String) {
