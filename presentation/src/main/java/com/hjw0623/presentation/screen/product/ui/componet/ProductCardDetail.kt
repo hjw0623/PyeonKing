@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,19 +36,22 @@ import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.getBrandColor
+import com.hjw0623.core.presentation.ui.getFullImageUrl
 import com.hjw0623.presentation.R
+import com.hjw0623.presentation.util.CoilImageRequest
 
 @Composable
 fun ProductCardDetail(
     product: Product,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Card(
         modifier = modifier
             .padding(60.dp)
             .fillMaxWidth()
             .height(400.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
@@ -61,9 +66,11 @@ fun ProductCardDetail(
 
                 ) {
                 AsyncImage(
-                    model = product.imgUrl,
+                    model = CoilImageRequest.getImageRequest(
+                        context = context,
+                        sourceImage = product.imgUrl
+                    ),
                     contentDescription = null,
-                    fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                     modifier = Modifier.size(120.dp),
                     contentScale = ContentScale.Fit
                 )

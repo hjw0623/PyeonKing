@@ -28,7 +28,7 @@ import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.core.util.mockdata.mockProductList
-import com.hjw0623.presentation.screen.home.ui.component.ProductCardLarge
+import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductCardSmall
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 
 @Composable
@@ -110,8 +110,8 @@ fun SearchResultScreen(
                     items = products,
                     key = { it.id }
                 ) { product ->
-                    ProductCardLarge(
-                        onCardClick = { onProductClick(product) },
+                    ProductCardSmall(
+                        onClick = { onProductClick(product) },
                         product = product
                     )
                 }
