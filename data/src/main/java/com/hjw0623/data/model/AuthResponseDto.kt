@@ -7,4 +7,5 @@ import com.squareup.moshi.JsonClass
 data class AuthResponseDto(
     @field:Json(name = "accessToken") val accessToken: String,
     @field:Json(name = "refreshToken") val refreshToken: String,
+    @field:Json(name = "nickname") val nickname: String
 )
