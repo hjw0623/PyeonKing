@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +44,12 @@ fun HomeScreenRoot(
 
     val throttledSearchClick = rememberThrottledOnClick {
         viewModel.onSearchClick()
+    }
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            homeViewModel.fetchRecommendList()
+        }
     }
 
     ObserveAsEvents(flow = viewModel.event) { event ->
