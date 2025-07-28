@@ -38,9 +38,6 @@ android {
         compose = true
         buildConfig = true
     }
-    secrets {
-        propertiesFileName = "secret.properties"
-    }
 }
 kotlin {
     jvmToolchain(21)
