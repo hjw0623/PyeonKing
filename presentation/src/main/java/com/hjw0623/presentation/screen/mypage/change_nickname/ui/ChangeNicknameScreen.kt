@@ -30,10 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hjw0623.core.domain.auth.EmailPatternValidator
 import com.hjw0623.core.domain.auth.NicknameValidationState
-import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -41,7 +38,6 @@ import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 
 @Composable
