@@ -1,4 +1,4 @@
-package com.hjw0623.core.domain.search.camera_search
+package com.hjw0623.core.util
 
 import android.content.Context
 import android.os.Environment
