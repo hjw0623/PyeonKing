@@ -1,5 +1,7 @@
 package com.hjw0623.core.constants
 
+import com.hjw0623.core.BuildConfig
+
 object TopBarTitle {
     const val TITLE_REVIEW_EDIT = "리뷰 수정"
     const val TITLE_REVIEW_WRITE = "리뷰 작성"
@@ -9,13 +11,19 @@ object TopBarTitle {
 object ScreenRoutes {
     const val REVIEW_EDIT = "ReviewEdit"
     const val REVIEW_WRITE = "ReviewWrite"
+
+    const val REVIEW_HISTORY = "ReviewHistory"
     const val SEARCH_RESULT = "SearchResult"
     const val PRODUCT_DETAIL = "ProductDetail"
-    const val HOME = "home"
-    const val CAMERA_SEARCH = "CameraSearch"
+    const val HOME = "Home"
+    const val CAMERA_SEARCH = "Camera"
     const val TEXT_SEARCH = "TextSearch"
-    const val MYPAGE = "mypage"
+    const val MY_PAGE = "MyPage"
     const val REGISTER_SUCCESS = "RegisterSuccess"
+
+    const val LOGIN = "Login"
+    const val REGISTER = "Register"
+    const val REGISTER_SUCCESS_ROUTE = "RegisterSuccess"
 }
 
 object EmptyString {
@@ -35,7 +43,29 @@ object Brand {
     const val EMART24 = "EMART24"
     const val SEVEN = "SEVENELEVEN"
 }
+
 object Promotion {
     const val ONE_PLUS_ONE = "1+1"
     const val TWO_PLUS_ONE = "2+1"
+
+    const val ONE_PLUS_ONE_RESPONSE = "ONE_PLUS_ONE"
+
+    const val TWO_PLUS_ONE_RESPONSE = "TWO_PLUS_ONE"
+}
+
+object Api {
+    const val BASE_URL = BuildConfig.BASE_URL
+    const val IMAGE_URL = BuildConfig.IMAGE_URL
+}
+
+object Error {
+    const val UNKNOWN_ERROR = "알 수 없는 오류가 발생했습니다. \n 잠시 후 다시 시도해 주세요."
+
+    const val DUPLICATED_NICKNAME = "이미 사용 중인 닉네임입니다."
+
+    const val BLANK_INPUT = "한글 자 이상 입력해주세요."
+
+    const val TOO_SHORT_SEARCH_QUERY_INPUT = "검색어는 2글자 이상 입력해주세요"
+
+    const val UNCHANGED_NICKNAME = "현재 닉네임과 동일합니다."
 }

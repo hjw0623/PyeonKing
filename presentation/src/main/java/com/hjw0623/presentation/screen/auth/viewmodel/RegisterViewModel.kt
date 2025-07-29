@@ -2,24 +2,30 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.constants.Error.DUPLICATED_NICKNAME
+import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.domain.model.AuthRequest
+import com.hjw0623.core.domain.model.AuthResponse
+import com.hjw0623.core.domain.model.BaseResponse
+import com.hjw0623.core.domain.auth.AuthRepository
 import com.hjw0623.core.domain.auth.NicknameValidationState
 import com.hjw0623.core.domain.auth.PasswordValidationState
 import com.hjw0623.core.domain.auth.UserDataValidator
-import com.hjw0623.core.util.mockdata.mockTakenNicknames
+import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenEvent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    // TODO: private val authRepository: AuthRepository,
+    private val authRepository: AuthRepository,
     private val userDataValidator: UserDataValidator
 ) : ViewModel() {
 
@@ -56,25 +62,45 @@ class RegisterViewModel(
     ) { isEmailValid, passwordValidationState, nicknameValidationState, isRegistering ->
         isEmailValid &&
                 passwordValidationState.isValidPassword
-                nicknameValidationState is NicknameValidationState.Valid &&
+        nicknameValidationState is NicknameValidationState.Valid &&
                 !isRegistering
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private val _event = MutableSharedFlow<RegisterScreenEvent>()
     val event = _event.asSharedFlow()
 
+    private val _registerResult = MutableStateFlow<DataResourceResult<BaseResponse<AuthResponse>>>(
+        DataResourceResult.DummyConstructor
+    )
+    val registerResult = _registerResult.asStateFlow()
+
     fun onRegisterClick() {
         viewModelScope.launch {
             _isRegistering.value = true
-            try {
-                delay(1500)
-                // TODO: 실제 회원가입 로직 호출
-                _event.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
+            _registerResult.value = DataResourceResult.Loading
 
-            } catch (e: Exception) {
-                _event.emit(RegisterScreenEvent.Error("회원가입에 실패했습니다. 잠시 후 다시 시도해주세요."))
-            } finally {
+            val authRequest = AuthRequest(
+                email = _email.value,
+                password = _password.value,
+                nickname = _nickname.value
+            )
+
+            authRepository.register(authRequest).collectLatest { result ->
+                _registerResult.value = result
                 _isRegistering.value = false
+
+                when (result) {
+                    is DataResourceResult.Success -> {
+                        _event.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
+                    }
+
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        _event.emit(RegisterScreenEvent.Error(message))
+                    }
+
+                    else -> Unit
+                }
             }
         }
     }
@@ -82,28 +108,34 @@ class RegisterViewModel(
     fun onNicknameCheckClick() {
         viewModelScope.launch {
             _nicknameValidationState.value = NicknameValidationState.Checking
-            try {
-                delay(1000)
-                // TODO: 실제 닉네임 중복 확인 로직 호출
 
-                if (mockTakenNicknames.contains(_nickname.value) || _nickname.value.isBlank()) {
-                    _nicknameValidationState.value = NicknameValidationState.Invalid("이미 사용 중인 닉네임입니다.")
-                } else {
-                    _nicknameValidationState.value = NicknameValidationState.Valid
+            authRepository.checkNickname(_nickname.value).collectLatest { result ->
+                when (result) {
+                    is DataResourceResult.Success -> {
+                        _nicknameValidationState.value = if (result.data.data) {
+                            NicknameValidationState.Valid
+                        } else {
+                            NicknameValidationState.Invalid(DUPLICATED_NICKNAME)
+                        }
+                    }
+
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        _nicknameValidationState.value = NicknameValidationState.Invalid(message)
+                    }
+
+                    else -> Unit
                 }
-            } catch (e: Exception) {
-                _nicknameValidationState.value = NicknameValidationState.Idle
-                _event.emit(RegisterScreenEvent.Error("닉네임 확인 중 오류가 발생했습니다."))
             }
         }
     }
 
     fun onEmailChange(inputEmail: String) {
-        _email.value = inputEmail
+        _email.value = inputEmail.trim()
     }
 
     fun onEmailChangeDebounced(debouncedEmail: String) {
-        val isValid = userDataValidator.isEmailValid(debouncedEmail)
+        val isValid = userDataValidator.isEmailValid(debouncedEmail.trim())
         _isEmailValid.value = isValid
     }
 
@@ -112,7 +144,7 @@ class RegisterViewModel(
     }
 
     fun onPasswordChangeDebounced(password: String) {
-        val validationState = userDataValidator.isPasswordValid(password)
+        val validationState = userDataValidator.isPasswordValid(password.trim())
         _passwordValidationState.value = validationState
     }
 

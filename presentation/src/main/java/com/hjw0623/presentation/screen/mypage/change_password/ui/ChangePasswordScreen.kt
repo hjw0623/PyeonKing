@@ -19,8 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hjw0623.core.domain.auth.EmailPatternValidator
 import com.hjw0623.core.domain.auth.PasswordValidationState
 import com.hjw0623.core.domain.auth.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
@@ -31,18 +29,16 @@ import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.register.ui.component.PasswordRequirement
-import com.hjw0623.presentation.screen.factory.MyPageViewModelFactory
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 
 @Composable
 fun ChangePasswordScreenRoot(
+    myPageViewModel: MyPageViewModel,
     onNavigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val myPageViewModel = MyPageViewModelFactory(userDataValidator)
-    val viewModel: MyPageViewModel = viewModel(factory = myPageViewModel)
+    val viewModel = myPageViewModel
 
     val currentPassword by viewModel.currentPassword.collectAsStateWithLifecycle()
     val newPassword by viewModel.newPassword.collectAsStateWithLifecycle()
@@ -67,7 +63,8 @@ fun ChangePasswordScreenRoot(
                 showToast(context, event.error)
             }
 
-            ChangePasswordScreenEvent.NavigateToMyPage -> {
+            is ChangePasswordScreenEvent.NavigateToMyPage -> {
+                showToast(context, event.message)
                 onNavigateToMyPage()
             }
         }

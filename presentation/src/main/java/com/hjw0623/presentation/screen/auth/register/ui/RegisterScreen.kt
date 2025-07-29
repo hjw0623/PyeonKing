@@ -46,18 +46,15 @@ import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.register.ui.component.PasswordRequirement
 import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
-import com.hjw0623.presentation.screen.factory.RegisterViewModelFactory
 
 @Composable
 fun RegisterScreenRoot(
     onNavigateToRegisterSuccess: () -> Unit,
+    registerViewModel: RegisterViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val userDataValidator = UserDataValidator(EmailPatternValidator)
-    val registerViewModel = RegisterViewModelFactory(userDataValidator)
-    val viewModel: RegisterViewModel = viewModel(factory = registerViewModel)
-
     val context = LocalContext.current
+    val viewModel = registerViewModel
 
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()

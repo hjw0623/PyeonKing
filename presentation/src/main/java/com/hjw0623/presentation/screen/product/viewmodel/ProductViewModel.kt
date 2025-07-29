@@ -2,23 +2,26 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.domain.model.BaseResponse
+import com.hjw0623.core.domain.model.ReviewPage
+import com.hjw0623.core.domain.model.toReviewItem
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.product.ProductDetailTab
+import com.hjw0623.core.domain.product.ProductRepository
 import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.util.mockdata.mockReviewList
+import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import kotlin.math.roundToInt
 
 class ProductViewModel(
-    // private val productRepository: ProductRepository
+    private val productRepository: ProductRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -30,10 +33,15 @@ class ProductViewModel(
     private val _selectedTab = MutableStateFlow(ProductDetailTab.REVIEW)
     val selectedTab = _selectedTab.asStateFlow()
 
-    private val _reviewList = MutableStateFlow<List<ReviewItem>>(emptyList())
+    private val _reviewList = MutableStateFlow<DataResourceResult<BaseResponse<ReviewPage>>>(
+        DataResourceResult.DummyConstructor
+    )
     val reviewList = _reviewList.asStateFlow()
 
-    private val _ratingList = MutableStateFlow<List<Int>>(List(5) { 0 })
+    private val _reviewListUi = MutableStateFlow<List<ReviewItem>>(emptyList())
+    val reviewListUi = _reviewListUi.asStateFlow()
+
+    private val _ratingList = MutableStateFlow(List(5) { 0 })
     val ratingList = _ratingList.asStateFlow()
 
     private val _avgRating = MutableStateFlow(0.0)
@@ -42,12 +50,29 @@ class ProductViewModel(
     private val _reviewSum = MutableStateFlow(0)
     val reviewSum = _reviewSum.asStateFlow()
 
+    private val _currentPage = MutableStateFlow(1)
+    val currentPage = _currentPage.asStateFlow()
+
+    private val _lastPage = MutableStateFlow(0)
+    val lastPage = _lastPage.asStateFlow()
+
     private val _event = MutableSharedFlow<ProductDetailScreenEvent>()
     val event = _event.asSharedFlow()
 
-    fun loadProductDetails(product: Product) {
+    fun initializeIfNeeded(product: Product) {
+        if (_product.value?.id == product.id && _product.value != null) return
+
         _product.value = product
-        fetchReviewData(product.name)
+        _currentPage.value = 1
+        _lastPage.value = 0
+        _reviewList.value = DataResourceResult.DummyConstructor
+        _reviewListUi.value = emptyList()
+        _ratingList.value = List(5) { 0 }
+        _avgRating.value = 0.0
+        _reviewSum.value = 0
+
+        fetchReviewSummary(product.id.toLong())
+        fetchInitReview(product.id.toLong(), 1)
     }
 
     fun changeTab(tab: ProductDetailTab) {
@@ -56,34 +81,95 @@ class ProductViewModel(
 
     fun onWriteReviewClick() {
         viewModelScope.launch {
-            _product.value?.let { product ->
-                _event.emit(ProductDetailScreenEvent.NavigateToReviewWrite(product))
+            _product.value?.let {
+                _event.emit(ProductDetailScreenEvent.NavigateToReviewWrite(it))
             }
         }
     }
 
-    private fun fetchReviewData(product: String) {
+    private fun fetchReviewSummary(promotionId: Long) {
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                delay(1000)
-                val reviews = mockReviewList
+            productRepository.getReviewSummaryByItemId(promotionId).collectLatest { result ->
+                when (result) {
+                    is DataResourceResult.Loading -> {
+                        _isLoading.value = true
+                    }
 
-                _reviewList.value = reviews
-                _reviewSum.value = reviews.size
+                    is DataResourceResult.Success -> {
+                        val summary = result.data.data
+                        _reviewSum.value = summary.totalCount
+                        _avgRating.value =
+                            DecimalFormat("#.#").apply { roundingMode = RoundingMode.HALF_UP }
+                                .format(summary.averageRating).toDouble()
 
-                val avg = if (reviews.isNotEmpty()) reviews.map { it.rating.toDouble() }.average() else 0.0
-                val df = DecimalFormat("#.#").apply { roundingMode = RoundingMode.HALF_UP }
-                _avgRating.value = df.format(avg).toDouble()
+                        _ratingList.value = List(5) { index ->
+                            val star = 5 - index
+                            summary.ratingDistribution[star]?.toInt() ?: 0
+                        }
+                        _isLoading.value = false
+                    }
 
-                _ratingList.value = List(5) { index ->
-                    reviews.count { it.rating.roundToInt() == (5 - index) }
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message.toString()
+                        _event.emit(ProductDetailScreenEvent.Error(message))
+                        _isLoading.value = true
+                    }
+
+                    else -> Unit
                 }
+            }
+        }
+    }
 
-            } catch (e: Exception) {
-                _event.emit(ProductDetailScreenEvent.Error("리뷰를 불러오는 데 실패했습니다."))
-            } finally {
-                _isLoading.value = false
+    private fun fetchInitReview(promotionId: Long, page: Int) {
+        viewModelScope.launch {
+            productRepository.getReviewByItemId(promotionId, page).collectLatest { result ->
+                when (result) {
+                    DataResourceResult.Loading -> {
+                        _isLoading.value = true
+                    }
+
+                    is DataResourceResult.Success -> {
+                        _lastPage.value = result.data.data.totalPages
+                        _reviewList.value = result
+                        _reviewListUi.value = result.data.data.content.map { it.toReviewItem() }
+                        _isLoading.value = false
+                    }
+
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message.toString()
+                        _event.emit(ProductDetailScreenEvent.Error(message))
+                        _isLoading.value = false
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    fun fetchNextReviewPage(promotionId: Long) {
+        viewModelScope.launch {
+            val nextPage = _currentPage.value + 1
+            if (nextPage > _lastPage.value) return@launch
+
+            productRepository.getReviewByItemId(promotionId, nextPage).collectLatest { result ->
+                when (result) {
+
+                    is DataResourceResult.Success -> {
+                        _currentPage.value = nextPage
+                        _lastPage.value = result.data.data.totalPages
+                        _reviewListUi.value =
+                            _reviewListUi.value + result.data.data.content.map { it.toReviewItem() }
+                    }
+
+                    is DataResourceResult.Failure -> {
+                        val message = result.exception.message.toString()
+                        _event.emit(ProductDetailScreenEvent.Error(message))
+                    }
+
+                    else -> Unit
+                }
             }
         }
     }

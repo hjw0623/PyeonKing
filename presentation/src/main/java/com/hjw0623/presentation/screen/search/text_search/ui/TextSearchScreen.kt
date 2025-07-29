@@ -1,14 +1,19 @@
 package com.hjw0623.presentation.screen.search.text_search.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -16,16 +21,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hjw0623.core.domain.product.Product
 import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.search.text_search.FilterType
-import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
-import com.hjw0623.presentation.screen.factory.TextSearchViewModelFactory
+import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.presentation.screen.search.text_search.ui.component.SearchTextField
 import com.hjw0623.presentation.screen.search.text_search.ui.component.focused.SearchHistorySection
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductListSection
@@ -33,17 +36,18 @@ import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
 
 @Composable
 fun TextSearchScreenRoot(
+    textSearchViewModel: TextSearchViewModel,
     onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
     onNavigateToProductDetail: (Product) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val textSearchViewModelFactory = TextSearchViewModelFactory()
-    val viewModel: TextSearchViewModel = viewModel(factory = textSearchViewModelFactory)
+    val viewModel = textSearchViewModel
 
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
-    val products by viewModel.products.collectAsStateWithLifecycle()
+    val allProducts by viewModel.allProducts.collectAsStateWithLifecycle()
     val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
 
     val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
@@ -54,6 +58,9 @@ fun TextSearchScreenRoot(
     val throttledProductClick =
         rememberThrottledOnClick<Product>(onClick = viewModel::onProductClick)
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchAllProducts()
+    }
     ObserveAsEvents(flow = viewModel.event) { event ->
         when (event) {
             is TextSearchScreenEvent.Error -> showToast(context, event.error)
@@ -64,9 +71,10 @@ fun TextSearchScreenRoot(
 
     TextSearchScreen(
         modifier = modifier,
+        isLoading = isLoading,
         query = query,
         searchHistory = searchHistory,
-        products = products,
+        allProducts = allProducts,
         selectedFilters = selectedFilters,
         onQueryChange = viewModel::onQueryChange,
         onClearClick = viewModel::onClearClick,
@@ -81,9 +89,10 @@ fun TextSearchScreenRoot(
 @Composable
 fun TextSearchScreen(
     modifier: Modifier = Modifier,
+    isLoading: Boolean,
     query: String,
     searchHistory: List<String>,
-    products: List<Product>,
+    allProducts: List<Product>,
     selectedFilters: Map<FilterType, Boolean>,
     onQueryChange: (String) -> Unit,
     onClearClick: () -> Unit,
@@ -125,10 +134,20 @@ fun TextSearchScreen(
         } else {
             ProductListSection(
                 selectedFilter = selectedFilters,
-                products = products,
+                products = allProducts,
                 onProductClick = onProductClick,
                 onFilterToggle = onFilterToggle
             )
+        }
+        if (isLoading) {
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+
         }
     }
 }
@@ -139,9 +158,10 @@ fun TextSearchScreen(
 private fun TextSearchScreenPreview() {
     PyeonKingTheme {
         TextSearchScreen(
+            isLoading = false,
             query = "라면",
             searchHistory = listOf("콜라", "아이스크림", "도시락"),
-            products = mockProductList,
+            allProducts = mockProductList,
             selectedFilters = mapOf(FilterType.ONE_PLUS_ONE to true),
             onQueryChange = {},
             onClearClick = {},

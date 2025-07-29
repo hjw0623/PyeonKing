@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.hjw0623.presentation"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -27,22 +27,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
     }
-    /*kotlinOptions {
-        jvmTarget = "17"
-    }*/
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -58,7 +56,7 @@ dependencies {
     implementation(libs.bundles.camerax)
 
     //coil
-    implementation(libs.coil.compose)
+    implementation(libs.bundles.coil)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)

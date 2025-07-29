@@ -4,11 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
     namespace = "com.hjw0623.pyeonking"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hjw0623.pyeonking"
@@ -30,18 +31,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    /*kotlinOptions {
-    jvmTarget = "17"
-    }*/
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    secrets {
+        propertiesFileName = "secrets.properties"
     }
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 dependencies {
     implementation(project(":core"))
@@ -62,10 +64,13 @@ dependencies {
     implementation(libs.bundles.retrofit)
 
     // Coil
-    implementation(libs.coil.compose)
+    implementation(libs.bundles.coil)
 
     // CameraX
     implementation(libs.bundles.camerax)
+
+    //Rest
+    implementation(libs.bundles.retrofit)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -75,6 +80,9 @@ dependencies {
 
     //GoogleMap
     implementation(libs.bundles.googlemap)
+
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))

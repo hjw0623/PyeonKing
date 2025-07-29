@@ -1,39 +1,52 @@
 package com.hjw0623.presentation.screen.review.review_edit.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
+import com.hjw0623.core.presentation.ui.getFullImageUrl
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.factory.ReviewViewModelFactory
 import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector
-import com.hjw0623.presentation.screen.review.viewmodel.ReviewViewModel
+import com.hjw0623.presentation.screen.review.viewmodel.ReviewEditViewModel
 
 @Composable
 fun ReviewEditScreenRoot(
     reviewInfo: ReviewInfo,
+    reviewEditViewModel: ReviewEditViewModel,
     onNavigateReviewHistory: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val reviewViewModelFactory = ReviewViewModelFactory()
-    val viewModel: ReviewViewModel = viewModel(factory = reviewViewModelFactory)
+    val viewModel = reviewEditViewModel
 
     val productName by viewModel.productName.collectAsStateWithLifecycle()
     val productImgUrl by viewModel.productImgUrl.collectAsStateWithLifecycle()
@@ -54,7 +67,9 @@ fun ReviewEditScreenRoot(
             is ReviewEditScreenEvent.Error -> {
                 showToast(context, event.error)
             }
-            ReviewEditScreenEvent.NavigateReviewHistory -> {
+
+            is ReviewEditScreenEvent.NavigateReviewHistory -> {
+                showToast(context, event.message)
                 onNavigateReviewHistory()
             }
         }
@@ -77,7 +92,7 @@ fun ReviewEditScreenRoot(
 fun ReviewEditScreen(
     modifier: Modifier = Modifier,
     productName: String,
-    productImgUrl: String,
+    productImgUrl: String?,
     newContent: String,
     newStarRating: Int,
     isEditButtonEnabled: Boolean,
@@ -98,8 +113,9 @@ fun ReviewEditScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
-                model = productImgUrl,
+                model = getFullImageUrl(productImgUrl).takeIf { it.isNotBlank() },
                 contentDescription = null,
+                fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 modifier = Modifier.size(100.dp),
                 contentScale = ContentScale.Fit
             )

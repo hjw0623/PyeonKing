@@ -7,7 +7,7 @@ import com.hjw0623.core.domain.review.review_history.ReviewInfo
 import java.util.UUID
 
 val mockProduct = Product(
-    uuid = UUID.randomUUID().toString(),
+    id = UUID.randomUUID().toString(),
     imgUrl = "https://image.woodongs.com/imgsvr/item/GD_8801094083205_003.jpg",
     name = "코카콜라제로캔350ML",
     price = "2100",
@@ -16,7 +16,7 @@ val mockProduct = Product(
     brand = "CU"
 )
 val mockProduct2 = Product(
-    uuid = UUID.randomUUID().toString(),
+    id = UUID.randomUUID().toString(),
     imgUrl = "https://image.woodongs.com/imgsvr/item/GD_8801056150013_008.jpg",
     name = "롯데)펩시콜라캔355ML",
     price = "2100",
@@ -25,7 +25,7 @@ val mockProduct2 = Product(
     brand = "GS25"
 )
 val mockProduct3 = Product(
-    uuid = UUID.randomUUID().toString(),
+    id = UUID.randomUUID().toString(),
     imgUrl = "https://image.woodongs.com/imgsvr/item/GD_8801094063283_002.jpg",
     name = "코카콜라제로레몬캔350ML",
     price = "2100",
@@ -34,7 +34,7 @@ val mockProduct3 = Product(
     brand = "EMART24"
 )
 val mockProduct4= Product(
-    uuid = UUID.randomUUID().toString(),
+    id = UUID.randomUUID().toString(),
     imgUrl = "https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8801056193010.JPG",
     name = "롯데)펩시콜라펫600ml",
     price = "2100",
@@ -47,13 +47,13 @@ val mockProduct4= Product(
 
 val mockProductList = listOf(
     mockProduct,
-    mockProduct.copy(uuid = UUID.randomUUID().toString(), promotion = "2+1"),
+    mockProduct.copy(id = UUID.randomUUID().toString(), promotion = "2+1"),
     mockProduct2,
-    mockProduct2.copy(uuid = UUID.randomUUID().toString(), promotion = "2+1"),
+    mockProduct2.copy(id = UUID.randomUUID().toString(), promotion = "2+1"),
     mockProduct3,
-    mockProduct3.copy(uuid = UUID.randomUUID().toString(), promotion = "2+1"),
+    mockProduct3.copy(id = UUID.randomUUID().toString(), promotion = "2+1"),
     mockProduct4,
-    mockProduct4.copy(uuid = UUID.randomUUID().toString(), promotion = "2+1")
+    mockProduct4.copy(id = UUID.randomUUID().toString(), promotion = "2+1")
 )
 
 
@@ -113,7 +113,7 @@ val mockTakenNicknames = setOf("닉네임1", "닉네임2", "닉네임3", "닉네
 val mockUser = User(
     email = "newuser@test.com",
     nickname = "신규회원",
-    password = "Aa123456",
+    password = "Qwer1234!!!",
     accessToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzU4NDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.RywnIQ_m2KbuXUZbxYJ36q1FS__GUKw3Dxo4giiSCMA",
     refreshToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzcwNDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.AWi_qMm9DGACW9CXQQ1e3hDmZjn3vs8UoSCAc-9qccs"
 )
