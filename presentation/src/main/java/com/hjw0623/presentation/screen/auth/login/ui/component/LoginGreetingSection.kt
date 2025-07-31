@@ -39,7 +39,7 @@ fun LoginGreetingSection(
                 .padding(vertical = 32.dp)
         ) {
             AsyncImage(
-                model = "https://robohash.org/login",
+                model = R.drawable.ic_pyeonking_logo,
                 contentDescription = null,
                 modifier = Modifier
                     .size(120.dp)
