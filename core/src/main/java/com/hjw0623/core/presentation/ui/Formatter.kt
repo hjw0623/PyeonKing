@@ -41,3 +41,13 @@ fun getFullImageUrl(imgUrl: String?): String {
         IMAGE_URL + imgUrl
     }
 }
+
+fun getBrandQuery(brand: String): String {
+    return when (brand) {
+        Brand.CU -> Brand.CU_KR
+        Brand.GS25 -> Brand.GS25_KR
+        Brand.SEVEN -> Brand.SEVEN_KR
+        Brand.EMART24 -> Brand.EMART24_KR
+        else -> brand
+    }
+}
