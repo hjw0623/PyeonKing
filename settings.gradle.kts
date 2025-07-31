@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "PyeonKing"
 include(":app")
+include(":core")
+include(":presentation")
+include(":data")
