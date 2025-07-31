@@ -42,6 +42,11 @@ object Brand {
     const val GS25 = "GS25"
     const val EMART24 = "EMART24"
     const val SEVEN = "SEVENELEVEN"
+
+    const val CU_KR = "cu"
+    const val GS25_KR = "gs25"
+    const val EMART24_KR = "이마트24"
+    const val SEVEN_KR = "세븐일레븐"
 }
 
 object Promotion {
@@ -56,6 +61,8 @@ object Promotion {
 object Api {
     const val BASE_URL = BuildConfig.BASE_URL
     const val IMAGE_URL = BuildConfig.IMAGE_URL
+
+    const val KAKAO_BASE_URL = "https://dapi.kakao.com/"
 }
 
 object Error {

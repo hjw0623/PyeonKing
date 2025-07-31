@@ -219,7 +219,12 @@ fun ProductDetailScreen(
                 }
 
                 ProductDetailTab.MAP -> {
-                    item { MapTab() }
+                    item {
+                        MapTab(
+                            brandName = product?.brand ?: "",
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                    }
                 }
             }
         }
