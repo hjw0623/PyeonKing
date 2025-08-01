@@ -29,7 +29,7 @@
 | Navigation | Jetpack Navigation |
 | Location | Android Location Services |
 | Local Storage | DataStore |
-| Networking | Retrofit2, OkHttp, Kakao Poi API, Moshi |
+| Networking | Retrofit2, OkHttp, Moshi |
 | Map | GoogleMaps |
 | Image Loading | Coil |
 | Tools | Git, Figma |
