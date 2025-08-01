@@ -11,9 +11,9 @@ import com.hjw0623.core.data.UserPreferenceDataStore
 import com.hjw0623.core.domain.AuthManager
 import timber.log.Timber
 
-const val COIL_MEMORY_CACHE_SIZE_PERCENT = 0.1
+const val COIL_MEMORY_CACHE_SIZE_PERCENT = 0.25
 const val COIL_DISK_CACHE_DIR_NAME = "coil_file_cache"
-const val COIL_DISK_CACHE_MAX_SIZE = 1024 * 1024 * 30
+const val COIL_DISK_CACHE_MAX_SIZE = 1024 * 1024 * 50
 
 class PyeonKingApplication: Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
