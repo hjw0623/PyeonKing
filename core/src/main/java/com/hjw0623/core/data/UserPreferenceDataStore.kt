@@ -23,6 +23,7 @@ class UserPreferenceDataStore(context: Context) {
         val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val KEY_IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+        val KEY_SEARCH_HISTORY = stringPreferencesKey("search_history")
     }
 
     suspend fun saveUserInfo(
@@ -48,10 +49,29 @@ class UserPreferenceDataStore(context: Context) {
         }
     }
 
+    suspend fun saveSearchHistory(query: String) {
+        dataStore.edit { preferences ->
+            val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
+            val newHistory = listOf(query) + currentHistory.filterNot { it == query }
+            preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
+        }
+    }
+
+    suspend fun removeSearchHistory(query: String) {
+        dataStore.edit { preferences ->
+            val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
+            val newHistory = currentHistory.filterNot { it == query }
+            preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
+        }
+    }
+
     val nicknameFlow: Flow<String?> = dataStore.data.map { it[KEY_NICKNAME] }
     val emailFlow: Flow<String?> = dataStore.data.map { it[KEY_EMAIL] }
     val passwordFlow: Flow<String?> = dataStore.data.map { it[KEY_PASSWORD] }
     val accessTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_ACCESS_TOKEN] }
     val refreshTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_REFRESH_TOKEN] }
     val isLoggedInFlow: Flow<Boolean> = dataStore.data.map { it[KEY_IS_LOGGED_IN] ?: false }
+    val searchHistoryFlow: Flow<List<String>> = dataStore.data.map { preferences ->
+        preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
+    }
 }
