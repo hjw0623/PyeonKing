@@ -2,8 +2,8 @@ package com.hjw0623.presentation.screen.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hjw0623.core.domain.auth.EmailPatternValidator
-import com.hjw0623.core.domain.auth.UserDataValidator
+import com.hjw0623.core.business_logic.auth.validator.EmailPatternValidator
+import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
 import com.hjw0623.data.repository.AuthRepositoryImpl
 import com.hjw0623.data.repository.MyPageRepositoryImpl
 import com.hjw0623.data.repository.ProductRepositoryImpl

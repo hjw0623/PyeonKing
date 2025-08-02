@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.hjw0623.core.BuildConfig
-import com.hjw0623.core.domain.model.PoiInfo
+import com.hjw0623.core.business_logic.model.response.PoiInfo
 import com.hjw0623.core.location.AndroidLocationObserver
-import com.hjw0623.core.location.KakaoRepository
+import com.hjw0623.core.business_logic.repository.KakaoRepository
 import com.hjw0623.core.presentation.ui.getBrandQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

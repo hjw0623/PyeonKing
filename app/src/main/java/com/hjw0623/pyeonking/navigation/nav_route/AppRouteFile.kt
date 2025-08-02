@@ -1,8 +1,8 @@
 package com.hjw0623.pyeonking.navigation.nav_route
 
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.review.ReviewInfo
 import kotlinx.serialization.Serializable
 
 @Serializable

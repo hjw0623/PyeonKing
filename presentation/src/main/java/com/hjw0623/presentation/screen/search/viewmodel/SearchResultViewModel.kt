@@ -2,12 +2,12 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.toProduct
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.SearchRepository
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.search_result.SearchResultSource
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.response.toProduct
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.repository.SearchRepository
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,6 +1,6 @@
 package com.hjw0623.data.util
 
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.data.model.parseErrorMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

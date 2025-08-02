@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.getBrandColor
 import com.hjw0623.core.presentation.ui.getFullImageUrl

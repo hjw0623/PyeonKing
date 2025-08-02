@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.product.ProductDetailTab
-import com.hjw0623.core.domain.product.ReviewItem
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.product.ProductDetailTab
+import com.hjw0623.core.business_logic.model.product.ReviewItem
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.TopRoundedBackground
 import com.hjw0623.core.presentation.designsystem.components.showToast

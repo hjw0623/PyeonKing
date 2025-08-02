@@ -14,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.AuthManager
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.auth.AuthManager
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents

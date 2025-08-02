@@ -4,9 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.review.ReviewInfo
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterSuccessScreen

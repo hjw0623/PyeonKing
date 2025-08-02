@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.text_search.FilterType
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.text_search.FilterType
 import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 

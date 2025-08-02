@@ -2,10 +2,10 @@ package com.hjw0623.presentation.screen.review.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.UpdateReviewBody
-import com.hjw0623.core.domain.review.ReviewRepository
-import com.hjw0623.core.domain.review.review_history.ReviewInfo
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.UpdateReviewBody
+import com.hjw0623.core.business_logic.repository.ReviewRepository
+import com.hjw0623.core.business_logic.model.review.ReviewInfo
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

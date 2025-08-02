@@ -8,7 +8,7 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import com.hjw0623.core.data.UserPreferenceDataStore
-import com.hjw0623.core.domain.AuthManager
+import com.hjw0623.core.business_logic.auth.AuthManager
 import timber.log.Timber
 
 const val COIL_MEMORY_CACHE_SIZE_PERCENT = 0.25

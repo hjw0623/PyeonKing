@@ -2,14 +2,14 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.BaseResponse
-import com.hjw0623.core.domain.model.ReviewPage
-import com.hjw0623.core.domain.model.toReviewItem
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.product.ProductDetailTab
-import com.hjw0623.core.domain.product.ProductRepository
-import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.response.BaseResponse
+import com.hjw0623.core.business_logic.model.response.ReviewPage
+import com.hjw0623.core.business_logic.model.response.toReviewItem
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.product.ProductDetailTab
+import com.hjw0623.core.business_logic.repository.ProductRepository
+import com.hjw0623.core.business_logic.model.product.ReviewItem
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.auth.PasswordValidationState
-import com.hjw0623.core.domain.auth.UserDataValidator
+import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
+import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingPasswordTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
