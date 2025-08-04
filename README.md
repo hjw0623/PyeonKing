@@ -8,11 +8,11 @@
 ## 📱 프로젝트 개요
 
 - **앱 이름**: PyeonKing  
-- **개발 기간**: 2025.06 ~ 2025.08(개발 완료 후 개선중)
+- **개발 기간**: 2025.06 ~ 2025.08(마켓 등록 준비중)
 - **플랫폼**: Android  
 - **개발 언어**: Kotlin  
 - **개발 환경**: Android Studio  
-- **데이터**: REST서버, kakao Poi
+- **데이터**: REST서버, kakao POI
 
 ## 🤷‍♀️ 기획 의도  
 해마다 상승하는 물가로 인해, 편의점에서 상품을 구매할때 할인정보를 확인하고 합리적인 소비를 위해 개발했습니다.
@@ -24,13 +24,14 @@
 | 구분 | 기술 |
 |----------|------------|
 | Language | Kotlin |
+| UI/UX | Jetpack Compose Material3 |
 | Architecture | MVVM, Repository Pattern, ViewModelFactory |
 | Async Programming | Kotlin Coroutines, StateFlow, SharedFlow |
 | Navigation | Jetpack Navigation |
-| Location | Android Location Services |
+| LBS | Fused Location Provider |
 | Local Storage | DataStore |
 | Networking | Retrofit2, OkHttp, Moshi |
-| Map | GoogleMaps |
+| Map | Google Compose Map |
 | Image Loading | Coil |
 | Tools | Git, Figma |
 
@@ -47,12 +48,12 @@
 
 ---
 
-### 📷 2. 이미지 검색 기능 (베타)
+### 📷 2. AI 서버와 연동된 이미지 검색 기능 
 
 | 이미지 검색 화면 |
 |:--:|
 | <img src="https://github.com/user-attachments/assets/e1cde4d7-a70c-4d33-ae5e-d001e9e8c310"/> |
-| 상품의 사진을 찍으면 해당 상품의 할인 정보를 제공합니다. |
+| 상품의 사진을 찍으면 해당 상품의 이미지를 AI서버와 연동해 할인 정보를 제공합니다. |
 
 ---
 
