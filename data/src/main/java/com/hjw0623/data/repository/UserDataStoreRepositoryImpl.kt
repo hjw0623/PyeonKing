@@ -1,17 +1,19 @@
-package com.hjw0623.core.data
+package com.hjw0623.data.repository
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private const val DATASTORE_NAME = "user_prefs"
 val Context.userDataStore by preferencesDataStore(name = DATASTORE_NAME)
 
-class UserPreferenceDataStore(context: Context) {
+
+class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
 
     private val appContext = context.applicationContext
     private val dataStore = appContext.userDataStore
@@ -26,30 +28,28 @@ class UserPreferenceDataStore(context: Context) {
         val KEY_SEARCH_HISTORY = stringPreferencesKey("search_history")
     }
 
-    suspend fun saveUserInfo(
+    override suspend fun saveUserInfo(
         nickname: String,
         email: String,
-        password: String,
         accessToken: String,
         refreshToken: String
     ) {
         dataStore.edit { preferences ->
             preferences[KEY_NICKNAME] = nickname
             preferences[KEY_EMAIL] = email
-            preferences[KEY_PASSWORD] = password
             preferences[KEY_ACCESS_TOKEN] = accessToken
             preferences[KEY_REFRESH_TOKEN] = refreshToken
             preferences[KEY_IS_LOGGED_IN] = true
         }
     }
 
-    suspend fun clearLoginInfo() {
+    override suspend fun clearLoginInfo() {
         dataStore.edit { preferences ->
             preferences.clear()
         }
     }
 
-    suspend fun saveSearchHistory(query: String) {
+    override suspend fun saveSearchHistory(query: String) {
         dataStore.edit { preferences ->
             val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
             val newHistory = listOf(query) + currentHistory.filterNot { it == query }
@@ -57,7 +57,7 @@ class UserPreferenceDataStore(context: Context) {
         }
     }
 
-    suspend fun removeSearchHistory(query: String) {
+    override suspend fun removeSearchHistory(query: String) {
         dataStore.edit { preferences ->
             val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
             val newHistory = currentHistory.filterNot { it == query }
@@ -65,13 +65,14 @@ class UserPreferenceDataStore(context: Context) {
         }
     }
 
-    val nicknameFlow: Flow<String?> = dataStore.data.map { it[KEY_NICKNAME] }
-    val emailFlow: Flow<String?> = dataStore.data.map { it[KEY_EMAIL] }
-    val passwordFlow: Flow<String?> = dataStore.data.map { it[KEY_PASSWORD] }
-    val accessTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_ACCESS_TOKEN] }
-    val refreshTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_REFRESH_TOKEN] }
-    val isLoggedInFlow: Flow<Boolean> = dataStore.data.map { it[KEY_IS_LOGGED_IN] ?: false }
-    val searchHistoryFlow: Flow<List<String>> = dataStore.data.map { preferences ->
+    override val nicknameFlow: Flow<String?> = dataStore.data.map { it[KEY_NICKNAME] }
+    override val emailFlow: Flow<String?> = dataStore.data.map { it[KEY_EMAIL] }
+    override val passwordFlow: Flow<String?> = dataStore.data.map { it[KEY_PASSWORD] }
+    override val accessTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_ACCESS_TOKEN] }
+    override val refreshTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_REFRESH_TOKEN] }
+    override val isLoggedInFlow: Flow<Boolean> =
+        dataStore.data.map { it[KEY_IS_LOGGED_IN] ?: false }
+    override val searchHistoryFlow: Flow<List<String>> = dataStore.data.map { preferences ->
         preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
     }
 }

@@ -1,8 +1,7 @@
 package com.hjw0623.core.business_logic.auth
 
-import android.util.Log
 import com.hjw0623.core.business_logic.model.mypage.User
-import com.hjw0623.core.data.UserPreferenceDataStore
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +22,11 @@ object AuthManager {
     private var _accessToken: String = ""
     val accessToken: String get() = _accessToken
 
-    private lateinit var userPrefs: UserPreferenceDataStore
+    private lateinit var userPrefs: UserDataStoreRepository
     private val applicationScope = CoroutineScope(Dispatchers.IO)
 
-    fun initialize(userPreferenceDataStore: UserPreferenceDataStore) {
-        userPrefs = userPreferenceDataStore
+    fun initialize(userDataStoreRepository: UserDataStoreRepository) {
+        userPrefs = userDataStoreRepository
 
         applicationScope.launch {
             userPrefs.isLoggedInFlow.collect {
@@ -59,13 +58,10 @@ object AuthManager {
             userPrefs.saveUserInfo(
                 nickname = user.nickname,
                 email = user.email,
-                password = user.password,
                 accessToken = user.accessToken,
                 refreshToken = user.refreshToken
             )
             _userData.emit(user)
-            Log.d("🔐AuthManager", "✅ login(): accessToken = ${user.accessToken}")
-
         }
     }
 
@@ -80,7 +76,6 @@ object AuthManager {
             userPrefs.saveUserInfo(
                 nickname = newUser.nickname,
                 email = newUser.email,
-                password = userPrefs.passwordFlow.first() ?: "",
                 accessToken = userPrefs.accessTokenFlow.first() ?: "",
                 refreshToken = userPrefs.refreshTokenFlow.first() ?: ""
             )
