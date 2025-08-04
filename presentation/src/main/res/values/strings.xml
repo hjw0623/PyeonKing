@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PyeonKing</string>
+    <string name="app_name">편킹</string>
 
     //홈스크린
     <string name="price_format">%1$s원 (%2$s원)</string>
