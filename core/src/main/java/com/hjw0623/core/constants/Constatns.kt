@@ -75,4 +75,8 @@ object Error {
     const val TOO_SHORT_SEARCH_QUERY_INPUT = "검색어는 2글자 이상 입력해주세요"
 
     const val UNCHANGED_NICKNAME = "현재 닉네임과 동일합니다."
+
+    const val SAVE_PICTURE_ERROR = "사진 저장 실패"
+
+    const val NO_IMAGE = "검색할 이미지가 없습니다."
 }
