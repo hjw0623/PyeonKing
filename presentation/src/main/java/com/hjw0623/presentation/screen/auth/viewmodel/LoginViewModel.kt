@@ -92,7 +92,6 @@ class LoginViewModel(
                         val user = User(
                             email = email.value,
                             nickname = response.nickname,
-                            password = password.value,
                             accessToken = response.accessToken,
                             refreshToken = response.refreshToken
                         )
