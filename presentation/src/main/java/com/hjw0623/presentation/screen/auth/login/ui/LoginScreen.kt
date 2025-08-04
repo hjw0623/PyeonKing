@@ -67,6 +67,7 @@ fun LoginScreenRoot(
             }
 
             LoginScreenEvent.NavigateToMyPage -> {
+                showToast(context, context.getString(R.string.toast_login_success))
                 onNavigateToMyPage()
             }
         }
