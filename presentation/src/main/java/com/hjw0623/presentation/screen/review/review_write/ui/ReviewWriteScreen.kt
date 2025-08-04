@@ -67,6 +67,7 @@ fun ReviewWriteScreenRoot(
             }
 
             is ReviewWriteScreenEvent.NavigateBackToProductDetail -> {
+                showToast(context, event.message)
                 onReviewWriteComplete()
             }
         }
