@@ -44,8 +44,6 @@ fun ChangePasswordScreenRoot(
     val newPassword by viewModel.newPassword.collectAsStateWithLifecycle()
     val confirmPassword by viewModel.confirmPassword.collectAsStateWithLifecycle()
     val passwordValidationState by viewModel.passwordValidationState.collectAsStateWithLifecycle()
-
-    val isCurrentPasswordValid by viewModel.isCurrentPasswordValid.collectAsStateWithLifecycle()
     val isConfirmPasswordValid by viewModel.isConfirmPasswordValid.collectAsStateWithLifecycle()
 
     val isCurrentPasswordVisible by viewModel.isCurrentPasswordVisible.collectAsStateWithLifecycle()
@@ -77,7 +75,6 @@ fun ChangePasswordScreenRoot(
         confirmPassword = confirmPassword,
         passwordValidationState = passwordValidationState,
         onChangePasswordClick = throttledChangePwClick,
-        isCurrentPasswordValid = isCurrentPasswordValid,
         isConfirmPasswordValid = isConfirmPasswordValid,
         isCurrentPasswordVisible = isCurrentPasswordVisible,
         isNewPasswordVisible = isNewPasswordVisible,
@@ -88,7 +85,6 @@ fun ChangePasswordScreenRoot(
         onToggleCurrentPasswordVisibility = viewModel::onToggleCurrentPasswordVisibility,
         onToggleNewPasswordVisibility = viewModel::onToggleNewPasswordVisibility,
         onToggleConfirmPasswordVisibility = viewModel::onToggleConfirmPasswordVisibility,
-        onCurrentPasswordChangeDebounced = viewModel::onCurrentPasswordChangeDebounced,
         onNewPasswordChangeDebounced = viewModel::onNewPasswordChangeDebounced,
         isChangePwButtonEnabled = isChangePwButtonEnabled
     )
@@ -102,7 +98,6 @@ private fun ChangePasswordScreenScreen(
     confirmPassword: String,
     passwordValidationState: PasswordValidationState,
     onChangePasswordClick: () -> Unit,
-    isCurrentPasswordValid: Boolean,
     isConfirmPasswordValid: Boolean,
     isCurrentPasswordVisible: Boolean,
     isNewPasswordVisible: Boolean,
@@ -110,7 +105,6 @@ private fun ChangePasswordScreenScreen(
     onCurrentPasswordChange: (String) -> Unit,
     onNewPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
-    onCurrentPasswordChangeDebounced: (String) -> Unit,
     onNewPasswordChangeDebounced: (String) -> Unit,
     onToggleCurrentPasswordVisibility: () -> Unit,
     onToggleNewPasswordVisibility: () -> Unit,
@@ -142,15 +136,11 @@ private fun ChangePasswordScreenScreen(
             modifier = Modifier.fillMaxWidth(),
             value = currentPassword,
             onValueChange = onCurrentPasswordChange,
-            onDebouncedValueChange = onCurrentPasswordChangeDebounced,
             isPasswordVisible = isCurrentPasswordVisible,
             onTogglePasswordVisibility = onToggleCurrentPasswordVisibility,
             title = stringResource(R.string.label_current_password),
         )
-        PasswordRequirement(
-            text = "현재 비밀번호 일치",
-            isValid = isCurrentPasswordValid
-        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         PyeonKingPasswordTextField(
@@ -264,7 +254,6 @@ private fun ChangePasswordScreenValidPreview() {
                 hasUpperCase = true,
                 hasSpecialCharacter = true
             ),
-            isCurrentPasswordValid = true,
             isConfirmPasswordValid = true,
             isCurrentPasswordVisible = false,
             isNewPasswordVisible = false,
@@ -274,7 +263,6 @@ private fun ChangePasswordScreenValidPreview() {
             onCurrentPasswordChange = {},
             onNewPasswordChange = {},
             onConfirmPasswordChange = {},
-            onCurrentPasswordChangeDebounced = {},
             onNewPasswordChangeDebounced = {},
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},
@@ -292,7 +280,6 @@ private fun ChangePasswordScreenErrorPreview() {
             newPassword = "short",
             confirmPassword = "mismatch",
             passwordValidationState = PasswordValidationState(hasMinLength = false),
-            isCurrentPasswordValid = false,
             isConfirmPasswordValid = false,
             isCurrentPasswordVisible = true,
             isNewPasswordVisible = false,
@@ -302,7 +289,6 @@ private fun ChangePasswordScreenErrorPreview() {
             onCurrentPasswordChange = {},
             onNewPasswordChange = {},
             onConfirmPasswordChange = {},
-            onCurrentPasswordChangeDebounced = {},
             onNewPasswordChangeDebounced = {},
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},

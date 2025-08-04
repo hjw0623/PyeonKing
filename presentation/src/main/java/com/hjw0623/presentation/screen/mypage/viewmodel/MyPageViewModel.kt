@@ -2,14 +2,14 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
-import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
 import com.hjw0623.core.business_logic.auth.AuthManager
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
 import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
-import com.hjw0623.core.business_logic.repository.MyPageRepository
 import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
+import com.hjw0623.core.business_logic.repository.MyPageRepository
+import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenEvent
@@ -144,9 +144,6 @@ class MyPageViewModel(
     private val _confirmPassword = MutableStateFlow("")
     val confirmPassword = _confirmPassword.asStateFlow()
 
-    private val _isCurrentPasswordValid = MutableStateFlow(false)
-    val isCurrentPasswordValid = _isCurrentPasswordValid.asStateFlow()
-
     private val _isCurrentPasswordVisible = MutableStateFlow(false)
     val isCurrentPasswordVisible = _isCurrentPasswordVisible.asStateFlow()
 
@@ -167,12 +164,10 @@ class MyPageViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), false)
 
     val isChangePwButtonEnabled = combine(
-        isCurrentPasswordValid,
-        passwordValidationState,
-        isConfirmPasswordValid,
-        isChangingPassword
-    ) { isValidCurrent, pwState, isValidConfirm, isChanging ->
-        isValidCurrent && pwState.isValidPassword && isValidConfirm && !isChanging
+        newPassword,
+        confirmPassword
+    ) { new, confirm ->
+        new.isNotBlank() && confirm.isNotBlank() && new == confirm
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), false)
 
     private val _changePasswordEvent = MutableSharedFlow<ChangePasswordScreenEvent>()
@@ -208,11 +203,6 @@ class MyPageViewModel(
 
     fun onCurrentPasswordChange(password: String) {
         _currentPassword.value = password
-    }
-
-    fun onCurrentPasswordChangeDebounced(password: String) {
-        val stored = AuthManager.userData.value?.password ?: ""
-        _isCurrentPasswordValid.value = password == stored
     }
 
     fun onNewPasswordChange(password: String) {
