@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.util.takePictureAndSave
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
@@ -55,7 +54,9 @@ fun CameraScreenRoot(
 
     val throttledRetakeClick = rememberThrottledOnClick(onClick = viewModel::onRetakeClick)
     val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
-
+    val throttledTakePicture = rememberThrottledOnClick {
+        viewModel.takePicture(context, cameraController)
+    }
     LaunchedEffect(Unit) {
         val isGranted = context.hasCameraPermission()
         viewModel.onPermissionResult(isGranted)
@@ -81,11 +82,7 @@ fun CameraScreenRoot(
             modifier = modifier,
             cameraController = cameraController,
             capturedImagePath = capturedImagePath,
-            onCaptureClick = {
-                takePictureAndSave(context, cameraController) { path ->
-                    viewModel.onPhotoTaken(path)
-                }
-            },
+            onCaptureClick = throttledTakePicture,
             onRetakeClick = throttledRetakeClick,
             onSearchClick = throttledSearchClick
         )
