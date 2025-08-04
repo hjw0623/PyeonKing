@@ -1,5 +1,6 @@
 package com.hjw0623.pyeonking
 
+import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,6 +53,7 @@ import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
 import com.hjw0623.pyeonking.navigation.topBarAsRouteName
+import kotlinx.serialization.json.internal.writeJson
 
 @Composable
 fun MainScreen() {
@@ -59,6 +61,7 @@ fun MainScreen() {
     val bottomNavItems = remember { BottomNavItem.fetchBottomNavItems() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val routeName = currentRoute?.substringAfterLast(".")
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
 
@@ -107,8 +110,9 @@ fun MainScreen() {
             if (showBottomBar) {
                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                     bottomNavItems.forEach { bottomItem ->
+                        val destinationName = bottomItem.destination::class.simpleName
                         NavigationBarItem(
-                            selected = currentRoute?.startsWith(bottomItem.destination.toString()) == true,
+                            selected = routeName == destinationName,
                             onClick = {
                                 navController.navigate(bottomItem.destination) {
                                     popUpTo(navController.graph.startDestinationId) {
