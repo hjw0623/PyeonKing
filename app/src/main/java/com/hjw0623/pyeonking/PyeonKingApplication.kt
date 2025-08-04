@@ -7,8 +7,9 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
-import com.hjw0623.core.data.UserPreferenceDataStore
 import com.hjw0623.core.business_logic.auth.AuthManager
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.data.repository.UserDataStoreRepositoryImpl
 import timber.log.Timber
 
 const val COIL_MEMORY_CACHE_SIZE_PERCENT = 0.25
@@ -21,8 +22,8 @@ class PyeonKingApplication: Application(), SingletonImageLoader.Factory {
         Timber.plant(Timber.DebugTree())
         pyeonKingApplication = this
 
-        val userPrefs = UserPreferenceDataStore(applicationContext)
-        AuthManager.initialize(userPrefs)
+        val userDataStoreRepository: UserDataStoreRepository = UserDataStoreRepositoryImpl(applicationContext)
+        AuthManager.initialize(userDataStoreRepository)
 
     }
     companion object {
