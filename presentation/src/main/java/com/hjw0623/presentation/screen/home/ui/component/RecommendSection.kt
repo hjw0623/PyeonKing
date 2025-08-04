@@ -3,7 +3,6 @@ package com.hjw0623.presentation.screen.home.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,7 +73,6 @@ fun RecommendSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(260.dp)
-                            .height(IntrinsicSize.Min)
                     )
                 }
             }
