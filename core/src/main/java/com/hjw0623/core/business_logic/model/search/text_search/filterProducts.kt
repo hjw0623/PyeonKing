@@ -18,7 +18,7 @@ fun filterProducts(
             .map { it.second }
             .ifEmpty { null }
 
-        val promoMatch = listOf(
+        val promotionMatch = listOf(
             FilterType.ONE_PLUS_ONE to Promotion.ONE_PLUS_ONE,
             FilterType.TWO_PLUS_ONE to Promotion.TWO_PLUS_ONE
         ).filter { filters[it.first] == true }
@@ -26,8 +26,8 @@ fun filterProducts(
             .ifEmpty { null }
 
         val storeMatches = storeMatch?.any { product.brand.contains(it) } ?: true
-        val promoMatches = promoMatch?.any { product.promotion.contains(it) } ?: true
+        val promotionMatches = promotionMatch?.any { product.promotion.contains(it) } ?: true
 
-        storeMatches && promoMatches
+        storeMatches && promotionMatches
     }
 }
