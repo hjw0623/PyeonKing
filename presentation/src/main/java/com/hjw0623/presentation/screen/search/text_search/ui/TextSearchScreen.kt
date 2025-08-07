@@ -47,16 +47,16 @@ fun TextSearchScreenRoot(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
-    val allProducts by viewModel.allProducts.collectAsStateWithLifecycle()
     val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
+    val filteredProducts by viewModel.filteredProducts.collectAsStateWithLifecycle()
 
     val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
     val throttledHistoryClick =
-        rememberThrottledOnClick<String>(onClick = viewModel::onHistoryClick)
+        rememberThrottledOnClick(onClick = viewModel::onHistoryClick)
     val throttledDeleteHistoryClick =
-        rememberThrottledOnClick<String>(onClick = viewModel::onDeleteSearchHistory)
+        rememberThrottledOnClick(onClick = viewModel::onDeleteSearchHistory)
     val throttledProductClick =
-        rememberThrottledOnClick<Product>(onClick = viewModel::onProductClick)
+        rememberThrottledOnClick(onClick = viewModel::onProductClick)
 
     LaunchedEffect(Unit) {
         viewModel.fetchAllProducts()
@@ -74,7 +74,7 @@ fun TextSearchScreenRoot(
         isLoading = isLoading,
         query = query,
         searchHistory = searchHistory,
-        allProducts = allProducts,
+        allProducts = filteredProducts,
         selectedFilters = selectedFilters,
         onQueryChange = viewModel::onQueryChange,
         onClearClick = viewModel::onClearClick,

@@ -33,7 +33,9 @@ class TextSearchViewModel(
     val searchHistory = _searchHistory.asStateFlow()
 
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
-    val allProducts = _allProducts.asStateFlow()
+
+    private val _filteredProducts = MutableStateFlow<List<Product>>(emptyList())
+    val filteredProducts = _filteredProducts.asStateFlow()
 
     private val _selectedFilters = MutableStateFlow<Map<FilterType, Boolean>>(emptyMap())
     val selectedFilters = _selectedFilters.asStateFlow()
@@ -54,8 +56,9 @@ class TextSearchViewModel(
 
                     is DataResourceResult.Success -> {
                         _isLoading.value = false
-                        _allProducts.value = result.data.data.searchItems.map { it.toProduct() }
-                        val items = result.data.data.searchItems
+                        val products = result.data.data.searchItems.map { it.toProduct() }
+                        _allProducts.value = products
+                        _filteredProducts.value = products
                     }
 
                     is DataResourceResult.Failure -> {
@@ -130,9 +133,14 @@ class TextSearchViewModel(
     }
 
     private fun applyFilters() {
-        _allProducts.value = filterProducts(
-            allProducts = _allProducts.value,
-            filters = selectedFilters.value
-        )
+        val filters = selectedFilters.value
+        _filteredProducts.value = if (filters.values.none { it}) {
+            _allProducts.value
+        } else {
+            filterProducts(
+                allProducts = _allProducts.value,
+                filters = selectedFilters.value
+            )
+        }
     }
 }
