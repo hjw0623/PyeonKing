@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.hjw0623.core.business_logic.model.review.ReviewInfo
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
@@ -53,6 +53,7 @@ fun ReviewEditScreenRoot(
     val newContent by viewModel.newContent.collectAsStateWithLifecycle()
     val newStarRating by viewModel.newStarRating.collectAsStateWithLifecycle()
     val isEditButtonEnabled by viewModel.isEditButtonEnabled.collectAsStateWithLifecycle()
+    val isEditing by viewModel.isEditing.collectAsStateWithLifecycle()
 
     val throttledEditClick = rememberThrottledOnClick {
         viewModel.onEditClick()
@@ -84,7 +85,8 @@ fun ReviewEditScreenRoot(
         isEditButtonEnabled = isEditButtonEnabled,
         onContentChanged = viewModel::onContentChanged,
         onStarRatingChanged = viewModel::onStarRatingChanged,
-        onEditClick = throttledEditClick
+        onEditClick = throttledEditClick,
+        isEditing = isEditing
     )
 }
 
@@ -98,7 +100,8 @@ fun ReviewEditScreen(
     isEditButtonEnabled: Boolean,
     onContentChanged: (String) -> Unit,
     onStarRatingChanged: (Int) -> Unit,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    isEditing: Boolean
 ) {
     Column(
         modifier = modifier
@@ -159,13 +162,14 @@ fun ReviewEditScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PyeonKingButton(
+        LoadingButton(
             text = stringResource(R.string.action_edit_review_complete),
             onClick = onEditClick,
             enabled = isEditButtonEnabled,
+            loading = isEditing,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(32.dp)
+                .padding(32.dp),
         )
     }
 }
@@ -182,7 +186,8 @@ private fun ReviewEditScreenPreview() {
             isEditButtonEnabled = true,
             onContentChanged = {},
             onStarRatingChanged = {},
-            onEditClick = {}
+            onEditClick = {},
+            isEditing = false
         )
     }
 }

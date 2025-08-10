@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
@@ -51,6 +51,7 @@ fun ReviewWriteScreenRoot(
     val rating by viewModel.rating.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
     val isSubmitButtonEnabled by viewModel.isSubmitButtonEnabled.collectAsStateWithLifecycle()
+    val isSubmitting by viewModel.isSubmitting.collectAsStateWithLifecycle()
 
     val throttledSubmitClick = rememberThrottledOnClick {
         viewModel.onSubmitClick()
@@ -78,6 +79,7 @@ fun ReviewWriteScreenRoot(
         product = productState,
         rating = rating,
         content = content,
+        isSubmitting = isSubmitting,
         isSubmitButtonEnabled = isSubmitButtonEnabled,
         onRatingChange = viewModel::onRatingChange,
         onContentChange = viewModel::onContentChange,
@@ -91,6 +93,7 @@ fun ReviewWriteScreen(
     product: Product?,
     rating: Int,
     content: String,
+    isSubmitting: Boolean,
     isSubmitButtonEnabled: Boolean,
     onRatingChange: (Int) -> Unit,
     onContentChange: (String) -> Unit,
@@ -135,13 +138,14 @@ fun ReviewWriteScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PyeonKingButton(
+        LoadingButton(
             text = stringResource(R.string.action_submit),
             onClick = onSubmitClick,
             enabled = isSubmitButtonEnabled,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .padding(horizontal = 16.dp, vertical = 32.dp),
+            loading = isSubmitting
         )
     }
 }
@@ -157,7 +161,8 @@ private fun ReviewWriteScreenPreview() {
             isSubmitButtonEnabled = true,
             onRatingChange = {},
             onContentChange = {},
-            onSubmitClick = {}
+            onSubmitClick = {},
+            isSubmitting = false
         )
     }
 }

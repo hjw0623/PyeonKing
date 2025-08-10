@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -94,6 +95,8 @@ private fun ChangeNicknameScreen(
     onNicknameCheckClick: () -> Unit,
     onChangeNicknameClick: () -> Unit,
 ) {
+    val isChecking = nicknameValidationState == NicknameValidationState.Checking
+    
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -144,12 +147,14 @@ private fun ChangeNicknameScreen(
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
             } else {
-                PyeonKingButton(
+                LoadingButton(
                     text = stringResource(R.string.action_duplicate_check),
                     onClick = onNicknameCheckClick,
+                    loading = isChecking,
                     enabled = newNickname.isNotBlank() && nicknameValidationState !is NicknameValidationState.Valid,
                     modifier = Modifier.height(56.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp)
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                    fullWidth = false
                 )
             }
         }

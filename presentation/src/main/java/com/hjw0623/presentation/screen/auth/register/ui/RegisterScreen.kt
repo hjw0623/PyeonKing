@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
 import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingPasswordTextField
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
@@ -63,6 +64,7 @@ fun RegisterScreenRoot(
     val nicknameValidationState by viewModel.nicknameValidationState.collectAsStateWithLifecycle()
     val isRegisterButtonEnabled by viewModel.isRegisterButtonEnabled.collectAsStateWithLifecycle()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
+    val isRegistering by viewModel.isRegistering.collectAsStateWithLifecycle()
 
     val throttledRegisterClick = rememberThrottledOnClick {
         viewModel.onRegisterClick()
@@ -89,6 +91,7 @@ fun RegisterScreenRoot(
         email = email,
         password = password,
         nickname = nickname,
+        isRegistering = isRegistering,
         isEmailValid = isEmailValid,
         passwordValidationState = passwordValidationState,
         isPasswordVisible = isPasswordVisible,
@@ -111,6 +114,7 @@ fun RegisterScreen(
     email: String,
     password: String,
     nickname: String,
+    isRegistering: Boolean,
     isEmailValid: Boolean,
     passwordValidationState: PasswordValidationState,
     isPasswordVisible: Boolean,
@@ -125,6 +129,7 @@ fun RegisterScreen(
     onRegisterClick: () -> Unit,
     onTogglePasswordVisibility: () -> Unit,
 ) {
+    val isChecking = nicknameValidationState == NicknameValidationState.Checking
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -178,12 +183,16 @@ fun RegisterScreen(
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
             } else {
-                PyeonKingButton(
+                LoadingButton(
                     text = stringResource(R.string.action_duplicate_check),
                     onClick = onNicknameCheckClick,
-                    enabled = nickname.isNotBlank() && nicknameValidationState !is NicknameValidationState.Valid,
+                    loading = isRegistering,
+                    enabled = nickname.isNotBlank()
+                            && !isChecking
+                            && nicknameValidationState !is NicknameValidationState.Valid,
                     modifier = Modifier.height(56.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp)
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                    fullWidth = false
                 )
             }
         }
@@ -296,6 +305,7 @@ private fun RegisterScreenWithPyeonKingFieldPreview() {
             email = "test@pking.com",
             password = "password123!",
             nickname = "편킹왕",
+            isRegistering = false,
             isEmailValid = true,
             passwordValidationState = PasswordValidationState(
                 hasMinLength = true,
@@ -329,6 +339,7 @@ private fun RegisterScreenWithPyeonKingFieldErrorPreview() {
             email = "test@",
             password = "123",
             nickname = "킹",
+            isRegistering = false,
             isEmailValid = false,
             passwordValidationState = PasswordValidationState(
                 hasMinLength = false,

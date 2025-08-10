@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingPasswordTextField
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
@@ -47,6 +48,7 @@ fun LoginScreenRoot(
     val isEmailValid by viewModel.isEmailValid.collectAsStateWithLifecycle()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
     val isLoginButtonEnabled by viewModel.isLoginButtonEnabled.collectAsStateWithLifecycle()
+    val isLoggingIn by viewModel.isLoggingIn.collectAsStateWithLifecycle()
 
     val throttledLoginClick = rememberThrottledOnClick {
         viewModel.onLoginClick()
@@ -77,6 +79,7 @@ fun LoginScreenRoot(
         modifier = modifier,
         email = email,
         password = password,
+        isLoggingIn = isLoggingIn,
         isEmailValid = isEmailValid,
         isPasswordVisible = isPasswordVisible,
         isLoginButtonEnabled = isLoginButtonEnabled,
@@ -94,6 +97,7 @@ private fun LoginScreen(
     modifier: Modifier = Modifier,
     email: String,
     password: String,
+    isLoggingIn: Boolean,
     isEmailValid: Boolean,
     isPasswordVisible: Boolean,
     isLoginButtonEnabled: Boolean,
@@ -143,12 +147,13 @@ private fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Column {
-                PyeonKingButton(
+                LoadingButton(
                     text = stringResource(R.string.label_login),
                     onClick = onLoginClick,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = isLoginButtonEnabled,
-                    contentPadding = PaddingValues(16.dp)
+                    loading = isLoggingIn,
+                    contentPadding = PaddingValues(10.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -173,6 +178,7 @@ private fun LoginScreenPreview() {
             email = "test@email.com",
             password = "password",
             isEmailValid = true,
+            isLoggingIn = false,
             isPasswordVisible = false,
             isLoginButtonEnabled = true,
             onEmailChange = {},

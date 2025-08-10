@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingPasswordTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
@@ -51,6 +51,7 @@ fun ChangePasswordScreenRoot(
     val isConfirmPasswordVisible by viewModel.isConfirmPasswordVisible.collectAsStateWithLifecycle()
 
     val isChangePwButtonEnabled by viewModel.isChangePwButtonEnabled.collectAsStateWithLifecycle()
+    val isChangingPassword by viewModel.isChangingPassword.collectAsStateWithLifecycle()
 
     val throttledChangePwClick = rememberThrottledOnClick {
         viewModel.onChangePasswordClick()
@@ -86,7 +87,8 @@ fun ChangePasswordScreenRoot(
         onToggleNewPasswordVisibility = viewModel::onToggleNewPasswordVisibility,
         onToggleConfirmPasswordVisibility = viewModel::onToggleConfirmPasswordVisibility,
         onNewPasswordChangeDebounced = viewModel::onNewPasswordChangeDebounced,
-        isChangePwButtonEnabled = isChangePwButtonEnabled
+        isChangePwButtonEnabled = isChangePwButtonEnabled,
+        isChangingPassword = isChangingPassword
     )
 }
 
@@ -109,7 +111,8 @@ private fun ChangePasswordScreenScreen(
     onToggleCurrentPasswordVisibility: () -> Unit,
     onToggleNewPasswordVisibility: () -> Unit,
     onToggleConfirmPasswordVisibility: () -> Unit,
-    isChangePwButtonEnabled: Boolean
+    isChangePwButtonEnabled: Boolean,
+    isChangingPassword: Boolean
 ) {
     Column(
         modifier = modifier
@@ -225,14 +228,15 @@ private fun ChangePasswordScreenScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PyeonKingButton(
+        LoadingButton(
             text = stringResource(R.string.text_change_password),
             onClick = onChangePasswordClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             enabled = isChangePwButtonEnabled,
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
+            loading = isChangingPassword
         )
     }
 }
@@ -266,7 +270,8 @@ private fun ChangePasswordScreenValidPreview() {
             onNewPasswordChangeDebounced = {},
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},
-            onToggleConfirmPasswordVisibility = {}
+            onToggleConfirmPasswordVisibility = {},
+            isChangingPassword = false
         )
     }
 }
@@ -292,7 +297,8 @@ private fun ChangePasswordScreenErrorPreview() {
             onNewPasswordChangeDebounced = {},
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},
-            onToggleConfirmPasswordVisibility = {}
+            onToggleConfirmPasswordVisibility = {},
+            isChangingPassword = false
         )
     }
 }

@@ -2,15 +2,15 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
-import com.hjw0623.core.business_logic.model.request.AuthRequest
-import com.hjw0623.core.business_logic.model.response.AuthResponse
-import com.hjw0623.core.business_logic.model.response.BaseResponse
 import com.hjw0623.core.business_logic.auth.AuthManager
-import com.hjw0623.core.business_logic.repository.AuthRepository
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
 import com.hjw0623.core.business_logic.model.mypage.User
 import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.AuthRequest
+import com.hjw0623.core.business_logic.model.response.AuthResponse
+import com.hjw0623.core.business_logic.model.response.BaseResponse
+import com.hjw0623.core.business_logic.repository.AuthRepository
+import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
