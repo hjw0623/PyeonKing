@@ -8,14 +8,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -114,6 +120,9 @@ private fun ChangePasswordScreenScreen(
     isChangePwButtonEnabled: Boolean,
     isChangingPassword: Boolean
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -141,6 +150,8 @@ private fun ChangePasswordScreenScreen(
             onValueChange = onCurrentPasswordChange,
             isPasswordVisible = isCurrentPasswordVisible,
             onTogglePasswordVisibility = onToggleCurrentPasswordVisibility,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             title = stringResource(R.string.label_current_password),
         )
 
@@ -153,6 +164,8 @@ private fun ChangePasswordScreenScreen(
             onDebouncedValueChange = onNewPasswordChangeDebounced,
             isPasswordVisible = isNewPasswordVisible,
             onTogglePasswordVisibility = onToggleNewPasswordVisibility,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             title = stringResource(R.string.label_new_password),
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -219,10 +232,15 @@ private fun ChangePasswordScreenScreen(
             onValueChange = onConfirmPasswordChange,
             isPasswordVisible = isConfirmPasswordVisible,
             onTogglePasswordVisibility = onToggleConfirmPasswordVisibility,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboard?.hide()
+                onChangePasswordClick()
+            }),
             title = stringResource(R.string.label_confirm),
         )
         PasswordRequirement(
-            text = "비밀번호 일치",
+            text = stringResource(R.string.text_same_password),
             isValid = isConfirmPasswordValid
         )
 

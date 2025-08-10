@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,8 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -130,6 +135,8 @@ fun RegisterScreen(
     onTogglePasswordVisibility: () -> Unit,
 ) {
     val isChecking = nicknameValidationState == NicknameValidationState.Checking
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -169,7 +176,8 @@ fun RegisterScreen(
                 } else {
                     null
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
                 modifier = Modifier.weight(1f)
             )
 
@@ -211,7 +219,8 @@ fun RegisterScreen(
             error = if (email.isNotBlank() && !isEmailValid) stringResource(
                 R.string.email_input_error
             ) else null,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -224,6 +233,11 @@ fun RegisterScreen(
             onDebouncedValueChange = onPasswordChangeDebounced,
             isPasswordVisible = isPasswordVisible,
             onTogglePasswordVisibility = onTogglePasswordVisibility,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {
+                keyboard?.hide()
+                onRegisterClick()
+            }),
             title = stringResource(R.string.label_password),
         )
         Spacer(modifier = Modifier.height(16.dp))

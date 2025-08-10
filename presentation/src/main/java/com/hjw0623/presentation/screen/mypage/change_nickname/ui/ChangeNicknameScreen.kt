@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,7 +26,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +99,7 @@ private fun ChangeNicknameScreen(
     onChangeNicknameClick: () -> Unit,
 ) {
     val isChecking = nicknameValidationState == NicknameValidationState.Checking
-    
+    val keyboard = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -133,7 +136,11 @@ private fun ChangeNicknameScreen(
                 } else {
                     null
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    keyboard?.hide()
+                    onNicknameCheckClick()
+                }),
                 modifier = Modifier.weight(1f)
             )
 
