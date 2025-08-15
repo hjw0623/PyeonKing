@@ -36,8 +36,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hjw0623.core.business_logic.auth.validator.EmailPatternValidator
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
-import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
 import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
@@ -58,27 +58,16 @@ fun RegisterScreenRoot(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewModel = registerViewModel
-
-    val email by viewModel.email.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val nickname by viewModel.nickname.collectAsStateWithLifecycle()
-
-    val isEmailValid by viewModel.isEmailValid.collectAsStateWithLifecycle()
-    val passwordValidationState by viewModel.passwordValidationState.collectAsStateWithLifecycle()
-    val nicknameValidationState by viewModel.nicknameValidationState.collectAsStateWithLifecycle()
-    val isRegisterButtonEnabled by viewModel.isRegisterButtonEnabled.collectAsStateWithLifecycle()
-    val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
-    val isRegistering by viewModel.isRegistering.collectAsStateWithLifecycle()
+    val state by registerViewModel.state.collectAsStateWithLifecycle()
 
     val throttledRegisterClick = rememberThrottledOnClick {
-        viewModel.onRegisterClick()
+        registerViewModel.onRegisterClick()
     }
     val throttledNicknameCheckClick = rememberThrottledOnClick {
-        viewModel.onNicknameCheckClick()
+        registerViewModel.onNicknameCheckClick()
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = registerViewModel.event) { event ->
         when (event) {
             is RegisterScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -93,38 +82,22 @@ fun RegisterScreenRoot(
 
     RegisterScreen(
         modifier = modifier,
-        email = email,
-        password = password,
-        nickname = nickname,
-        isRegistering = isRegistering,
-        isEmailValid = isEmailValid,
-        passwordValidationState = passwordValidationState,
-        isPasswordVisible = isPasswordVisible,
-        nicknameValidationState = nicknameValidationState,
-        isRegisterButtonEnabled = isRegisterButtonEnabled,
-        onEmailChange = viewModel::onEmailChange,
-        onEmailChangeDebounced = viewModel::onEmailChangeDebounced,
-        onPasswordChange = viewModel::onPasswordChange,
-        onPasswordChangeDebounced = viewModel::onPasswordChangeDebounced,
-        onNicknameChange = viewModel::onNicknameChange,
+        state = state,
+        onEmailChange = registerViewModel::onEmailChange,
+        onEmailChangeDebounced = registerViewModel::onEmailChangeDebounced,
+        onPasswordChange = registerViewModel::onPasswordChange,
+        onPasswordChangeDebounced = registerViewModel::onPasswordChangeDebounced,
+        onNicknameChange = registerViewModel::onNicknameChange,
         onNicknameCheckClick = throttledNicknameCheckClick,
         onRegisterClick = throttledRegisterClick,
-        onTogglePasswordVisibility = viewModel::onTogglePasswordVisibility,
+        onTogglePasswordVisibility = registerViewModel::onTogglePasswordVisibility,
     )
 }
 
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
-    email: String,
-    password: String,
-    nickname: String,
-    isRegistering: Boolean,
-    isEmailValid: Boolean,
-    passwordValidationState: PasswordValidationState,
-    isPasswordVisible: Boolean,
-    nicknameValidationState: NicknameValidationState,
-    isRegisterButtonEnabled: Boolean,
+    state: RegisterScreenState,
     onEmailChange: (String) -> Unit,
     onEmailChangeDebounced: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -134,16 +107,15 @@ fun RegisterScreen(
     onRegisterClick: () -> Unit,
     onTogglePasswordVisibility: () -> Unit,
 ) {
-    val isChecking = nicknameValidationState == NicknameValidationState.Checking
+    val isChecking = state.nicknameValidationState == NicknameValidationState.Checking
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 32.dp)
-            .padding(top = 16.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
     ) {
 
         Text(
@@ -166,16 +138,14 @@ fun RegisterScreen(
             verticalAlignment = Alignment.Bottom
         ) {
             PyeonKingTextField(
-                value = nickname,
+                value = state.nickname,
                 onValueChange = onNicknameChange,
                 startIcon = Icons.Default.Badge,
-                endIcon = if (nicknameValidationState is NicknameValidationState.Valid) Icons.Default.Check else null,
+                endIcon = if (state.nicknameValidationState is NicknameValidationState.Valid) Icons.Default.Check else null,
                 title = stringResource(R.string.label_nickname),
-                error = if (nicknameValidationState is NicknameValidationState.Invalid) {
-                    nicknameValidationState.message
-                } else {
-                    null
-                },
+                error = if (state.nicknameValidationState is NicknameValidationState.Invalid) {
+                    state.nicknameValidationState.message
+                } else null,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
                 modifier = Modifier.weight(1f)
@@ -183,7 +153,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            if (nicknameValidationState is NicknameValidationState.Checking) {
+            if (isChecking) {
                 Box(
                     modifier = Modifier.size(56.dp),
                     contentAlignment = Alignment.Center
@@ -194,10 +164,9 @@ fun RegisterScreen(
                 LoadingButton(
                     text = stringResource(R.string.action_duplicate_check),
                     onClick = onNicknameCheckClick,
-                    loading = isRegistering,
-                    enabled = nickname.isNotBlank()
-                            && !isChecking
-                            && nicknameValidationState !is NicknameValidationState.Valid,
+                    loading = state.isRegistering,
+                    enabled = state.nickname.isNotBlank()
+                            && state.nicknameValidationState !is NicknameValidationState.Valid,
                     modifier = Modifier.height(56.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp),
                     fullWidth = false
@@ -209,17 +178,20 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         PyeonKingTextField(
-            value = email,
+            value = state.email,
             onValueChange = onEmailChange,
             onDebouncedValueChange = onEmailChangeDebounced,
             startIcon = Icons.Default.Email,
-            endIcon = if (isEmailValid) Icons.Default.Check else null,
+            endIcon = if (state.isEmailValid) Icons.Default.Check else null,
             title = stringResource(R.string.label_email),
             hint = stringResource(R.string.login_hint_email),
-            error = if (email.isNotBlank() && !isEmailValid) stringResource(
+            error = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
                 R.string.email_input_error
             ) else null,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth()
         )
@@ -228,10 +200,10 @@ fun RegisterScreen(
 
         PyeonKingPasswordTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = password,
+            value = state.password,
             onValueChange = onPasswordChange,
             onDebouncedValueChange = onPasswordChangeDebounced,
-            isPasswordVisible = isPasswordVisible,
+            isPasswordVisible = state.isPasswordVisible,
             onTogglePasswordVisibility = onTogglePasswordVisibility,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {
@@ -247,7 +219,7 @@ fun RegisterScreen(
                 id = R.string.at_least_x_characters,
                 UserDataValidator.MIN_PASSWORD_LENGTH
             ),
-            isValid = passwordValidationState.hasMinLength
+            isValid = state.passwordValidationState.hasMinLength
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -257,7 +229,7 @@ fun RegisterScreen(
                 id = R.string.at_max_x_characters,
                 UserDataValidator.MAX_PASSWORD_LENGTH
             ),
-            isValid = passwordValidationState.hasMaxLength
+            isValid = state.passwordValidationState.hasMaxLength
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -266,7 +238,7 @@ fun RegisterScreen(
             text = stringResource(
                 id = R.string.at_least_one_number,
             ),
-            isValid = passwordValidationState.hasNumber
+            isValid = state.passwordValidationState.hasNumber
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -275,7 +247,7 @@ fun RegisterScreen(
             text = stringResource(
                 id = R.string.contains_lowercase_char,
             ),
-            isValid = passwordValidationState.hasLowerCase
+            isValid = state.passwordValidationState.hasLowerCase
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -284,7 +256,7 @@ fun RegisterScreen(
             text = stringResource(
                 id = R.string.contains_uppercase_char,
             ),
-            isValid = passwordValidationState.hasUpperCase
+            isValid = state.passwordValidationState.hasUpperCase
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -293,7 +265,7 @@ fun RegisterScreen(
             text = stringResource(
                 id = R.string.contains_special_char,
             ),
-            isValid = passwordValidationState.hasSpecialCharacter
+            isValid = state.passwordValidationState.hasSpecialCharacter
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -304,34 +276,18 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            enabled = isRegisterButtonEnabled,
+            enabled = state.isRegisterButtonEnabled,
             contentPadding = PaddingValues(16.dp)
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "기본 상태")
 @Composable
-private fun RegisterScreenWithPyeonKingFieldPreview() {
+private fun RegisterScreenDefaultPreview() {
     PyeonKingTheme {
         RegisterScreen(
-            modifier = Modifier,
-            email = "test@pking.com",
-            password = "password123!",
-            nickname = "편킹왕",
-            isRegistering = false,
-            isEmailValid = true,
-            passwordValidationState = PasswordValidationState(
-                hasMinLength = true,
-                hasMaxLength = true,
-                hasNumber = true,
-                hasLowerCase = true,
-                hasUpperCase = true,
-                hasSpecialCharacter = true
-            ),
-            isPasswordVisible = false,
-            nicknameValidationState = NicknameValidationState.Valid,
-            isRegisterButtonEnabled = true,
+            state = RegisterScreenState(),
             onEmailChange = {},
             onEmailChangeDebounced = {},
             onPasswordChange = {},
@@ -344,28 +300,46 @@ private fun RegisterScreenWithPyeonKingFieldPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "모든 유효성 검사 통과 상태")
 @Composable
-private fun RegisterScreenWithPyeonKingFieldErrorPreview() {
+private fun RegisterScreenValidPreview() {
     PyeonKingTheme {
         RegisterScreen(
-            modifier = Modifier,
-            email = "test@",
-            password = "123",
-            nickname = "킹",
-            isRegistering = false,
-            isEmailValid = false,
-            passwordValidationState = PasswordValidationState(
-                hasMinLength = false,
-                hasMaxLength = false,
-                hasNumber = false,
-                hasLowerCase = false,
-                hasUpperCase = false,
-                hasSpecialCharacter = false
+            state = RegisterScreenState(
+                email = "test@pking.com",
+                isEmailValid = true,
+                password = "Passw0rd!",
+                passwordValidationState = UserDataValidator(EmailPatternValidator).isPasswordValid("Password!123"),
+                nickname = "편킹왕",
+                nicknameValidationState = NicknameValidationState.Valid,
+                isPasswordVisible = false
             ),
-            isPasswordVisible = true,
-            nicknameValidationState = NicknameValidationState.Invalid("중복된 닉네임 입니다."),
-            isRegisterButtonEnabled = false,
+            onEmailChange = {},
+            onEmailChangeDebounced = {},
+            onPasswordChange = {},
+            onPasswordChangeDebounced = {},
+            onNicknameChange = {},
+            onNicknameCheckClick = {},
+            onRegisterClick = {},
+            onTogglePasswordVisibility = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "유효성 검사 실패 상태")
+@Composable
+private fun RegisterScreenInvalidPreview() {
+    PyeonKingTheme {
+        RegisterScreen(
+            state = RegisterScreenState(
+                email = "wrongemail",
+                isEmailValid = false,
+                password = "123",
+                passwordValidationState = UserDataValidator(EmailPatternValidator).isPasswordValid("123"),
+                nickname = "편킹",
+                nicknameValidationState = NicknameValidationState.Invalid("중복된 닉네임입니다."),
+                isPasswordVisible = true
+            ),
             onEmailChange = {},
             onEmailChangeDebounced = {},
             onPasswordChange = {},
