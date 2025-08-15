@@ -53,38 +53,42 @@ class LoginViewModel(
     }
 
     fun onLoginClick() {
-        if (!state.value.isEmailValid) return
+        val currentState = state.value
+        if (!currentState.isEmailValid) return
 
         viewModelScope.launch {
-            _state.update { it.copy(isLoggingIn = true) }
+            authRepository.login(
+                AuthRequest(
+                    email = currentState.email.trim(),
+                    password = currentState.password
+                )
+            ).collectLatest { result ->
+                _state.update {
+                    when (result) {
+                        is DataResourceResult.Loading -> it.copy(isLoggingIn = true)
+                        is DataResourceResult.Success -> {
+                            val response = result.data.data
+                            userDataStoreRepository.saveUserInfo(
+                                nickname = response.nickname,
+                                email = currentState.email.trim(),
+                                accessToken = response.accessToken,
+                                refreshToken = response.refreshToken
+                            )
+                            _event.emit(LoginScreenEvent.NavigateToMyPage)
+                            it.copy(isLoggingIn = false)
+                        }
 
-            val authRequest = AuthRequest(
-                email = state.value.email.trim(),
-                password = state.value.password
-            )
+                        is DataResourceResult.Failure -> {
+                            _event.emit(
+                                LoginScreenEvent.Error(
+                                    result.exception.message ?: UNKNOWN_ERROR
+                                )
+                            )
+                            it.copy(isLoggingIn = false)
+                        }
 
-            authRepository.login(authRequest).collectLatest { result ->
-                _state.update { it.copy(isLoggingIn = false) }
-
-                when (result) {
-                    is DataResourceResult.Success -> {
-                        val response = result.data.data
-
-                        userDataStoreRepository.saveUserInfo(
-                            nickname = response.nickname,
-                            email = state.value.email.trim(),
-                            accessToken = response.accessToken,
-                            refreshToken = response.refreshToken
-                        )
-                        _event.emit(LoginScreenEvent.NavigateToMyPage)
+                        is DataResourceResult.DummyConstructor -> it
                     }
-
-                    is DataResourceResult.Failure -> {
-                        val message = result.exception.message ?: UNKNOWN_ERROR
-                        _event.emit(LoginScreenEvent.Error(message))
-                    }
-
-                    else -> Unit
                 }
             }
         }

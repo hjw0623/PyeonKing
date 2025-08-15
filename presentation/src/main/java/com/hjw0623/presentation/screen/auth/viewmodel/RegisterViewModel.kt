@@ -30,68 +30,74 @@ class RegisterViewModel(
     val event = _event.asSharedFlow()
 
     fun onRegisterClick() {
-        if (state.value.isRegistering) return
+        val currentState = state.value
+        if (currentState.isRegistering) return
+
         viewModelScope.launch {
-            _state.update { it.copy(isRegistering = true) }
+            authRepository.register(
+                AuthRequest(
+                    email = currentState.email.trim(),
+                    password = currentState.password,
+                    nickname = currentState.nickname
+                )
+            ).collectLatest { result ->
+                _state.update {
+                    when (result) {
+                        is DataResourceResult.Loading -> it.copy(isRegistering = true)
+                        is DataResourceResult.Success -> {
+                            _event.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
+                            it.copy(isRegistering = false)
+                        }
 
-            val authRequest = AuthRequest(
-                email = state.value.email,
-                password = state.value.password,
-                nickname = state.value.nickname
-            )
+                        is DataResourceResult.Failure -> {
+                            _event.emit(
+                                RegisterScreenEvent.Error(
+                                    result.exception.message ?: UNKNOWN_ERROR
+                                )
+                            )
+                            it.copy(isRegistering = false)
+                        }
 
-            authRepository.register(authRequest).collectLatest { result ->
-                _state.update { it.copy(isRegistering = false) }
-
-                when (result) {
-                    is DataResourceResult.Success -> {
-                        val response = result.data.data
-                        _event.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
+                        is DataResourceResult.DummyConstructor -> it
                     }
-
-                    is DataResourceResult.Failure -> {
-                        val message = result.exception.message ?: UNKNOWN_ERROR
-                        _event.emit(RegisterScreenEvent.Error(message))
-                    }
-
-                    else -> Unit
                 }
             }
         }
     }
 
     fun onNicknameCheckClick() {
-        if (state.value.nicknameValidationState is NicknameValidationState.Checking) return
-
-        _state.update { it.copy(nicknameValidationState = NicknameValidationState.Checking) }
+        val currentState = state.value
+        if (currentState.nicknameValidationState is NicknameValidationState.Checking) return
 
         viewModelScope.launch {
-            authRepository.checkNickname(state.value.nickname).collectLatest { result ->
-                when (result) {
-                    is DataResourceResult.Success -> {
-                        val isRegisterAvailable = result.data.data
-                        _state.update {
+            authRepository.checkNickname(currentState.nickname).collectLatest { result ->
+                _state.update {
+                    when (result) {
+                        is DataResourceResult.Loading -> it.copy(
+                            nicknameValidationState = NicknameValidationState.Checking
+                        )
+
+                        is DataResourceResult.Success -> {
+                            val isAvailable = result.data.data
                             it.copy(
-                                nicknameValidationState = if (isRegisterAvailable) {
+                                nicknameValidationState = if (isAvailable) {
                                     NicknameValidationState.Valid
                                 } else {
                                     NicknameValidationState.Invalid(DUPLICATED_NICKNAME)
                                 }
                             )
                         }
-                    }
 
-                    is DataResourceResult.Failure -> {
-                        _state.update {
+                        is DataResourceResult.Failure -> {
                             it.copy(
                                 nicknameValidationState = NicknameValidationState.Invalid(
                                     result.exception.message ?: UNKNOWN_ERROR
                                 )
                             )
                         }
-                    }
 
-                    else -> Unit
+                        is DataResourceResult.DummyConstructor -> it
+                    }
                 }
             }
         }
