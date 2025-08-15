@@ -46,24 +46,18 @@ fun LoginScreenRoot(
 ) {
 
     val context = LocalContext.current
-    val viewModel = loginViewModel
 
-    val email by viewModel.email.collectAsStateWithLifecycle()
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val isEmailValid by viewModel.isEmailValid.collectAsStateWithLifecycle()
-    val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
-    val isLoginButtonEnabled by viewModel.isLoginButtonEnabled.collectAsStateWithLifecycle()
-    val isLoggingIn by viewModel.isLoggingIn.collectAsStateWithLifecycle()
+    val state by loginViewModel.state.collectAsStateWithLifecycle()
 
     val throttledLoginClick = rememberThrottledOnClick {
-        viewModel.onLoginClick()
+        loginViewModel.onLoginClick()
     }
 
     val throttledRegisterClick = rememberThrottledOnClick {
-        viewModel.onRegisterClick()
+        loginViewModel.onRegisterClick()
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = loginViewModel.event) { event ->
         when (event) {
             is LoginScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -82,30 +76,20 @@ fun LoginScreenRoot(
 
     LoginScreen(
         modifier = modifier,
-        email = email,
-        password = password,
-        isLoggingIn = isLoggingIn,
-        isEmailValid = isEmailValid,
-        isPasswordVisible = isPasswordVisible,
-        isLoginButtonEnabled = isLoginButtonEnabled,
-        onEmailChange = viewModel::onEmailChange,
-        onEmailChangeDebounced = viewModel::onEmailChangeDebounced,
-        onPasswordChange = viewModel::onPasswordChange,
+        state = state,
+        onEmailChange = loginViewModel::onEmailChange,
+        onEmailChangeDebounced = loginViewModel::onEmailChangeDebounced,
+        onPasswordChange = loginViewModel::onPasswordChange,
         onLoginClick = throttledLoginClick,
         onRegisterClick = throttledRegisterClick,
-        onTogglePasswordVisibility = viewModel::onTogglePasswordVisibility
+        onTogglePasswordVisibility = loginViewModel::onTogglePasswordVisibility
     )
 }
 
 @Composable
 private fun LoginScreen(
     modifier: Modifier = Modifier,
-    email: String,
-    password: String,
-    isLoggingIn: Boolean,
-    isEmailValid: Boolean,
-    isPasswordVisible: Boolean,
-    isLoginButtonEnabled: Boolean,
+    state: LoginScreenState,
     onEmailChange: (String) -> Unit,
     onEmailChangeDebounced: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -126,14 +110,14 @@ private fun LoginScreen(
             LoginGreetingSection()
 
             PyeonKingTextField(
-                value = email,
+                value = state.email,
                 onValueChange = onEmailChange,
                 onDebouncedValueChange = onEmailChangeDebounced,
                 startIcon = Icons.Default.Email,
-                endIcon = if (isEmailValid) Icons.Default.Check else null,
+                endIcon = if (state.isEmailValid) Icons.Default.Check else null,
                 title = stringResource(R.string.label_email),
                 hint = stringResource(R.string.login_hint_email),
-                error = if (email.isNotBlank() && !isEmailValid) stringResource(
+                error = if (state.email.isNotBlank() && !state.isEmailValid) stringResource(
                     R.string.email_input_error
                 ) else null,
                 keyboardOptions = KeyboardOptions(
@@ -141,7 +125,7 @@ private fun LoginScreen(
                     imeAction = ImeAction.Next
                 ),
                 keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down)}
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -149,15 +133,15 @@ private fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PyeonKingPasswordTextField(
-                value = password,
+                value = state.password,
                 onValueChange = onPasswordChange,
-                isPasswordVisible = isPasswordVisible,
+                isPasswordVisible = state.isPasswordVisible,
                 onTogglePasswordVisibility = onTogglePasswordVisibility,
                 title = stringResource(R.string.label_password),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (!isLoggingIn) {
+                        if (!state.isLoggingIn) {
                             keyboard?.hide()
                             onLoginClick()
                         }
@@ -173,8 +157,8 @@ private fun LoginScreen(
                     text = stringResource(R.string.label_login),
                     onClick = onLoginClick,
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = isLoginButtonEnabled,
-                    loading = isLoggingIn,
+                    enabled = state.isLoginButtonEnabled,
+                    loading = state.isLoggingIn,
                     contentPadding = PaddingValues(10.dp)
                 )
 
@@ -184,7 +168,8 @@ private fun LoginScreen(
                     text = stringResource(R.string.label_register),
                     onClick = onRegisterClick,
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp)
+                    contentPadding = PaddingValues(16.dp),
+                    enabled = !state.isLoggingIn
                 )
             }
         }
@@ -197,18 +182,19 @@ private fun LoginScreen(
 private fun LoginScreenPreview() {
     PyeonKingTheme {
         LoginScreen(
-            email = "test@email.com",
-            password = "password",
-            isEmailValid = true,
-            isLoggingIn = false,
-            isPasswordVisible = false,
-            isLoginButtonEnabled = true,
+            state = LoginScreenState(
+                email = "test@email.com",
+                password = "password",
+                isEmailValid = true,
+                isPasswordVisible = false,
+                isLoggingIn = false
+            ),
             onEmailChange = {},
+            onEmailChangeDebounced = {},
             onPasswordChange = {},
             onLoginClick = {},
             onRegisterClick = {},
-            onTogglePasswordVisibility = {},
-            onEmailChangeDebounced = {}
+            onTogglePasswordVisibility = {}
         )
     }
 }
