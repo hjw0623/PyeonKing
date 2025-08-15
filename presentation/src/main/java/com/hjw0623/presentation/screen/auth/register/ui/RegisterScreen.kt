@@ -1,6 +1,5 @@
 package com.hjw0623.presentation.screen.auth.register.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -153,25 +150,18 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            if (isChecking) {
-                Box(
-                    modifier = Modifier.size(56.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-            } else {
-                LoadingButton(
-                    text = stringResource(R.string.action_duplicate_check),
-                    onClick = onNicknameCheckClick,
-                    loading = state.isRegistering,
-                    enabled = state.nickname.isNotBlank()
-                            && state.nicknameValidationState !is NicknameValidationState.Valid,
-                    modifier = Modifier.height(56.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
-                    fullWidth = false
-                )
-            }
+
+            LoadingButton(
+                text = stringResource(R.string.action_duplicate_check),
+                onClick = onNicknameCheckClick,
+                loading = isChecking,
+                enabled = state.nickname.isNotBlank()
+                        && state.nicknameValidationState !is NicknameValidationState.Valid,
+                modifier = Modifier.height(56.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
+                fullWidth = false
+            )
+
         }
 
 
@@ -207,8 +197,10 @@ fun RegisterScreen(
             onTogglePasswordVisibility = onTogglePasswordVisibility,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {
-                keyboard?.hide()
-                onRegisterClick()
+                if (state.isRegisterButtonEnabled && !state.isRegistering) {
+                    keyboard?.hide()
+                    onRegisterClick()
+                }
             }),
             title = stringResource(R.string.label_password),
         )
