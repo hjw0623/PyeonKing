@@ -159,7 +159,7 @@ private fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = state.isLoginButtonEnabled,
                     loading = state.isLoggingIn,
-                    contentPadding = PaddingValues(10.dp)
+                    contentPadding = PaddingValues(16.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
