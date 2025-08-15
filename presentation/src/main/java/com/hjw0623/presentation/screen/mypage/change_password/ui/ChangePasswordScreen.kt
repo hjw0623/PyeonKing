@@ -44,25 +44,13 @@ fun ChangePasswordScreenRoot(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewModel = myPageViewModel
 
-    val currentPassword by viewModel.currentPassword.collectAsStateWithLifecycle()
-    val newPassword by viewModel.newPassword.collectAsStateWithLifecycle()
-    val confirmPassword by viewModel.confirmPassword.collectAsStateWithLifecycle()
-    val passwordValidationState by viewModel.passwordValidationState.collectAsStateWithLifecycle()
-    val isConfirmPasswordValid by viewModel.isConfirmPasswordValid.collectAsStateWithLifecycle()
-
-    val isCurrentPasswordVisible by viewModel.isCurrentPasswordVisible.collectAsStateWithLifecycle()
-    val isNewPasswordVisible by viewModel.isNewPasswordVisible.collectAsStateWithLifecycle()
-    val isConfirmPasswordVisible by viewModel.isConfirmPasswordVisible.collectAsStateWithLifecycle()
-
-    val isChangePwButtonEnabled by viewModel.isChangePwButtonEnabled.collectAsStateWithLifecycle()
-    val isChangingPassword by viewModel.isChangingPassword.collectAsStateWithLifecycle()
+    val state by myPageViewModel.changePasswordState.collectAsStateWithLifecycle()
 
     val throttledChangePwClick = rememberThrottledOnClick {
-        viewModel.onChangePasswordClick()
+        myPageViewModel.onChangePasswordClick()
     }
-    ObserveAsEvents(flow = viewModel.changePasswordEvent) { event ->
+    ObserveAsEvents(flow = myPageViewModel.changePasswordEvent) { event ->
         when (event) {
             is ChangePasswordScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -77,39 +65,23 @@ fun ChangePasswordScreenRoot(
 
     ChangePasswordScreenScreen(
         modifier = modifier,
-        currentPassword = currentPassword,
-        newPassword = newPassword,
-        confirmPassword = confirmPassword,
-        passwordValidationState = passwordValidationState,
+        state = state,
         onChangePasswordClick = throttledChangePwClick,
-        isConfirmPasswordValid = isConfirmPasswordValid,
-        isCurrentPasswordVisible = isCurrentPasswordVisible,
-        isNewPasswordVisible = isNewPasswordVisible,
-        isConfirmPasswordVisible = isConfirmPasswordVisible,
-        onCurrentPasswordChange = viewModel::onCurrentPasswordChange,
-        onNewPasswordChange = viewModel::onNewPasswordChange,
-        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
-        onToggleCurrentPasswordVisibility = viewModel::onToggleCurrentPasswordVisibility,
-        onToggleNewPasswordVisibility = viewModel::onToggleNewPasswordVisibility,
-        onToggleConfirmPasswordVisibility = viewModel::onToggleConfirmPasswordVisibility,
-        onNewPasswordChangeDebounced = viewModel::onNewPasswordChangeDebounced,
-        isChangePwButtonEnabled = isChangePwButtonEnabled,
-        isChangingPassword = isChangingPassword
+        onCurrentPasswordChange = myPageViewModel::onCurrentPasswordChange,
+        onNewPasswordChange = myPageViewModel::onNewPasswordChange,
+        onConfirmPasswordChange = myPageViewModel::onConfirmPasswordChange,
+        onToggleCurrentPasswordVisibility = myPageViewModel::onToggleCurrentPasswordVisibility,
+        onToggleNewPasswordVisibility = myPageViewModel::onToggleNewPasswordVisibility,
+        onToggleConfirmPasswordVisibility = myPageViewModel::onToggleConfirmPasswordVisibility,
+        onNewPasswordChangeDebounced = myPageViewModel::onNewPasswordChangeDebounced,
     )
 }
 
 @Composable
 private fun ChangePasswordScreenScreen(
     modifier: Modifier = Modifier,
-    currentPassword: String,
-    newPassword: String,
-    confirmPassword: String,
-    passwordValidationState: PasswordValidationState,
+    state: ChangePasswordScreenState,
     onChangePasswordClick: () -> Unit,
-    isConfirmPasswordValid: Boolean,
-    isCurrentPasswordVisible: Boolean,
-    isNewPasswordVisible: Boolean,
-    isConfirmPasswordVisible: Boolean,
     onCurrentPasswordChange: (String) -> Unit,
     onNewPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
@@ -117,8 +89,6 @@ private fun ChangePasswordScreenScreen(
     onToggleCurrentPasswordVisibility: () -> Unit,
     onToggleNewPasswordVisibility: () -> Unit,
     onToggleConfirmPasswordVisibility: () -> Unit,
-    isChangePwButtonEnabled: Boolean,
-    isChangingPassword: Boolean
 ) {
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
@@ -146,9 +116,9 @@ private fun ChangePasswordScreenScreen(
 
         PyeonKingPasswordTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = currentPassword,
+            value = state.currentPassword,
             onValueChange = onCurrentPasswordChange,
-            isPasswordVisible = isCurrentPasswordVisible,
+            isPasswordVisible = state.isCurrentPasswordVisible,
             onTogglePasswordVisibility = onToggleCurrentPasswordVisibility,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
@@ -159,10 +129,10 @@ private fun ChangePasswordScreenScreen(
 
         PyeonKingPasswordTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = newPassword,
+            value = state.newPassword,
             onValueChange = onNewPasswordChange,
             onDebouncedValueChange = onNewPasswordChangeDebounced,
-            isPasswordVisible = isNewPasswordVisible,
+            isPasswordVisible = state.isNewPasswordVisible,
             onTogglePasswordVisibility = onToggleNewPasswordVisibility,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
@@ -175,7 +145,7 @@ private fun ChangePasswordScreenScreen(
                 id = R.string.at_least_x_characters,
                 UserDataValidator.MIN_PASSWORD_LENGTH
             ),
-            isValid = passwordValidationState.hasMinLength
+            isValid = state.passwordValidationState.hasMinLength
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -185,7 +155,7 @@ private fun ChangePasswordScreenScreen(
                 id = R.string.at_max_x_characters,
                 UserDataValidator.MAX_PASSWORD_LENGTH
             ),
-            isValid = passwordValidationState.hasMaxLength
+            isValid = state.passwordValidationState.hasMaxLength
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -194,7 +164,7 @@ private fun ChangePasswordScreenScreen(
             text = stringResource(
                 id = R.string.at_least_one_number,
             ),
-            isValid = passwordValidationState.hasNumber
+            isValid = state.passwordValidationState.hasNumber
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -203,7 +173,7 @@ private fun ChangePasswordScreenScreen(
             text = stringResource(
                 id = R.string.contains_lowercase_char,
             ),
-            isValid = passwordValidationState.hasLowerCase
+            isValid = state.passwordValidationState.hasLowerCase
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -212,7 +182,7 @@ private fun ChangePasswordScreenScreen(
             text = stringResource(
                 id = R.string.contains_uppercase_char,
             ),
-            isValid = passwordValidationState.hasUpperCase
+            isValid = state.passwordValidationState.hasUpperCase
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -221,16 +191,16 @@ private fun ChangePasswordScreenScreen(
             text = stringResource(
                 id = R.string.contains_special_char,
             ),
-            isValid = passwordValidationState.hasSpecialCharacter
+            isValid = state.passwordValidationState.hasSpecialCharacter
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         PyeonKingPasswordTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = confirmPassword,
+            value = state.confirmPassword,
             onValueChange = onConfirmPasswordChange,
-            isPasswordVisible = isConfirmPasswordVisible,
+            isPasswordVisible = state.isConfirmPasswordVisible,
             onTogglePasswordVisibility = onToggleConfirmPasswordVisibility,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {
@@ -241,7 +211,7 @@ private fun ChangePasswordScreenScreen(
         )
         PasswordRequirement(
             text = stringResource(R.string.text_same_password),
-            isValid = isConfirmPasswordValid
+            isValid = state.isConfirmPasswordValid
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -252,9 +222,9 @@ private fun ChangePasswordScreenScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
-            enabled = isChangePwButtonEnabled,
+            enabled = state.isChangePwButtonEnabled,
             contentPadding = PaddingValues(16.dp),
-            loading = isChangingPassword
+            loading = state.isChangingPassword
         )
     }
 }
@@ -265,22 +235,21 @@ private fun ChangePasswordScreenScreen(
 private fun ChangePasswordScreenValidPreview() {
     PyeonKingTheme {
         ChangePasswordScreenScreen(
-            currentPassword = "currentPassword1!",
-            newPassword = "newPassword123@",
-            confirmPassword = "newPassword1223@",
-            passwordValidationState = PasswordValidationState(
-                hasMinLength = true,
-                hasMaxLength = true,
-                hasNumber = true,
-                hasLowerCase = true,
-                hasUpperCase = true,
-                hasSpecialCharacter = true
+            state = ChangePasswordScreenState(
+                currentPassword = "password",
+                newPassword = "password",
+                confirmPassword = "password",
+                passwordValidationState = PasswordValidationState(
+                    hasUpperCase = true,
+                    hasLowerCase = true,
+                    hasNumber = true,
+                    hasSpecialCharacter = true,
+                    hasMinLength = true
+                ),
+                isCurrentPasswordVisible = true,
+                isNewPasswordVisible = false,
+                isConfirmPasswordVisible = false
             ),
-            isConfirmPasswordValid = true,
-            isCurrentPasswordVisible = false,
-            isNewPasswordVisible = false,
-            isConfirmPasswordVisible = true,
-            isChangePwButtonEnabled = true,
             onChangePasswordClick = {},
             onCurrentPasswordChange = {},
             onNewPasswordChange = {},
@@ -289,7 +258,6 @@ private fun ChangePasswordScreenValidPreview() {
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},
             onToggleConfirmPasswordVisibility = {},
-            isChangingPassword = false
         )
     }
 }
@@ -299,15 +267,21 @@ private fun ChangePasswordScreenValidPreview() {
 private fun ChangePasswordScreenErrorPreview() {
     PyeonKingTheme {
         ChangePasswordScreenScreen(
-            currentPassword = "wrongPassword",
-            newPassword = "short",
-            confirmPassword = "mismatch",
-            passwordValidationState = PasswordValidationState(hasMinLength = false),
-            isConfirmPasswordValid = false,
-            isCurrentPasswordVisible = true,
-            isNewPasswordVisible = false,
-            isConfirmPasswordVisible = false,
-            isChangePwButtonEnabled = false,
+            state = ChangePasswordScreenState(
+                currentPassword = "wrongPassword",
+                newPassword = "short",
+                confirmPassword = "mismatch",
+                passwordValidationState = PasswordValidationState(
+                    hasUpperCase = false,
+                    hasLowerCase = false,
+                    hasNumber = false,
+                    hasSpecialCharacter = false,
+                    hasMinLength = false
+                ),
+                isCurrentPasswordVisible = true,
+                isNewPasswordVisible = false,
+                isConfirmPasswordVisible = false,
+            ),
             onChangePasswordClick = {},
             onCurrentPasswordChange = {},
             onNewPasswordChange = {},
@@ -316,7 +290,6 @@ private fun ChangePasswordScreenErrorPreview() {
             onToggleCurrentPasswordVisibility = {},
             onToggleNewPasswordVisibility = {},
             onToggleConfirmPasswordVisibility = {},
-            isChangingPassword = false
         )
     }
 }

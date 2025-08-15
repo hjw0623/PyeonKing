@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hjw0623.core.business_logic.model.mypage.User
 import com.hjw0623.core.presentation.designsystem.components.TopRoundedBackground
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.R
@@ -29,7 +28,7 @@ import com.hjw0623.presentation.R
 @Composable
 fun LoggedInScreen(
     modifier: Modifier = Modifier,
-    userData: User,
+    nickname: String,
     onLogoutClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onChangeNicknameClick: () -> Unit,
@@ -56,7 +55,7 @@ fun LoggedInScreen(
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
                 MyPageGreetingText(stringResource(R.string.text_greeting))
-                MyPageGreetingText(stringResource(R.string.text_user_name, userData.nickname))
+                MyPageGreetingText(stringResource(R.string.text_user_name, nickname))
                 MyPageGreetingText(stringResource(R.string.text_welcom_to_pyeonking))
             }
         }
@@ -96,7 +95,7 @@ fun LoggedInScreen(
 private fun LoggedInScreenPreview() {
     PyeonKingTheme {
         LoggedInScreen(
-            userData = User(),
+            nickname = "nickname",
             onLogoutClick = {},
             onChangePasswordClick = {},
             onChangeNicknameClick = {},

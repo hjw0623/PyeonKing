@@ -2,96 +2,139 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.auth.AuthManager
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
-import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
 import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
 import com.hjw0623.core.business_logic.repository.MyPageRepository
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
+import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
+import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenState
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent
+import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenState
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenEvent
+import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MyPageViewModel(
     private val myPageRepository: MyPageRepository,
     private val userDataValidator: UserDataValidator,
-    private val authManager: AuthManager = AuthManager
+    private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
 
     // --------------------------------------------------
     // 닉네임 변경 관련
     // --------------------------------------------------
-
-    private val _currentNickname = MutableStateFlow(authManager.userData.value?.nickname ?: "")
-    private val _newNickname = MutableStateFlow(authManager.userData.value?.nickname ?: "")
-    val newNickname = _newNickname.asStateFlow()
-
-    private val _nicknameValidationState =
-        MutableStateFlow<NicknameValidationState>(NicknameValidationState.Idle)
-    val nicknameValidationState = _nicknameValidationState.asStateFlow()
-
-    private val _isChangingNickname = MutableStateFlow(false)
-
-    val isChangeButtonEnabled = combine(
-        _currentNickname, newNickname, nicknameValidationState, _isChangingNickname
-    ) { current, new, validation, changing ->
-        validation is NicknameValidationState.Valid && current != new && !changing
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), false)
+    private val _changeNicknameState = MutableStateFlow(ChangeNicknameScreenState())
+    val changeNicknameState = _changeNicknameState.asStateFlow()
 
     private val _changeNicknameEvent = MutableSharedFlow<ChangeNicknameScreenEvent>()
     val changeNicknameEvent = _changeNicknameEvent.asSharedFlow()
 
-    fun onNicknameChange(nickname: String) {
-        _newNickname.value = nickname
-        if (_nicknameValidationState.value !is NicknameValidationState.Idle) {
-            _nicknameValidationState.value = NicknameValidationState.Idle
+    init {
+        viewModelScope.launch {
+            userDataStoreRepository.nicknameFlow.collectLatest { nickname ->
+                _myPageScreenState.update {
+                    it.copy(nickname = nickname.orEmpty())
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            userDataStoreRepository.isLoggedInFlow.collectLatest { isLoggedIn ->
+                _myPageScreenState.update {
+                    it.copy(isLoggedIn = isLoggedIn)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            userDataStoreRepository.nicknameFlow.collectLatest { nickname ->
+                val saved = nickname.orEmpty()
+                _changeNicknameState.update {
+                    it.copy(
+                        currentNickname = saved,
+                        newNickname = if (it.newNickname == it.currentNickname) saved else it.newNickname
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            userDataStoreRepository.emailFlow.collectLatest { email ->
+                _changePasswordState.update {
+                    it.copy(email = email.orEmpty())
+                }
+            }
         }
     }
 
 
+    fun onNicknameChange(nickname: String) {
+        _changeNicknameState.update {
+            it.copy(
+                newNickname = nickname,
+                nicknameValidationState = NicknameValidationState.Idle
+            )
+        }
+    }
+
     fun onNicknameCheckClick() {
-        if (newNickname.value == _currentNickname.value) {
-            _nicknameValidationState.value = NicknameValidationState.Invalid(UNCHANGED_NICKNAME)
+        val currentState = _changeNicknameState.value
+
+        if (currentState.newNickname == currentState.currentNickname) {
+            _changeNicknameState.update {
+                it.copy(
+                    nicknameValidationState = NicknameValidationState.Invalid(
+                        UNCHANGED_NICKNAME
+                    )
+                )
+            }
             return
         }
 
         viewModelScope.launch {
-            _nicknameValidationState.value = NicknameValidationState.Checking
-            myPageRepository.checkNickname(newNickname.value).collectLatest { result ->
-                when (result) {
-                    is DataResourceResult.Success -> {
-                        if (result.data.data) {
-                            _nicknameValidationState.value = NicknameValidationState.Valid
-                        } else {
-                            val message = result.data.message
-                            _nicknameValidationState.value =
-                                NicknameValidationState.Invalid(message)
+            _changeNicknameState.update {
+                it.copy(nicknameValidationState = NicknameValidationState.Checking)
+            }
+
+            myPageRepository.checkNickname(currentState.newNickname).collectLatest { result ->
+                _changeNicknameState.update {
+                    when (result) {
+                        is DataResourceResult.Loading -> it.copy(nicknameValidationState = NicknameValidationState.Checking)
+
+                        is DataResourceResult.Success -> {
+                            if (result.data.data) {
+                                it.copy(nicknameValidationState = NicknameValidationState.Valid)
+                            } else {
+                                it.copy(
+                                    nicknameValidationState = NicknameValidationState.Invalid(
+                                        result.data.message
+                                    )
+                                )
+                            }
                         }
-                    }
 
-                    is DataResourceResult.Failure -> {
-                        val errorMsg = result.exception.message.toString()
-                        _nicknameValidationState.value = NicknameValidationState.Idle
-                        _changeNicknameEvent.emit(ChangeNicknameScreenEvent.Error(errorMsg))
-                    }
+                        is DataResourceResult.Failure -> {
+                            _changeNicknameEvent.emit(
+                                ChangeNicknameScreenEvent.Error(
+                                    result.exception.message.toString()
+                                )
+                            )
+                            it.copy(nicknameValidationState = NicknameValidationState.Idle)
+                        }
 
-                    DataResourceResult.Loading -> {
-                        _nicknameValidationState.value = NicknameValidationState.Checking
+                        is DataResourceResult.DummyConstructor -> it
                     }
-
-                    else -> Unit
                 }
             }
         }
@@ -99,15 +142,26 @@ class MyPageViewModel(
 
 
     fun onChangeNicknameClick() {
+        val currentState = _changeNicknameState.value
+
         viewModelScope.launch {
-            _isChangingNickname.value = true
-            myPageRepository.changeNickname(_newNickname.value).collectLatest { result ->
+            myPageRepository.checkNickname(currentState.newNickname).collectLatest { result ->
                 when (result) {
+                    is DataResourceResult.Loading -> {
+                        _changeNicknameState.update { it.copy(isChangingNickname = true) }
+                    }
+
                     is DataResourceResult.Success -> {
+                        _changeNicknameState.update { it.copy(isChangingNickname = false) }
                         if (result.data.data) {
-                            authManager.userData.value?.let { user ->
-                                authManager.updateUserData(user.copy(nickname = _newNickname.value))
-                            }
+                            userDataStoreRepository.saveUserInfo(
+                                nickname = currentState.newNickname,
+                                email = userDataStoreRepository.emailFlow.first() ?: "",
+                                accessToken = userDataStoreRepository.accessTokenFlow.first() ?: "",
+                                refreshToken = userDataStoreRepository.refreshTokenFlow.first()
+                                    ?: ""
+                            )
+
                             _changeNicknameEvent.emit(
                                 ChangeNicknameScreenEvent.NavigateToMyPage(result.data.message)
                             )
@@ -119,13 +173,15 @@ class MyPageViewModel(
                     }
 
                     is DataResourceResult.Failure -> {
-                        val errorMsg = result.exception.message.toString()
-                        _changeNicknameEvent.emit(ChangeNicknameScreenEvent.Error(errorMsg))
+                        _changeNicknameState.update { it.copy(isChangingNickname = false) }
+                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        _changeNicknameEvent.emit(
+                            ChangeNicknameScreenEvent.Error(message)
+                        )
                     }
 
-                    else -> Unit
+                    is DataResourceResult.DummyConstructor -> Unit
                 }
-                _isChangingNickname.value = false
             }
         }
     }
@@ -133,125 +189,120 @@ class MyPageViewModel(
     // --------------------------------------------------
     // 비밀번호 변경 관련
     // --------------------------------------------------
-
-    private val _userEmail = MutableStateFlow(authManager.userData.value?.email ?: "")
-    private val _currentPassword = MutableStateFlow("")
-    val currentPassword = _currentPassword.asStateFlow()
-
-    private val _newPassword = MutableStateFlow("")
-    val newPassword = _newPassword.asStateFlow()
-
-    private val _confirmPassword = MutableStateFlow("")
-    val confirmPassword = _confirmPassword.asStateFlow()
-
-    private val _isCurrentPasswordVisible = MutableStateFlow(false)
-    val isCurrentPasswordVisible = _isCurrentPasswordVisible.asStateFlow()
-
-    private val _isNewPasswordVisible = MutableStateFlow(false)
-    val isNewPasswordVisible = _isNewPasswordVisible.asStateFlow()
-
-    private val _isConfirmPasswordVisible = MutableStateFlow(false)
-    val isConfirmPasswordVisible = _isConfirmPasswordVisible.asStateFlow()
-
-    private val _passwordValidationState = MutableStateFlow(PasswordValidationState())
-    val passwordValidationState = _passwordValidationState.asStateFlow()
-
-    private val _isChangingPassword = MutableStateFlow(false)
-    val isChangingPassword = _isChangingPassword.asStateFlow()
-
-    val isConfirmPasswordValid = combine(newPassword, confirmPassword) { new, confirm ->
-        new.isNotEmpty() && new == confirm
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), false)
-
-    val isChangePwButtonEnabled = combine(
-        newPassword,
-        confirmPassword
-    ) { new, confirm ->
-        new.isNotBlank() && confirm.isNotBlank() && new == confirm
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), false)
+    private val _changePasswordState = MutableStateFlow(ChangePasswordScreenState())
+    val changePasswordState = _changePasswordState.asStateFlow()
 
     private val _changePasswordEvent = MutableSharedFlow<ChangePasswordScreenEvent>()
     val changePasswordEvent = _changePasswordEvent.asSharedFlow()
 
     fun onChangePasswordClick() {
+        val currentState = _changePasswordState.value
         viewModelScope.launch {
-            _isChangingPassword.value = true
+
             val request = ChangePasswordRequest(
-                email = _userEmail.value,
-                password = _currentPassword.value,
-                newPassword = _newPassword.value,
+                email = currentState.email,
+                password = currentState.currentPassword,
+                newPassword = currentState.newPassword
             )
 
             myPageRepository.changePassword(request).collectLatest { result ->
                 when (result) {
+                    is DataResourceResult.Loading -> {
+                        _changePasswordState.update { it.copy(isChangingPassword = true) }
+                    }
+
                     is DataResourceResult.Success -> {
+                        _changePasswordState.update { it.copy(isChangingPassword = false) }
                         val message = result.data.message
                         _changePasswordEvent.emit(ChangePasswordScreenEvent.NavigateToMyPage(message))
                     }
 
                     is DataResourceResult.Failure -> {
-                        val errorMsg = result.exception.message.toString()
-                        _changePasswordEvent.emit(ChangePasswordScreenEvent.Error(errorMsg))
+                        _changePasswordState.update { it.copy(isChangingPassword = false) }
+                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        _changePasswordEvent.emit(ChangePasswordScreenEvent.Error(message))
                     }
 
-                    else -> Unit
+                    is DataResourceResult.DummyConstructor -> Unit
                 }
-                _isChangingPassword.value = false
             }
         }
     }
 
     fun onCurrentPasswordChange(password: String) {
-        _currentPassword.value = password
+        _changePasswordState.update { it.copy(currentPassword = password) }
     }
 
     fun onNewPasswordChange(password: String) {
-        _newPassword.value = password
+        _changePasswordState.update { it.copy(newPassword = password) }
     }
 
     fun onNewPasswordChangeDebounced(password: String) {
-        _passwordValidationState.value = userDataValidator.isPasswordValid(password)
+        _changePasswordState.update {
+            it.copy(
+                passwordValidationState = userDataValidator.isPasswordValid(password)
+            )
+        }
     }
 
     fun onConfirmPasswordChange(password: String) {
-        _confirmPassword.value = password
+        _changePasswordState.update { it.copy(confirmPassword = password) }
     }
 
     fun onToggleCurrentPasswordVisibility() {
-        _isCurrentPasswordVisible.update { !it }
+        _changePasswordState.update {
+            it.copy(isCurrentPasswordVisible = !it.isCurrentPasswordVisible)
+        }
     }
 
     fun onToggleNewPasswordVisibility() {
-        _isNewPasswordVisible.update { !it }
+        _changePasswordState.update {
+            it.copy(isNewPasswordVisible = !it.isNewPasswordVisible)
+        }
     }
 
     fun onToggleConfirmPasswordVisibility() {
-        _isConfirmPasswordVisible.update { !it }
+        _changePasswordState.update {
+            it.copy(isConfirmPasswordVisible = !it.isConfirmPasswordVisible)
+        }
     }
 
     // --------------------------------------------------
     // 마이페이지 이동 관련
     // --------------------------------------------------
+    private val _myPageScreenState = MutableStateFlow(MyPageScreenState())
+    val myPageScreenState = _myPageScreenState.asStateFlow()
 
     private val _myPageScreenEvent = MutableSharedFlow<MyPageScreenEvent>()
     val myPageScreenEvent = _myPageScreenEvent.asSharedFlow()
 
-    fun onLoginClick() = emitEvent(_myPageScreenEvent, MyPageScreenEvent.NavigateToLogin)
-    fun onLogoutClick() = AuthManager.logout()
-    fun navigateToChangePassword() =
-        emitEvent(_myPageScreenEvent, MyPageScreenEvent.NavigateToChangePassword)
+    fun onLoginClick() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToLogin)
+        }
+    }
 
-    fun navigateToChangeNickname() =
-        emitEvent(_myPageScreenEvent, MyPageScreenEvent.NavigateToChangeNickname)
+    fun onLogoutClick() {
+        viewModelScope.launch {
+            userDataStoreRepository.clearLoginInfo()
+        }
+    }
 
-    fun navigateToReviewHistory() =
-        emitEvent(_myPageScreenEvent, MyPageScreenEvent.NavigateToReviewHistory)
+    fun navigateToChangePassword() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToChangePassword)
+        }
+    }
 
-    // --------------------------------------------------
-    // Util
-    // --------------------------------------------------
+    fun navigateToChangeNickname() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToChangeNickname)
+        }
+    }
 
-    private fun <T> emitEvent(flow: MutableSharedFlow<T>, event: T) {
-        viewModelScope.launch { flow.emit(event) }
+    fun navigateToReviewHistory() {
+        viewModelScope.launch {
+            _myPageScreenEvent.emit(MyPageScreenEvent.NavigateToReviewHistory)
+        }
     }
 }
