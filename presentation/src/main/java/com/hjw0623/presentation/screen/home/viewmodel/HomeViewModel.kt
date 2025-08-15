@@ -8,6 +8,7 @@ import com.hjw0623.core.business_logic.model.response.toProduct
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
 import com.hjw0623.core.business_logic.repository.ProductRepository
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.BLANK_INPUT
 import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
@@ -25,7 +26,9 @@ private const val MIN_SEARCH_QUERY_LENGTH = 2
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
+    private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
+
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
@@ -33,6 +36,13 @@ class HomeViewModel(
     private val _event = MutableSharedFlow<HomeScreenEvent>()
     val event = _event.asSharedFlow()
 
+    init {
+        viewModelScope.launch {
+            userDataStoreRepository.isLoggedInFlow.collectLatest { loggedIn ->
+                _state.update { it.copy(isLoggedIn = loggedIn) }
+            }
+        }
+    }
 
     fun fetchRecommendList() {
         viewModelScope.launch {
