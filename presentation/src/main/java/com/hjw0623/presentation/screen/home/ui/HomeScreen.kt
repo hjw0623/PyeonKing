@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.business_logic.auth.AuthManager
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -35,24 +34,19 @@ fun HomeScreenRoot(
     onNavigateToSearchResult: (SearchResultNavArgs) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = homeViewModel
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val recommendList by viewModel.recommendProductList.collectAsStateWithLifecycle()
-    val isLoggedIn by AuthManager.isLoggedIn.collectAsStateWithLifecycle()
+    val state by homeViewModel.state.collectAsStateWithLifecycle()
 
     val throttledSearchClick = rememberThrottledOnClick {
-        viewModel.onSearchClick()
+        homeViewModel.onSearchClick()
     }
 
-    LaunchedEffect(isLoggedIn) {
-        if (isLoggedIn) {
+    LaunchedEffect(state.isLoggedIn) {
+        if (state.isLoggedIn) {
             homeViewModel.fetchRecommendList()
         }
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = homeViewModel.event) { event ->
         when (event) {
             is HomeScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -70,13 +64,10 @@ fun HomeScreenRoot(
 
     HomeScreen(
         modifier = modifier,
-        isLoggedIn = isLoggedIn,
-        isLoading = isLoading,
-        searchQuery = searchQuery,
-        recommendList = recommendList,
-        onSearchQueryChange = viewModel::onSearchQueryChange,
-        onSearchQueryChangeDebounced = viewModel::onSearchQueryChangeDebounced,
-        onCardClick = viewModel::onProductCardClick,
+        state = state,
+        onSearchQueryChange = homeViewModel::onSearchQueryChange,
+        onSearchQueryChangeDebounced = homeViewModel::onSearchQueryChangeDebounced,
+        onCardClick = homeViewModel::onProductCardClick,
         onSearchClick = throttledSearchClick
     )
 }
@@ -84,10 +75,7 @@ fun HomeScreenRoot(
 @Composable
 private fun HomeScreen(
     modifier: Modifier = Modifier,
-    isLoggedIn: Boolean,
-    isLoading: Boolean,
-    searchQuery: String,
-    recommendList: List<Product>,
+    state: HomeScreenState,
     onSearchQueryChange: (String) -> Unit,
     onSearchQueryChangeDebounced: (String) -> Unit,
     onCardClick: (Product) -> Unit,
@@ -99,7 +87,7 @@ private fun HomeScreen(
             .background(MaterialTheme.colorScheme.primary)
     ) {
         TopHeader(
-            query = searchQuery,
+            query = state.searchQuery,
             onQueryChange = onSearchQueryChange,
             onSearchClick = onSearchClick,
             onSearchQueryChangeDebounced = onSearchQueryChangeDebounced
@@ -107,10 +95,10 @@ private fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (isLoggedIn) {
+        if (state.isLoggedIn) {
             RecommendSection(
-                isLoading = isLoading,
-                recommendList = recommendList,
+                isLoading = state.isLoading,
+                recommendList = state.recommendList,
                 onCardClick = onCardClick
             )
         } else {
@@ -124,10 +112,12 @@ private fun HomeScreen(
 private fun HomeScreenPreview() {
     PyeonKingTheme {
         HomeScreen(
-            searchQuery = "편의점",
-            isLoggedIn = true,
-            isLoading = true,
-            recommendList = mockProductList,
+            state = HomeScreenState(
+                searchQuery = "편의점",
+                isLoggedIn = true,
+                isLoading = true,
+                recommendList = mockProductList
+            ),
             onSearchQueryChange = {},
             onSearchQueryChangeDebounced = {},
             onCardClick = {},
