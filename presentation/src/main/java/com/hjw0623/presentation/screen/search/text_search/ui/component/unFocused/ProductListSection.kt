@@ -2,6 +2,8 @@ package com.hjw0623.presentation.screen.search.text_search.ui.component.unFocuse
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,6 +19,7 @@ fun ProductListSection(
     onProductClick: (Product) -> Unit,
     onFilterToggle: (FilterType) -> Unit,
     modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -27,7 +30,8 @@ fun ProductListSection(
         )
         ProductList(
             products = products,
-            onProductClick = onProductClick
+            onProductClick = onProductClick,
+            listState = listState
         )
     }
 }
