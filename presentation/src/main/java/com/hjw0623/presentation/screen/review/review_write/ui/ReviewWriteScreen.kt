@@ -45,23 +45,17 @@ fun ReviewWriteScreenRoot(
     onReviewWriteComplete: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = reviewWriteViewModel
-
-    val productState by viewModel.product.collectAsStateWithLifecycle()
-    val rating by viewModel.rating.collectAsStateWithLifecycle()
-    val content by viewModel.content.collectAsStateWithLifecycle()
-    val isSubmitButtonEnabled by viewModel.isSubmitButtonEnabled.collectAsStateWithLifecycle()
-    val isSubmitting by viewModel.isSubmitting.collectAsStateWithLifecycle()
+    val state by reviewWriteViewModel.state.collectAsStateWithLifecycle()
 
     val throttledSubmitClick = rememberThrottledOnClick {
-        viewModel.onSubmitClick()
+        reviewWriteViewModel.onSubmitClick()
     }
 
     LaunchedEffect(key1 = product) {
-        viewModel.init(product)
+        reviewWriteViewModel.init(product)
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = reviewWriteViewModel.event) { event ->
         when (event) {
             is ReviewWriteScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -76,13 +70,9 @@ fun ReviewWriteScreenRoot(
 
     ReviewWriteScreen(
         modifier = modifier,
-        product = productState,
-        rating = rating,
-        content = content,
-        isSubmitting = isSubmitting,
-        isSubmitButtonEnabled = isSubmitButtonEnabled,
-        onRatingChange = viewModel::onRatingChange,
-        onContentChange = viewModel::onContentChange,
+        state = state,
+        onRatingChange = reviewWriteViewModel::onRatingChange,
+        onContentChange = reviewWriteViewModel::onContentChange,
         onSubmitClick = throttledSubmitClick
     )
 }
@@ -90,16 +80,12 @@ fun ReviewWriteScreenRoot(
 @Composable
 fun ReviewWriteScreen(
     modifier: Modifier = Modifier,
-    product: Product?,
-    rating: Int,
-    content: String,
-    isSubmitting: Boolean,
-    isSubmitButtonEnabled: Boolean,
+    state: ReviewWriteScreenState,
     onRatingChange: (Int) -> Unit,
     onContentChange: (String) -> Unit,
     onSubmitClick: () -> Unit
 ) {
-    if (product == null) {
+    if (state.product == null) {
         return
     }
 
@@ -112,7 +98,7 @@ fun ReviewWriteScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
-                model = product.imgUrl,
+                model = state.product.imgUrl,
                 contentDescription = null,
                 fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 modifier = Modifier.size(100.dp),
@@ -121,18 +107,18 @@ fun ReviewWriteScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = product.name,
+                    text = state.product.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 )
                 StarRatingSelector(
-                    rating = rating,
+                    rating = state.rating,
                     onRatingChange = onRatingChange
                 )
             }
         }
 
         WritingSection(
-            content = content,
+            content = state.content,
             onContentChange = onContentChange
         )
 
@@ -141,11 +127,11 @@ fun ReviewWriteScreen(
         LoadingButton(
             text = stringResource(R.string.action_submit),
             onClick = onSubmitClick,
-            enabled = isSubmitButtonEnabled,
+            enabled = state.isSubmitButtonEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 32.dp),
-            loading = isSubmitting
+            loading = state.isSubmitting
         )
     }
 }
@@ -155,14 +141,15 @@ fun ReviewWriteScreen(
 private fun ReviewWriteScreenPreview() {
     PyeonKingTheme {
         ReviewWriteScreen(
-            product = mockProduct,
-            rating = 4,
-            content = "이 편의점 조합 정말 맛있네요. 추천합니다!",
-            isSubmitButtonEnabled = true,
+            state = ReviewWriteScreenState(
+                product = mockProduct,
+                rating = 4,
+                content = "이 편의점 조합 정말 맛있네요. 추천합니다!",
+                isSubmitting = false
+            ),
             onRatingChange = {},
             onContentChange = {},
             onSubmitClick = {},
-            isSubmitting = false
         )
     }
 }
