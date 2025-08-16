@@ -51,16 +51,17 @@ class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
 
     override suspend fun saveSearchHistory(query: String) {
         dataStore.edit { preferences ->
-            val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
-            val newHistory = listOf(query) + currentHistory.filterNot { it == query }
+            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
+            // 중복 제거 + 최근 검색어 맨 앞에 추가
+            val newHistory = listOf(query.trim()) + current.filterNot { it.equals(query.trim(), ignoreCase = true) }
             preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
         }
     }
 
     override suspend fun removeSearchHistory(query: String) {
         dataStore.edit { preferences ->
-            val currentHistory = preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
-            val newHistory = currentHistory.filterNot { it == query }
+            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
+            val newHistory = current.filterNot { it.equals(query.trim(), ignoreCase = true) }
             preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
         }
     }
@@ -72,7 +73,10 @@ class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
     override val refreshTokenFlow: Flow<String?> = dataStore.data.map { it[KEY_REFRESH_TOKEN] }
     override val isLoggedInFlow: Flow<Boolean> =
         dataStore.data.map { it[KEY_IS_LOGGED_IN] ?: false }
-    override val searchHistoryFlow: Flow<List<String>> = dataStore.data.map { preferences ->
-        preferences[KEY_SEARCH_HISTORY]?.split(",") ?: emptyList()
+    override val searchHistoryFlow: Flow<List<String>> = dataStore.data.map { prefs ->
+        prefs[KEY_SEARCH_HISTORY]
+            ?.split(",")
+            ?.filter { it.isNotBlank() }
+            ?: emptyList()
     }
 }
