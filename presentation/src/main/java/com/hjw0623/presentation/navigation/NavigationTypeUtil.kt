@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.navigation
+package com.hjw0623.presentation.navigation
 
 import android.os.Build
 import android.os.Bundle

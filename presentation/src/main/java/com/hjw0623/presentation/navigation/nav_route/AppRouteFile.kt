@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.navigation.nav_route
+package com.hjw0623.presentation.navigation.nav_route
 
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs

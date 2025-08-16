@@ -1,4 +1,4 @@
-package com.hjw0623.pyeonking.navigation.nav_route
+package com.hjw0623.presentation.navigation.nav_route
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -26,7 +26,7 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
-import com.hjw0623.pyeonking.navigation.parcelableType
+import com.hjw0623.presentation.navigation.parcelableType
 import kotlin.reflect.typeOf
 
 

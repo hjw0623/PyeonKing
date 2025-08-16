@@ -40,18 +40,18 @@ import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoo
 import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
-import com.hjw0623.pyeonking.navigation.TopBarData
-import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
-import com.hjw0623.pyeonking.navigation.nav_route.CameraTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.HomeTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MyPageTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.TextSearchTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.cameraNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
-import com.hjw0623.pyeonking.navigation.topBarAsRouteName
+import com.hjw0623.presentation.navigation.TopBarData
+import com.hjw0623.presentation.navigation.bottom_nav.BottomNavItem
+import com.hjw0623.presentation.navigation.nav_route.CameraTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.HomeTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.MainNavigationRoute
+import com.hjw0623.presentation.navigation.nav_route.MyPageTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.TextSearchTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.cameraNavGraph
+import com.hjw0623.presentation.navigation.nav_route.homeNavGraph
+import com.hjw0623.presentation.navigation.nav_route.myPageNavGraph
+import com.hjw0623.presentation.navigation.nav_route.textSearchNavGraph
+import com.hjw0623.presentation.navigation.topBarAsRouteName
 
 @Composable
 fun MainScreen() {
