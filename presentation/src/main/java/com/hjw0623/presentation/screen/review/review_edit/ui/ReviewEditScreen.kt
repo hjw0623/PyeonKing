@@ -50,24 +50,17 @@ fun ReviewEditScreenRoot(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewModel = reviewEditViewModel
-
-    val productName by viewModel.productName.collectAsStateWithLifecycle()
-    val productImgUrl by viewModel.productImgUrl.collectAsStateWithLifecycle()
-    val newContent by viewModel.newContent.collectAsStateWithLifecycle()
-    val newStarRating by viewModel.newStarRating.collectAsStateWithLifecycle()
-    val isEditButtonEnabled by viewModel.isEditButtonEnabled.collectAsStateWithLifecycle()
-    val isEditing by viewModel.isEditing.collectAsStateWithLifecycle()
+    val state by reviewEditViewModel.state.collectAsStateWithLifecycle()
 
     val throttledEditClick = rememberThrottledOnClick {
-        viewModel.onEditClick()
+        reviewEditViewModel.onEditClick()
     }
 
     LaunchedEffect(key1 = reviewInfo) {
-        viewModel.init(reviewInfo)
+        reviewEditViewModel.fetchInitReview(reviewInfo)
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = reviewEditViewModel.event) { event ->
         when (event) {
             is ReviewEditScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -82,32 +75,23 @@ fun ReviewEditScreenRoot(
 
     ReviewEditScreen(
         modifier = modifier,
-        productName = productName,
-        productImgUrl = productImgUrl,
-        newContent = newContent,
-        newStarRating = newStarRating,
-        isEditButtonEnabled = isEditButtonEnabled,
-        onContentChanged = viewModel::onContentChanged,
-        onStarRatingChanged = viewModel::onStarRatingChanged,
-        onEditClick = throttledEditClick,
-        isEditing = isEditing
+        state = state,
+        onContentChanged = reviewEditViewModel::onContentChanged,
+        onStarRatingChanged = reviewEditViewModel::onStarRatingChanged,
+        onEditClick = throttledEditClick
     )
 }
 
 @Composable
 fun ReviewEditScreen(
     modifier: Modifier = Modifier,
-    productName: String,
-    productImgUrl: String?,
-    newContent: String,
-    newStarRating: Int,
-    isEditButtonEnabled: Boolean,
+    state: ReviewEditScreenState,
     onContentChanged: (String) -> Unit,
     onStarRatingChanged: (Int) -> Unit,
     onEditClick: () -> Unit,
-    isEditing: Boolean
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -121,7 +105,7 @@ fun ReviewEditScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             AsyncImage(
-                model = getFullImageUrl(productImgUrl).takeIf { it.isNotBlank() },
+                model = getFullImageUrl(state.productImgUrl).takeIf { it.isNotBlank() },
                 contentDescription = null,
                 fallback = painterResource(com.hjw0623.core.R.drawable.no_image),
                 modifier = Modifier.size(100.dp),
@@ -130,11 +114,11 @@ fun ReviewEditScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = productName,
+                    text = state.productName,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 StarRatingSelector(
-                    rating = newStarRating,
+                    rating = state.newStarRating,
                     onRatingChange = onStarRatingChanged
                 )
             }
@@ -150,7 +134,7 @@ fun ReviewEditScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = newContent,
+                value = state.newContent,
                 onValueChange = onContentChanged,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions {
@@ -174,8 +158,8 @@ fun ReviewEditScreen(
         LoadingButton(
             text = stringResource(R.string.action_edit_review_complete),
             onClick = onEditClick,
-            enabled = isEditButtonEnabled,
-            loading = isEditing,
+            enabled = state.isEditButtonEnabled,
+            loading = state.isEditing,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(32.dp),
@@ -188,15 +172,15 @@ fun ReviewEditScreen(
 private fun ReviewEditScreenPreview() {
     PyeonKingTheme {
         ReviewEditScreen(
-            productName = "스팸 김치볶음밥",
-            productImgUrl = "",
-            newContent = "이거 정말 맛있네요! 최고!",
-            newStarRating = 5,
-            isEditButtonEnabled = true,
+            state = ReviewEditScreenState(
+                productName = "스팸 김치볶음밥",
+                productImgUrl = "",
+                newContent = "이거 정말 맛있네요! 최고!",
+                newStarRating = 5,
+            ),
             onContentChanged = {},
             onStarRatingChanged = {},
             onEditClick = {},
-            isEditing = false
         )
     }
 }
