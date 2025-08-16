@@ -9,56 +9,62 @@ import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSo
 import com.hjw0623.core.constants.Error
 import com.hjw0623.core.util.takePictureAndSave
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
+import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CameraSearchViewModel : ViewModel() {
 
-    private val _hasCameraPermission = MutableStateFlow(false)
-    val hasCameraPermission = _hasCameraPermission.asStateFlow()
-
-    private val _capturedImagePath = MutableStateFlow<String?>(null)
-    val capturedImagePath = _capturedImagePath.asStateFlow()
+    private val _state = MutableStateFlow(CameraScreenState())
+    val state = _state.asStateFlow()
 
     private val _event = MutableSharedFlow<CameraScreenEvent>()
     val event = _event.asSharedFlow()
 
     fun onPermissionResult(isGranted: Boolean) {
-        _hasCameraPermission.value = isGranted
+        _state.update { it.copy(hasCameraPermission = isGranted) }
     }
 
-    fun onPhotoTaken(path: String) {
-        _capturedImagePath.value = path
-    }
 
     fun takePicture(context: Context, controller: LifecycleCameraController) {
+        if (_state.value.isTakingPicture) return
+
         viewModelScope.launch {
+            _state.update { it.copy(isTakingPicture = true) }
+
             takePictureAndSave(context, controller)
                 .catch { e ->
-                    _event.emit(CameraScreenEvent.Error(Error.SAVE_PICTURE_ERROR + e.message))
+                    _state.update { s -> s.copy(isTakingPicture = false) }
+                    _event.emit(
+                        CameraScreenEvent.Error(
+                            Error.SAVE_PICTURE_ERROR + (e.message ?: "")
+                        )
+                    )
                 }
                 .collect { path ->
-                    _capturedImagePath.value = path
+                    _state.update { it.copy(capturedImagePath = path, isTakingPicture = false) }
                 }
         }
     }
 
     fun onRetakeClick() {
-        _capturedImagePath.value = null
+        if (_state.value.isTakingPicture) return
+        _state.update { it.copy(capturedImagePath = null) }
     }
 
     fun onSearchClick() {
+        val currentState = _state.value
         viewModelScope.launch {
-            val path = _capturedImagePath.value
-            if (path != null) {
+            if (currentState.capturedImagePath != null) {
                 val navArgs = SearchResultNavArgs(
                     source = SearchResultSource.CAMERA,
                     passedQuery = "",
-                    passedImagePath = path
+                    passedImagePath = currentState.capturedImagePath
                 )
                 _event.emit(CameraScreenEvent.NavigateToSearchResult(navArgs))
             } else {

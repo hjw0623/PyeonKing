@@ -33,10 +33,7 @@ fun CameraScreenRoot(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val viewModel = cameraSearchViewModel
-
-    val hasPermission by viewModel.hasCameraPermission.collectAsStateWithLifecycle()
-    val capturedImagePath by viewModel.capturedImagePath.collectAsStateWithLifecycle()
+    val state by cameraSearchViewModel.state.collectAsStateWithLifecycle()
 
     val cameraController = remember {
         LifecycleCameraController(context).apply {
@@ -46,26 +43,31 @@ fun CameraScreenRoot(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
-        viewModel.onPermissionResult(granted)
+        cameraSearchViewModel.onPermissionResult(granted)
         if (!granted) {
             showToast(context, context.getString(R.string.camera_permission_required))
         }
     }
 
-    val throttledRetakeClick = rememberThrottledOnClick(onClick = viewModel::onRetakeClick)
-    val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
+    val throttledRetakeClick = rememberThrottledOnClick(
+        onClick = cameraSearchViewModel::onRetakeClick
+    )
+    val throttledSearchClick = rememberThrottledOnClick(
+        onClick = cameraSearchViewModel::onSearchClick
+    )
     val throttledTakePicture = rememberThrottledOnClick {
-        viewModel.takePicture(context, cameraController)
+        cameraSearchViewModel.takePicture(context, cameraController)
     }
+
     LaunchedEffect(Unit) {
         val isGranted = context.hasCameraPermission()
-        viewModel.onPermissionResult(isGranted)
+        cameraSearchViewModel.onPermissionResult(isGranted)
         if (!isGranted) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = cameraSearchViewModel.event) { event ->
         when (event) {
             is CameraScreenEvent.NavigateToSearchResult -> {
                 onNavigateToSearchResult(event.searchResultNavArgs)
@@ -77,11 +79,11 @@ fun CameraScreenRoot(
         }
     }
 
-    if (hasPermission) {
+    if (state.hasCameraPermission) {
         CameraScreen(
             modifier = modifier,
+            state = state,
             cameraController = cameraController,
-            capturedImagePath = capturedImagePath,
             onCaptureClick = throttledTakePicture,
             onRetakeClick = throttledRetakeClick,
             onSearchClick = throttledSearchClick
@@ -101,16 +103,16 @@ fun CameraScreenRoot(
 @Composable
 fun CameraScreen(
     cameraController: LifecycleCameraController,
-    capturedImagePath: String?,
+    state: CameraScreenState,
     onCaptureClick: () -> Unit,
     onRetakeClick: () -> Unit,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (capturedImagePath != null) {
+    if (state.hasCapturedImage) {
         CapturedImageScreen(
             modifier = modifier.fillMaxSize(),
-            imagePath = capturedImagePath,
+            imagePath = state.capturedImagePath!!,
             onRetake = onRetakeClick,
             onSearchClick = onSearchClick
         )
@@ -129,10 +131,10 @@ private fun CameraScreenPreview() {
     PyeonKingTheme {
         CameraScreen(
             cameraController = LifecycleCameraController(LocalContext.current),
-            capturedImagePath = null,
             onCaptureClick = {},
             onRetakeClick = {},
-            onSearchClick = {}
+            onSearchClick = {},
+            state = CameraScreenState(),
         )
     }
 }
