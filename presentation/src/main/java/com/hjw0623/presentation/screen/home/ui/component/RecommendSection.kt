@@ -31,6 +31,7 @@ import com.hjw0623.presentation.R
 fun RecommendSection(
     isLoading: Boolean,
     recommendList: List<Product>,
+    hasFetched: Boolean,
     onCardClick: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -59,6 +60,9 @@ fun RecommendSection(
                     .align(Alignment.CenterHorizontally)
             )
         } else {
+            if (hasFetched && recommendList.isEmpty()) {
+                RecommendEmptyScreen()
+            }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -87,6 +91,7 @@ private fun RecommendSectionPreview() {
         RecommendSection(
             isLoading = false,
             recommendList = mockProductList,
+            hasFetched = true,
             onCardClick = {},
         )
     }

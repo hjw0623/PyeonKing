@@ -99,6 +99,7 @@ private fun HomeScreen(
             RecommendSection(
                 isLoading = state.isLoading,
                 recommendList = state.recommendList,
+                hasFetched = state.hasFetchedRecommendList,
                 onCardClick = onCardClick
             )
         } else {

@@ -57,13 +57,20 @@ class HomeViewModel(
                             if (products.isEmpty()) {
                                 _event.emit(HomeScreenEvent.Error("추천 상품이 없습니다"))
                             }
-                            it.copy(recommendList = products, isLoading = false)
+                            it.copy(
+                                recommendList = products,
+                                isLoading = false,
+                                hasFetchedRecommendList = true
+                            )
                         }
 
                         is DataResourceResult.Failure -> {
                             val message = result.exception.message ?: UNKNOWN_ERROR
                             _event.emit(HomeScreenEvent.Error(message))
-                            it.copy(isLoading = false)
+                            it.copy(
+                                isLoading = false,
+                                hasFetchedRecommendList = true
+                            )
                         }
 
                         is DataResourceResult.DummyConstructor -> it

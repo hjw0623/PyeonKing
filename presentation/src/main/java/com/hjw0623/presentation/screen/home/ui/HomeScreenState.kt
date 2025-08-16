@@ -6,5 +6,6 @@ data class HomeScreenState(
     val isLoading: Boolean = false,
     val searchQuery: String = "",
     val recommendList: List<Product> = emptyList(),
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
+    val hasFetchedRecommendList: Boolean = false
 )
