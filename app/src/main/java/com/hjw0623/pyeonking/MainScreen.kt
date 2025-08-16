@@ -1,6 +1,5 @@
 package com.hjw0623.pyeonking
 
-import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,7 +52,6 @@ import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
 import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
 import com.hjw0623.pyeonking.navigation.topBarAsRouteName
-import kotlinx.serialization.json.internal.writeJson
 
 @Composable
 fun MainScreen() {
@@ -65,30 +63,32 @@ fun MainScreen() {
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
 
-    val loginViewModel = viewModel<LoginViewModel>(factory = PyeonKingViewModelFactory)
+    val pyeonKingViewModelFactory = PyeonKingViewModelFactory(navController.context)
 
-    val registerViewModel = viewModel<RegisterViewModel>(factory = PyeonKingViewModelFactory)
+    val loginViewModel = viewModel<LoginViewModel>(factory = pyeonKingViewModelFactory)
 
-    val homeViewModel = viewModel<HomeViewModel>(factory = PyeonKingViewModelFactory)
+    val registerViewModel = viewModel<RegisterViewModel>(factory = pyeonKingViewModelFactory)
 
-    val myPageViewModel = viewModel<MyPageViewModel>(factory = PyeonKingViewModelFactory)
+    val homeViewModel = viewModel<HomeViewModel>(factory = pyeonKingViewModelFactory)
 
-    val productViewModel = viewModel<ProductViewModel>(factory = PyeonKingViewModelFactory)
+    val myPageViewModel = viewModel<MyPageViewModel>(factory = pyeonKingViewModelFactory)
 
-    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = PyeonKingViewModelFactory)
+    val productViewModel = viewModel<ProductViewModel>(factory = pyeonKingViewModelFactory)
+
+    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = pyeonKingViewModelFactory)
 
     val reviewHistoryViewModel =
-        viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<ReviewHistoryViewModel>(factory = pyeonKingViewModelFactory)
 
-    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = PyeonKingViewModelFactory)
+    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = pyeonKingViewModelFactory)
 
     val cameraSearchViewModel =
-        viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<CameraSearchViewModel>(factory = pyeonKingViewModelFactory)
 
     val searchResultViewModel =
-        viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<SearchResultViewModel>(factory = pyeonKingViewModelFactory)
 
-    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = PyeonKingViewModelFactory)
+    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = pyeonKingViewModelFactory)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
