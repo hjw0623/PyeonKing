@@ -1,6 +1,5 @@
 package com.hjw0623.presentation.screen.mypage.change_nickname.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -9,15 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,12 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.auth.NicknameValidationState
+import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
+import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -47,20 +47,17 @@ fun ChangeNicknameScreenRoot(
     onNavigateToMyPage: () -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel = myPageViewModel
 
-    val newNickname by viewModel.newNickname.collectAsStateWithLifecycle()
-    val nicknameValidationState by viewModel.nicknameValidationState.collectAsStateWithLifecycle()
-    val isChangeButtonEnabled by viewModel.isChangeButtonEnabled.collectAsStateWithLifecycle()
+    val state by myPageViewModel.changeNicknameState.collectAsStateWithLifecycle()
 
     val throttledNicknameCheckClick = rememberThrottledOnClick {
-        viewModel.onNicknameCheckClick()
+        myPageViewModel.onNicknameCheckClick()
     }
     val throttledChangeNicknameClick = rememberThrottledOnClick {
-        viewModel.onChangeNicknameClick()
+        myPageViewModel.onChangeNicknameClick()
     }
 
-    ObserveAsEvents(flow = viewModel.changeNicknameEvent) { event ->
+    ObserveAsEvents(flow = myPageViewModel.changeNicknameEvent) { event ->
         when (event) {
             is ChangeNicknameScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -75,11 +72,9 @@ fun ChangeNicknameScreenRoot(
 
     ChangeNicknameScreen(
         modifier = modifier,
-        newNickname = newNickname,
-        nicknameValidationState = nicknameValidationState,
-        isChangeButtonEnabled = isChangeButtonEnabled,
+        state = state,
+        onNicknameChange = myPageViewModel::onNicknameChange,
         onNicknameCheckClick = throttledNicknameCheckClick,
-        onNicknameChange = viewModel::onNicknameChange,
         onChangeNicknameClick = throttledChangeNicknameClick,
     )
 }
@@ -87,13 +82,13 @@ fun ChangeNicknameScreenRoot(
 @Composable
 private fun ChangeNicknameScreen(
     modifier: Modifier = Modifier,
-    newNickname: String,
-    nicknameValidationState: NicknameValidationState,
+    state: ChangeNicknameScreenState,
     onNicknameChange: (String) -> Unit,
-    isChangeButtonEnabled: Boolean,
     onNicknameCheckClick: () -> Unit,
     onChangeNicknameClick: () -> Unit,
 ) {
+    val isChecking = state.nicknameValidationState == NicknameValidationState.Checking
+    val keyboard = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp, vertical = 16.dp)
@@ -120,38 +115,36 @@ private fun ChangeNicknameScreen(
             verticalAlignment = Alignment.Bottom
         ) {
             PyeonKingTextField(
-                value = newNickname,
+                value = state.newNickname,
                 onValueChange = onNicknameChange,
                 startIcon = Icons.Default.Badge,
-                endIcon = if (nicknameValidationState is NicknameValidationState.Valid) Icons.Default.Check else null,
+                endIcon = if (state.nicknameValidationState is NicknameValidationState.Valid) Icons.Default.Check else null,
                 title = stringResource(R.string.label_nickname),
-                error = if (nicknameValidationState is NicknameValidationState.Invalid) {
-                    nicknameValidationState.message
+                error = if (state.nicknameValidationState is NicknameValidationState.Invalid) {
+                    state.nicknameValidationState.message
                 } else {
                     null
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    keyboard?.hide()
+                    onNicknameCheckClick()
+                }),
                 modifier = Modifier.weight(1f)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            if (nicknameValidationState is NicknameValidationState.Checking) {
-                Box(
-                    modifier = Modifier.size(56.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-            } else {
-                PyeonKingButton(
-                    text = stringResource(R.string.action_duplicate_check),
-                    onClick = onNicknameCheckClick,
-                    enabled = newNickname.isNotBlank() && nicknameValidationState !is NicknameValidationState.Valid,
-                    modifier = Modifier.height(56.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp)
-                )
-            }
+            LoadingButton(
+                text = stringResource(R.string.action_duplicate_check),
+                onClick = onNicknameCheckClick,
+                loading = isChecking,
+                enabled = state.newNickname.isNotBlank() && state.nicknameValidationState !is NicknameValidationState.Valid,
+                modifier = Modifier.height(56.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
+                fullWidth = false
+            )
+
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -162,7 +155,7 @@ private fun ChangeNicknameScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            enabled = isChangeButtonEnabled,
+            enabled = state.isChangeNicknameButtonEnabled,
             contentPadding = PaddingValues(16.dp)
         )
     }
@@ -173,9 +166,10 @@ private fun ChangeNicknameScreen(
 private fun ChangeNicknameScreenPreview() {
     PyeonKingTheme {
         ChangeNicknameScreen(
-            newNickname = "편킹왕",
-            nicknameValidationState = NicknameValidationState.Valid,
-            isChangeButtonEnabled = true,
+            state = ChangeNicknameScreenState(
+                newNickname = "편킹왕",
+                nicknameValidationState = NicknameValidationState.Valid,
+            ),
             onNicknameCheckClick = {},
             onChangeNicknameClick = {},
             onNicknameChange = {},

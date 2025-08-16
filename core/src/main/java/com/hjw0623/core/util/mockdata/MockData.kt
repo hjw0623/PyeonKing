@@ -1,9 +1,9 @@
 package com.hjw0623.core.util.mockdata
 
-import com.hjw0623.core.domain.mypage.User
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.product.ReviewItem
-import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.core.business_logic.model.mypage.User
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.product.ReviewItem
+import com.hjw0623.core.business_logic.model.review.ReviewInfo
 import java.util.UUID
 
 val mockProduct = Product(
@@ -113,7 +113,6 @@ val mockTakenNicknames = setOf("닉네임1", "닉네임2", "닉네임3", "닉네
 val mockUser = User(
     email = "newuser@test.com",
     nickname = "신규회원",
-    password = "Qwer1234!!!",
     accessToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzU4NDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.RywnIQ_m2KbuXUZbxYJ36q1FS__GUKw3Dxo4giiSCMA",
     refreshToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJhY2Nlc3MiLCJ1c2VySUQiOjEwMSwiZXhwIjoxNzcwNDI4NTA5LCJpYXQiOjE3NTI0Mjg1MDksImlzcyI6InRlc3QifQ.AWi_qMm9DGACW9CXQQ1e3hDmZjn3vs8UoSCAc-9qccs"
 )

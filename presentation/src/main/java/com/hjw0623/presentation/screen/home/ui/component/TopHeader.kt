@@ -45,7 +45,7 @@ fun TopHeader(
     onSearchQueryChangeDebounced: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val keyboard = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(key1 = query) {
         delay(300L)
@@ -89,7 +89,7 @@ fun TopHeader(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     onSearchClick()
-                    keyboardController?.hide()
+                    keyboard?.hide()
                 }
             ),
             decorationBox = { innerTextField ->

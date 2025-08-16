@@ -2,46 +2,40 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.toProduct
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.SearchRepository
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.search_result.SearchResultSource
-import com.hjw0623.core.domain.search.text_search.FilterType
-import com.hjw0623.core.domain.search.text_search.filterProducts
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.response.toProduct
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
+import com.hjw0623.core.business_logic.model.search.text_search.FilterType
+import com.hjw0623.core.business_logic.model.search.text_search.filterProducts
+import com.hjw0623.core.business_logic.repository.SearchRepository
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.constants.Error
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
+import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TextSearchViewModel(
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
-
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
-
-    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
-    val searchHistory = _searchHistory.asStateFlow()
-
-    private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
-    val allProducts = _allProducts.asStateFlow()
-
-    private val _selectedFilters = MutableStateFlow<Map<FilterType, Boolean>>(emptyMap())
-    val selectedFilters = _selectedFilters.asStateFlow()
+    private val _state = MutableStateFlow(TextSearchScreenState())
+    val state = _state.asStateFlow()
     private val _event = MutableSharedFlow<TextSearchScreenEvent>()
     val event = _event.asSharedFlow()
 
     init {
-        fetchSearchHistory()
+        observeSearchHistory()
+        fetchAllProducts()
     }
 
     fun fetchAllProducts() {
@@ -49,19 +43,27 @@ class TextSearchViewModel(
             searchRepository.getAllItems().collectLatest { result ->
                 when (result) {
                     DataResourceResult.Loading -> {
-                        _isLoading.value = true
+                        _state.update { it.copy(isLoading = true) }
                     }
 
                     is DataResourceResult.Success -> {
-                        _isLoading.value = false
-                        _allProducts.value = result.data.data.searchItems.map { it.toProduct() }
-                        val items = result.data.data.searchItems
+                        val products = result.data.data.searchItems.map { it.toProduct() }
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                allProducts = products,
+                                filteredProducts = applyFilters(
+                                    products = products,
+                                    filters = it.selectedFilters
+                                )
+                            )
+                        }
                     }
 
                     is DataResourceResult.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         val message = result.exception.message.toString()
                         _event.emit(TextSearchScreenEvent.Error(message))
-                        _isLoading.value = false
                     }
 
                     else -> Unit
@@ -70,40 +72,54 @@ class TextSearchViewModel(
         }
     }
 
-    private fun fetchSearchHistory() {
+    private fun observeSearchHistory() {
         viewModelScope.launch {
-            _searchHistory.value = listOf("라면", "콜라", "아이스크림", "도시락")
+            userDataStoreRepository.searchHistoryFlow
+                .distinctUntilChanged()
+                .collectLatest { history ->
+                    _state.update { it.copy(searchHistory = history) }
+                }
         }
     }
 
     fun onQueryChange(newQuery: String) {
-        _query.value = newQuery
+        _state.update { it.copy(query = newQuery) }
     }
 
     fun onClearClick() {
-        _query.value = ""
+        _state.update { it.copy(query = "") }
     }
 
     fun onDeleteSearchHistory(history: String) {
-        _searchHistory.update { currentList ->
-            currentList.filterNot { it == history }
+        viewModelScope.launch {
+            try {
+                userDataStoreRepository.removeSearchHistory(history)
+            } catch (e: Exception) {
+                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_HISTORY_DELETE_FAILED))
+            }
         }
     }
 
     fun onHistoryClick(history: String) {
-        _query.value = history
+        _state.update { it.copy(query = history) }
         onSearchClick()
     }
 
     fun onSearchClick() {
-        val currentQuery = query.value
+        val currentQuery = _state.value.query
         if (currentQuery.isBlank()) {
-            viewModelScope.launch { _event.emit(TextSearchScreenEvent.Error("검색어를 입력해주세요.")) }
+            viewModelScope.launch {
+                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_QUERY_EMPTY))
+            }
             return
         }
 
-        _searchHistory.update { currentList ->
-            listOf(currentQuery) + currentList.filterNot { it == currentQuery }
+        viewModelScope.launch {
+            try {
+                userDataStoreRepository.saveSearchHistory(currentQuery)
+            } catch (e: Exception) {
+                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_HISTORY_SAVE_FAILED))
+            }
         }
 
         viewModelScope.launch {
@@ -123,16 +139,31 @@ class TextSearchViewModel(
     }
 
     fun onToggleFilter(filterType: FilterType) {
-        val updatedFilters = selectedFilters.value.toMutableMap()
-        updatedFilters[filterType] = selectedFilters.value[filterType] != true
-        _selectedFilters.value = updatedFilters
-        applyFilters()
+        _state.update {
+            val updated = it.selectedFilters.toMutableMap()
+            updated[filterType] = it.selectedFilters[filterType] != true
+            val newFiltered = applyFilters(
+                products = it.allProducts,
+                filters = updated
+            )
+            it.copy(
+                selectedFilters = updated,
+                filteredProducts = newFiltered
+            )
+        }
     }
 
-    private fun applyFilters() {
-        _allProducts.value = filterProducts(
-            allProducts = _allProducts.value,
-            filters = selectedFilters.value
-        )
+    private fun applyFilters(
+        products: List<Product>,
+        filters: Map<FilterType, Boolean>
+    ): List<Product> {
+        return if (filters.values.none { it }) {
+            products
+        } else {
+            filterProducts(
+                allProducts = products,
+                filters = filters
+            )
+        }
     }
 }

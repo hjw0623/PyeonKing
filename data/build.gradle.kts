@@ -50,6 +50,9 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))

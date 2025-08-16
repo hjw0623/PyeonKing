@@ -40,18 +40,18 @@ import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoo
 import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
-import com.hjw0623.pyeonking.navigation.TopBarData
-import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
-import com.hjw0623.pyeonking.navigation.nav_route.CameraTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.HomeTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MyPageTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.TextSearchTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.cameraNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
-import com.hjw0623.pyeonking.navigation.topBarAsRouteName
+import com.hjw0623.presentation.navigation.TopBarData
+import com.hjw0623.presentation.navigation.bottom_nav.BottomNavItem
+import com.hjw0623.presentation.navigation.nav_route.CameraTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.HomeTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.MainNavigationRoute
+import com.hjw0623.presentation.navigation.nav_route.MyPageTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.TextSearchTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.cameraNavGraph
+import com.hjw0623.presentation.navigation.nav_route.homeNavGraph
+import com.hjw0623.presentation.navigation.nav_route.myPageNavGraph
+import com.hjw0623.presentation.navigation.nav_route.textSearchNavGraph
+import com.hjw0623.presentation.navigation.topBarAsRouteName
 
 @Composable
 fun MainScreen() {
@@ -59,33 +59,36 @@ fun MainScreen() {
     val bottomNavItems = remember { BottomNavItem.fetchBottomNavItems() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val routeName = currentRoute?.substringAfterLast(".")
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
 
-    val loginViewModel = viewModel<LoginViewModel>(factory = PyeonKingViewModelFactory)
+    val pyeonKingViewModelFactory = PyeonKingViewModelFactory(navController.context)
 
-    val registerViewModel = viewModel<RegisterViewModel>(factory = PyeonKingViewModelFactory)
+    val loginViewModel = viewModel<LoginViewModel>(factory = pyeonKingViewModelFactory)
 
-    val homeViewModel = viewModel<HomeViewModel>(factory = PyeonKingViewModelFactory)
+    val registerViewModel = viewModel<RegisterViewModel>(factory = pyeonKingViewModelFactory)
 
-    val myPageViewModel = viewModel<MyPageViewModel>(factory = PyeonKingViewModelFactory)
+    val homeViewModel = viewModel<HomeViewModel>(factory = pyeonKingViewModelFactory)
 
-    val productViewModel = viewModel<ProductViewModel>(factory = PyeonKingViewModelFactory)
+    val myPageViewModel = viewModel<MyPageViewModel>(factory = pyeonKingViewModelFactory)
 
-    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = PyeonKingViewModelFactory)
+    val productViewModel = viewModel<ProductViewModel>(factory = pyeonKingViewModelFactory)
+
+    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = pyeonKingViewModelFactory)
 
     val reviewHistoryViewModel =
-        viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<ReviewHistoryViewModel>(factory = pyeonKingViewModelFactory)
 
-    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = PyeonKingViewModelFactory)
+    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = pyeonKingViewModelFactory)
 
     val cameraSearchViewModel =
-        viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<CameraSearchViewModel>(factory = pyeonKingViewModelFactory)
 
     val searchResultViewModel =
-        viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
+        viewModel<SearchResultViewModel>(factory = pyeonKingViewModelFactory)
 
-    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = PyeonKingViewModelFactory)
+    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = pyeonKingViewModelFactory)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -107,8 +110,9 @@ fun MainScreen() {
             if (showBottomBar) {
                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                     bottomNavItems.forEach { bottomItem ->
+                        val destinationName = bottomItem.destination::class.simpleName
                         NavigationBarItem(
-                            selected = currentRoute?.startsWith(bottomItem.destination.toString()) == true,
+                            selected = routeName == destinationName,
                             onClick = {
                                 navController.navigate(bottomItem.destination) {
                                     popUpTo(navController.graph.startDestinationId) {

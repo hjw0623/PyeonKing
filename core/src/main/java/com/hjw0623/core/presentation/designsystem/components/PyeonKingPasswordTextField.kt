@@ -1,5 +1,6 @@
 package com.hjw0623.core.presentation.designsystem.components
 
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -18,6 +19,8 @@ fun PyeonKingPasswordTextField(
     onValueChange: (String) -> Unit,
     onDebouncedValueChange: ((String) -> Unit)? = null,
     debounceInterval: Long = DEBOUNCE_INTERVAL,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     isPasswordVisible: Boolean,
     onTogglePasswordVisibility: () -> Unit,
     hint: String = "",
@@ -48,7 +51,8 @@ fun PyeonKingPasswordTextField(
         hint = hint,
         title = title,
         error = error,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation
     )
 }

@@ -1,10 +1,10 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.domain.model.AuthRequest
-import com.hjw0623.core.domain.model.AuthResponse
-import com.hjw0623.core.domain.model.BaseResponse
-import com.hjw0623.core.domain.auth.AuthRepository
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.AuthRequest
+import com.hjw0623.core.business_logic.model.response.AuthResponse
+import com.hjw0623.core.business_logic.model.response.BaseResponse
+import com.hjw0623.core.business_logic.repository.AuthRepository
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
 import com.hjw0623.data.remote.PyeonKingApiClient

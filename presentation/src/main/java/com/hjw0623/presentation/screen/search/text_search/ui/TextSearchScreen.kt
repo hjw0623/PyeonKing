@@ -4,14 +4,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +26,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.text_search.FilterType
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.text_search.FilterType
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
@@ -33,6 +40,7 @@ import com.hjw0623.presentation.screen.search.text_search.ui.component.SearchTex
 import com.hjw0623.presentation.screen.search.text_search.ui.component.focused.SearchHistorySection
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductListSection
 import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun TextSearchScreenRoot(
@@ -42,26 +50,18 @@ fun TextSearchScreenRoot(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val viewModel = textSearchViewModel
+    val state by textSearchViewModel.state.collectAsStateWithLifecycle()
 
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
-    val allProducts by viewModel.allProducts.collectAsStateWithLifecycle()
-    val selectedFilters by viewModel.selectedFilters.collectAsStateWithLifecycle()
-
-    val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
+    val throttledSearchClick =
+        rememberThrottledOnClick(onClick = textSearchViewModel::onSearchClick)
     val throttledHistoryClick =
-        rememberThrottledOnClick<String>(onClick = viewModel::onHistoryClick)
+        rememberThrottledOnClick(onClick = textSearchViewModel::onHistoryClick)
     val throttledDeleteHistoryClick =
-        rememberThrottledOnClick<String>(onClick = viewModel::onDeleteSearchHistory)
+        rememberThrottledOnClick(onClick = textSearchViewModel::onDeleteSearchHistory)
     val throttledProductClick =
-        rememberThrottledOnClick<Product>(onClick = viewModel::onProductClick)
+        rememberThrottledOnClick(onClick = textSearchViewModel::onProductClick)
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchAllProducts()
-    }
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = textSearchViewModel.event) { event ->
         when (event) {
             is TextSearchScreenEvent.Error -> showToast(context, event.error)
             is TextSearchScreenEvent.NavigateToSearchResult -> onNavigateToSearchResult(event.searchResultNavArgs)
@@ -71,29 +71,21 @@ fun TextSearchScreenRoot(
 
     TextSearchScreen(
         modifier = modifier,
-        isLoading = isLoading,
-        query = query,
-        searchHistory = searchHistory,
-        allProducts = allProducts,
-        selectedFilters = selectedFilters,
-        onQueryChange = viewModel::onQueryChange,
-        onClearClick = viewModel::onClearClick,
+        state = state,
+        onQueryChange = textSearchViewModel::onQueryChange,
+        onClearClick = textSearchViewModel::onClearClick,
         onSearchClick = throttledSearchClick,
         onHistoryClick = throttledHistoryClick,
         onDeleteSearchHistory = throttledDeleteHistoryClick,
         onProductClick = throttledProductClick,
-        onFilterToggle = viewModel::onToggleFilter
+        onFilterToggle = textSearchViewModel::onToggleFilter
     )
 }
 
 @Composable
 fun TextSearchScreen(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    query: String,
-    searchHistory: List<String>,
-    allProducts: List<Product>,
-    selectedFilters: Map<FilterType, Boolean>,
+    state: TextSearchScreenState,
     onQueryChange: (String) -> Unit,
     onClearClick: () -> Unit,
     onSearchClick: () -> Unit,
@@ -102,52 +94,79 @@ fun TextSearchScreen(
     onProductClick: (Product) -> Unit,
     onFilterToggle: (FilterType) -> Unit,
 ) {
-    var isFocused by remember { mutableStateOf(false) }
+    var isFocused by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    Column(
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        SearchTextField(
-            searchQuery = query,
-            onQueryChange = onQueryChange,
-            onClearClick = onClearClick,
-            onBackClick = {
-                focusManager.clearFocus(force = true)
-                keyboardController?.hide()
-            },
-            onSearchClick = onSearchClick,
-            onFocusChange = { isFocused = it },
-            focusRequester = focusRequester
-        )
+        Column(Modifier.fillMaxSize()) {
+            SearchTextField(
+                searchQuery = state.query,
+                onQueryChange = onQueryChange,
+                onClearClick = onClearClick,
+                onBackClick = {
+                    focusManager.clearFocus(force = true)
+                    keyboardController?.hide()
+                },
+                onSearchClick = onSearchClick,
+                onFocusChange = { isFocused = it },
+                focusRequester = focusRequester
+            )
 
-        if (isFocused) {
-            SearchHistorySection(
-                searchHistory = searchHistory,
-                onHistoryClick = onHistoryClick,
-                onRemoveClick = onDeleteSearchHistory
-            )
-        } else {
-            ProductListSection(
-                selectedFilter = selectedFilters,
-                products = allProducts,
-                onProductClick = onProductClick,
-                onFilterToggle = onFilterToggle
-            )
+            if (isFocused) {
+                SearchHistorySection(
+                    searchHistory = state.searchHistory,
+                    onHistoryClick = onHistoryClick,
+                    onRemoveClick = onDeleteSearchHistory
+                )
+            } else {
+                ProductListSection(
+                    selectedFilter = state.selectedFilters,
+                    products = state.filteredProducts,
+                    onProductClick = onProductClick,
+                    onFilterToggle = onFilterToggle,
+                    listState = listState
+                )
+            }
         }
-        if (isLoading) {
 
+        if (!isFocused && state.filteredProducts.isNotEmpty()) {
+            FloatingActionButton(
+                onClick = {
+                    scope.launch {
+                        listState.animateScrollToItem(0)
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowUpward,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        if (state.isLoading) {
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.32f)),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
             }
-
         }
     }
 }
@@ -158,11 +177,14 @@ fun TextSearchScreen(
 private fun TextSearchScreenPreview() {
     PyeonKingTheme {
         TextSearchScreen(
-            isLoading = false,
-            query = "라면",
-            searchHistory = listOf("콜라", "아이스크림", "도시락"),
-            allProducts = mockProductList,
-            selectedFilters = mapOf(FilterType.ONE_PLUS_ONE to true),
+            state = TextSearchScreenState(
+                isLoading = false,
+                query = "라면",
+                searchHistory = listOf("콜라", "아이스크림", "도시락"),
+                allProducts = mockProductList,
+                filteredProducts = mockProductList,
+                selectedFilters = mapOf(FilterType.ONE_PLUS_ONE to true)
+            ),
             onQueryChange = {},
             onClearClick = {},
             onSearchClick = {},

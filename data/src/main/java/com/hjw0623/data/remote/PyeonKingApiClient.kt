@@ -2,7 +2,7 @@ package com.hjw0623.data.remote
 
 import android.util.Log
 import com.hjw0623.core.constants.Api
-import com.hjw0623.core.domain.AuthManager
+import com.hjw0623.core.business_logic.auth.AuthManager
 import com.hjw0623.data.service.PyeonKingApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

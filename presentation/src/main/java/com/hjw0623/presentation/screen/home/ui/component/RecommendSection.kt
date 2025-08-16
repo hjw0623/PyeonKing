@@ -3,7 +3,6 @@ package com.hjw0623.presentation.screen.home.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.presentation.R
@@ -32,6 +31,7 @@ import com.hjw0623.presentation.R
 fun RecommendSection(
     isLoading: Boolean,
     recommendList: List<Product>,
+    hasFetched: Boolean,
     onCardClick: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -60,6 +60,9 @@ fun RecommendSection(
                     .align(Alignment.CenterHorizontally)
             )
         } else {
+            if (hasFetched && recommendList.isEmpty()) {
+                RecommendEmptyScreen()
+            }
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -74,7 +77,6 @@ fun RecommendSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(260.dp)
-                            .height(IntrinsicSize.Min)
                     )
                 }
             }
@@ -89,6 +91,7 @@ private fun RecommendSectionPreview() {
         RecommendSection(
             isLoading = false,
             recommendList = mockProductList,
+            hasFetched = true,
             onCardClick = {},
         )
     }
