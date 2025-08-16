@@ -52,7 +52,6 @@ class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
     override suspend fun saveSearchHistory(query: String) {
         dataStore.edit { preferences ->
             val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
-            // 중복 제거 + 최근 검색어 맨 앞에 추가
             val newHistory = listOf(query.trim()) + current.filterNot { it.equals(query.trim(), ignoreCase = true) }
             preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
         }
