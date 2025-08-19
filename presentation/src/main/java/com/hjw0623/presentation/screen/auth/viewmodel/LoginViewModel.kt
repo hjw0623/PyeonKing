@@ -10,6 +10,7 @@ import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,8 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userDataValidator: UserDataValidator,
     private val userDataStoreRepository: UserDataStoreRepository,
@@ -75,7 +78,11 @@ class LoginViewModel(
                                 refreshToken = response.refreshToken
                             )
                             _event.emit(LoginScreenEvent.NavigateToMyPage)
-                            it.copy(isLoggingIn = false)
+                            it.copy(
+                                isLoggingIn = false,
+                                email = "",
+                                password = ""
+                            )
                         }
 
                         is DataResourceResult.Failure -> {
