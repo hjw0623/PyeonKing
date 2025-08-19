@@ -11,6 +11,7 @@ import com.hjw0623.core.constants.Error.DUPLICATED_NICKNAME
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenEvent
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,8 +19,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterViewModel(
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userDataValidator: UserDataValidator
 ) : ViewModel() {
@@ -46,7 +49,12 @@ class RegisterViewModel(
                         is DataResourceResult.Loading -> it.copy(isRegistering = true)
                         is DataResourceResult.Success -> {
                             _event.emit(RegisterScreenEvent.NavigateToRegisterSuccess)
-                            it.copy(isRegistering = false)
+                            it.copy(
+                                isRegistering = false,
+                                email = "",
+                                password = "",
+                                nickname = ""
+                            )
                         }
 
                         is DataResourceResult.Failure -> {
