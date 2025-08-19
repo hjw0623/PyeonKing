@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
@@ -36,10 +37,10 @@ import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 
 @Composable
 fun SearchResultScreenRoot(
+    modifier: Modifier = Modifier,
     navArgs: SearchResultNavArgs,
-    searchResultViewModel: SearchResultViewModel,
-    onNavigateToProductDetail: (Product) -> Unit,
-    modifier: Modifier = Modifier
+    searchResultViewModel: SearchResultViewModel = hiltViewModel(),
+    onNavigateToProductDetail: (Product) -> Unit
 ) {
     val context = LocalContext.current
     val state by searchResultViewModel.state.collectAsStateWithLifecycle()

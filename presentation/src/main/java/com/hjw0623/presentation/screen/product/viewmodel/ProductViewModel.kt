@@ -10,6 +10,7 @@ import com.hjw0623.core.business_logic.repository.ProductRepository
 import com.hjw0623.core.constants.Error
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,9 +20,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class ProductViewModel(
-    private val productRepository: ProductRepository
+@HiltViewModel
+class ProductViewModel @Inject constructor(
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductDetailScreenState())

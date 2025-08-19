@@ -12,6 +12,7 @@ import com.hjw0623.core.constants.Error
 import com.hjw0623.core.constants.UiText
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,8 +21,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class SearchResultViewModel(
+@HiltViewModel
+class SearchResultViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
 

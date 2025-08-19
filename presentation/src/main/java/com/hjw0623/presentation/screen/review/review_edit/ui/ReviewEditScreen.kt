@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.hjw0623.core.business_logic.model.review.ReviewInfo
@@ -44,10 +45,10 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewEditViewModel
 
 @Composable
 fun ReviewEditScreenRoot(
-    reviewInfo: ReviewInfo,
-    reviewEditViewModel: ReviewEditViewModel,
-    onNavigateReviewHistory: () -> Unit,
     modifier: Modifier = Modifier,
+    reviewInfo: ReviewInfo,
+    reviewEditViewModel: ReviewEditViewModel = hiltViewModel(),
+    onNavigateReviewHistory: () -> Unit
 ) {
     val context = LocalContext.current
     val state by reviewEditViewModel.state.collectAsStateWithLifecycle()

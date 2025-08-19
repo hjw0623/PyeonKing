@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.presentation.designsystem.components.LoadingButton
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
@@ -39,10 +40,10 @@ import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreenRoot(
+    modifier: Modifier = Modifier,
     onNavigateToRegister: () -> Unit,
     onNavigateToMyPage: () -> Unit,
-    loginViewModel: LoginViewModel,
-    modifier: Modifier = Modifier
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
 
     val context = LocalContext.current

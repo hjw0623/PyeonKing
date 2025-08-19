@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
@@ -44,10 +45,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TextSearchScreenRoot(
-    textSearchViewModel: TextSearchViewModel,
-    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
-    onNavigateToProductDetail: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    textSearchViewModel: TextSearchViewModel = hiltViewModel(),
+    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
+    onNavigateToProductDetail: (Product) -> Unit
 ) {
     val context = LocalContext.current
     val state by textSearchViewModel.state.collectAsStateWithLifecycle()

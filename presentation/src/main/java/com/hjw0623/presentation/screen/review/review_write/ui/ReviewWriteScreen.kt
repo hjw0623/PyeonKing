@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.hjw0623.core.business_logic.model.product.Product
@@ -41,7 +42,7 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 fun ReviewWriteScreenRoot(
     modifier: Modifier = Modifier,
     product: Product,
-    reviewWriteViewModel: ReviewWriteViewModel,
+    reviewWriteViewModel: ReviewWriteViewModel = hiltViewModel(),
     onReviewWriteComplete: () -> Unit
 ) {
     val context = LocalContext.current

@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.auth.validator.EmailPatternValidator
 import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
@@ -50,9 +51,9 @@ import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreenRoot(
-    onNavigateToRegisterSuccess: () -> Unit,
-    registerViewModel: RegisterViewModel,
     modifier: Modifier = Modifier,
+    onNavigateToRegisterSuccess: () -> Unit,
+    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val state by registerViewModel.state.collectAsStateWithLifecycle()

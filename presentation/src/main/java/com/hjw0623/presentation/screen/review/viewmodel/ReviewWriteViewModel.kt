@@ -8,6 +8,7 @@ import com.hjw0623.core.business_logic.model.request.ReviewPostBody
 import com.hjw0623.core.business_logic.repository.ReviewRepository
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenEvent
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,8 +16,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ReviewWriteViewModel(
+@HiltViewModel
+class ReviewWriteViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository
 ) : ViewModel() {
 

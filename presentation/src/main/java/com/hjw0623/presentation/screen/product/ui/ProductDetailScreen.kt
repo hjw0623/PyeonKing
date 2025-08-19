@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.product.ProductDetailTab
@@ -48,10 +49,10 @@ import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
 
 @Composable
 fun ProductDetailScreenRoot(
-    product: Product,
-    productViewModel: ProductViewModel,
-    onNavigateToReviewWrite: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    product: Product,
+    productViewModel: ProductViewModel = hiltViewModel(),
+    onNavigateToReviewWrite: (Product) -> Unit
 ) {
 
     val context = LocalContext.current
