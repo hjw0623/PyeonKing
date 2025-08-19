@@ -1,21 +1,22 @@
 package com.hjw0623.data.repository
 
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.core.business_logic.model.response.BaseResponse
 import com.hjw0623.core.business_logic.model.response.SearchItemResponse
 import com.hjw0623.core.business_logic.repository.SearchRepository
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.data.model.mapper.toDomain
-import com.hjw0623.data.remote.PyeonKingApiClient
+import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import javax.inject.Inject
 
-class SearchRepositoryImpl: SearchRepository {
-
-    val apiService = PyeonKingApiClient.pyeonKingApiService
+class SearchRepositoryImpl @Inject constructor(
+    private val apiService: PyeonKingApiService
+) : SearchRepository {
 
     override suspend fun getAllItems(): Flow<DataResourceResult<BaseResponse<SearchItemResponse>>> {
         return safeApiFlow {
