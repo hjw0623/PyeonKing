@@ -16,6 +16,7 @@ import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordS
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenState
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenEvent
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,21 +25,31 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyPageViewModel(
+@HiltViewModel
+class MyPageViewModel @Inject constructor(
     private val myPageRepository: MyPageRepository,
     private val userDataValidator: UserDataValidator,
     private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
-
-    // --------------------------------------------------
-    // 닉네임 변경 관련
-    // --------------------------------------------------
     private val _changeNicknameState = MutableStateFlow(ChangeNicknameScreenState())
     val changeNicknameState = _changeNicknameState.asStateFlow()
 
     private val _changeNicknameEvent = MutableSharedFlow<ChangeNicknameScreenEvent>()
     val changeNicknameEvent = _changeNicknameEvent.asSharedFlow()
+
+    private val _changePasswordState = MutableStateFlow(ChangePasswordScreenState())
+    val changePasswordState = _changePasswordState.asStateFlow()
+
+    private val _changePasswordEvent = MutableSharedFlow<ChangePasswordScreenEvent>()
+    val changePasswordEvent = _changePasswordEvent.asSharedFlow()
+
+    private val _myPageScreenState = MutableStateFlow(MyPageScreenState())
+    val myPageScreenState = _myPageScreenState.asStateFlow()
+
+    private val _myPageScreenEvent = MutableSharedFlow<MyPageScreenEvent>()
+    val myPageScreenEvent = _myPageScreenEvent.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -78,6 +89,9 @@ class MyPageViewModel(
         }
     }
 
+    // --------------------------------------------------
+    // 닉네임 변경 관련
+    // --------------------------------------------------
 
     fun onNicknameChange(nickname: String) {
         _changeNicknameState.update {
@@ -189,11 +203,6 @@ class MyPageViewModel(
     // --------------------------------------------------
     // 비밀번호 변경 관련
     // --------------------------------------------------
-    private val _changePasswordState = MutableStateFlow(ChangePasswordScreenState())
-    val changePasswordState = _changePasswordState.asStateFlow()
-
-    private val _changePasswordEvent = MutableSharedFlow<ChangePasswordScreenEvent>()
-    val changePasswordEvent = _changePasswordEvent.asSharedFlow()
 
     fun onChangePasswordClick() {
         val currentState = _changePasswordState.value
@@ -270,11 +279,6 @@ class MyPageViewModel(
     // --------------------------------------------------
     // 마이페이지 이동 관련
     // --------------------------------------------------
-    private val _myPageScreenState = MutableStateFlow(MyPageScreenState())
-    val myPageScreenState = _myPageScreenState.asStateFlow()
-
-    private val _myPageScreenEvent = MutableSharedFlow<MyPageScreenEvent>()
-    val myPageScreenEvent = _myPageScreenEvent.asSharedFlow()
 
     fun onLoginClick() {
         viewModelScope.launch {
