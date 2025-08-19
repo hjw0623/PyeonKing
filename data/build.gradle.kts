@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -41,8 +42,9 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    // Networking 
+    // Networking
     implementation(libs.bundles.retrofit)
+    ksp(libs.moshi.codegen)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -60,4 +62,7 @@ dependencies {
 
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -77,4 +79,9 @@ dependencies {
     // Debug
     testImplementation(libs.bundles.testing)
     debugImplementation(libs.bundles.debug.tooling)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }
