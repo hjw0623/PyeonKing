@@ -1,4 +1,7 @@
-# :convenience_store: 편킹 - 편의점 할인정보 제공 앱
+![편킹 목업 ](https://github.com/user-attachments/assets/e9971bcd-c5f5-49be-a735-45db88476e3d)
+
+# :convenience_store: 편킹 - 편의점 할인정보
+제공 앱
 
 **고 물가 시대 할인받고 구매하자!!**  
 편의점 할인 정보를 제공하며, 리뷰를 작성할 수 있는 Android 앱입니다.
