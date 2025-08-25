@@ -46,7 +46,7 @@ fun AuthRequest.toDto(): AuthRequestDto {
 }
 
 fun ItemDto.toDomain(): Item {
-    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE) {
+    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE_RESPONSE) {
         this.pricePerGroup / 2
     } else {
         this.pricePerGroup / 3
