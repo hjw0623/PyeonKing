@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +23,8 @@ import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.core.util.mockdata.mockProductList
-import com.hjw0623.presentation.screen.home.ui.component.LoginPromptSection
+import com.hjw0623.presentation.R
+import com.hjw0623.presentation.screen.home.ui.component.LoginPrompt
 import com.hjw0623.presentation.screen.home.ui.component.RecommendSection
 import com.hjw0623.presentation.screen.home.ui.component.TopHeader
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
@@ -104,7 +106,10 @@ private fun HomeScreen(
                 onCardClick = onCardClick
             )
         } else {
-            LoginPromptSection()
+            LoginPrompt(
+                title = stringResource(R.string.home_title_require_login),
+                message = stringResource(R.string.home_message_require_login),
+            )
         }
     }
 }
