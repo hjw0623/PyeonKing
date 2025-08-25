@@ -14,5 +14,6 @@ data class ProductDetailScreenState(
     val avgRating: Double = 0.0,
     val reviewSum: Int = 0,
     val currentPage: Int = 1,
-    val lastPage: Int = 0
+    val lastPage: Int = 0,
+    val isLoggedIn: Boolean = false
 )
