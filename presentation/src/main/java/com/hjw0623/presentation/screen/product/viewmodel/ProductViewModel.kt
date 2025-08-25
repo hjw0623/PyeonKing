@@ -7,6 +7,7 @@ import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.product.ProductDetailTab
 import com.hjw0623.core.business_logic.model.response.toReviewItem
 import com.hjw0623.core.business_logic.repository.ProductRepository
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val productRepository: ProductRepository,
+    private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductDetailScreenState())
@@ -33,8 +35,25 @@ class ProductViewModel @Inject constructor(
     private val _event = MutableSharedFlow<ProductDetailScreenEvent>()
     val event = _event.asSharedFlow()
 
+    init {
+        viewModelScope.launch {
+            userDataStoreRepository.isLoggedInFlow.collectLatest { isLoggedIn ->
+                _state.update { it.copy(isLoggedIn = isLoggedIn) }
+
+                val product = _state.value.product
+                if (isLoggedIn && product != null) {
+                    product.id.toLongOrNull()?.let { id ->
+                        fetchReviewSummary(id)
+                        fetchInitReview(id)
+                    }
+                }
+            }
+        }
+    }
+
     fun initializeIfNeeded(product: Product) {
-        val alreadyInitialized = _state.value.product?.id == product.id && _state.value.product != null
+        val alreadyInitialized =
+            _state.value.product?.id == product.id && _state.value.product != null
         if (alreadyInitialized) return
 
         _state.update {
@@ -42,11 +61,20 @@ class ProductViewModel @Inject constructor(
                 product = product,
                 isSummaryLoading = true,
                 isReviewLoading = true,
+                isLoggedIn = _state.value.isLoggedIn
             )
         }
-        product.id.toLongOrNull()?.let { id ->
-            fetchReviewSummary(id)
-            fetchInitReview(id)
+
+    }
+
+    fun refreshReviews(product: Product) {
+        viewModelScope.launch {
+            if (state.value.isLoggedIn) {
+                product.id.toLongOrNull()?.let { id ->
+                    fetchReviewSummary(id)
+                    fetchInitReview(id)
+                }
+            }
         }
     }
 
@@ -62,7 +90,7 @@ class ProductViewModel @Inject constructor(
         }
     }
 
-    private fun fetchReviewSummary(promotionId: Long) {
+    fun fetchReviewSummary(promotionId: Long) {
         viewModelScope.launch {
             productRepository.getReviewSummaryByItemId(promotionId).collectLatest { result ->
                 when (result) {
@@ -98,7 +126,7 @@ class ProductViewModel @Inject constructor(
         }
     }
 
-    private fun fetchInitReview(promotionId: Long) {
+    fun fetchInitReview(promotionId: Long) {
         viewModelScope.launch {
             productRepository.getReviewByItemId(promotionId, 1).collectLatest { result ->
                 when (result) {

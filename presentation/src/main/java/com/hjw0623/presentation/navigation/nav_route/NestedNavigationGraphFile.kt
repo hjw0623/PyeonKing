@@ -1,5 +1,7 @@
 package com.hjw0623.presentation.navigation.nav_route
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,6 +10,7 @@ import androidx.navigation.toRoute
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.review.ReviewInfo
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.constants.NavArgs
 import com.hjw0623.presentation.navigation.parcelableType
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot
@@ -28,6 +31,7 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.homeNavGraph(
@@ -52,6 +56,20 @@ fun NavGraphBuilder.homeNavGraph(
     ) { backStackEntry ->
         val vm: ProductViewModel = hiltViewModel(backStackEntry)
         val product = backStackEntry.toRoute<HomeTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
             productViewModel = vm,
@@ -69,7 +87,12 @@ fun NavGraphBuilder.homeNavGraph(
         ReviewWriteScreenRoot(
             product = product,
             reviewWriteViewModel = vm,
-            onReviewWriteComplete = { navController.popBackStack() },
+            onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
+                navController.popBackStack()
+            },
         )
     }
 }
@@ -97,6 +120,20 @@ fun NavGraphBuilder.cameraNavGraph(
     ) { backStackEntry ->
         val vm: ProductViewModel = hiltViewModel(backStackEntry)
         val product = backStackEntry.toRoute<CameraTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
             productViewModel = vm,
@@ -114,7 +151,12 @@ fun NavGraphBuilder.cameraNavGraph(
         ReviewWriteScreenRoot(
             product = product,
             reviewWriteViewModel = vm,
-            onReviewWriteComplete = { navController.popBackStack() },
+            onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
+                navController.popBackStack()
+            },
         )
     }
 }
@@ -142,6 +184,20 @@ fun NavGraphBuilder.textSearchNavGraph(
     ) { backStackEntry ->
         val vm: ProductViewModel = hiltViewModel(backStackEntry)
         val product = backStackEntry.toRoute<TextSearchTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
             productViewModel = vm,
@@ -159,7 +215,12 @@ fun NavGraphBuilder.textSearchNavGraph(
         ReviewWriteScreenRoot(
             product = product,
             reviewWriteViewModel = vm,
-            onReviewWriteComplete = { navController.popBackStack() },
+            onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
+                navController.popBackStack()
+            },
         )
     }
 }
