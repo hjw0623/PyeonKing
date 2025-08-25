@@ -92,8 +92,6 @@
     <string name="contains_uppercase_char">영어 대문자 포함</string>
     <string name="at_max_x_characters">%d자리 이하</string>
     <string name="contains_special_char">특수 문자 포함</string>
-    <string name="prompt_require_login">로그인이 필요한 서비스예요</string>
-    <string name="prompt_recommend_login">로그인하고 나에게 맞는\n편의점 상품을 추천받아 보세요!</string>
     <string name="action_see_more_review">더보기 (%1$d/%2$d)</string>
     <string name="error_need_location_permission">위치 권한이 필요합니다.</string>
     <string name="toast_login_success">로그인 성공</string>
@@ -128,5 +126,8 @@
     <string name="map_title_nearby">주변 %1$s 위치</string>
     <string name="home_recommend_empty_title">추천 상품이 없습니다.</string>
     <string name="home_recommend_empty_message">리뷰 작성이나 상품 검색을 통해 추천 상품을 받아보세요!</string>
-
+    <string name="home_title_require_login">로그인이 필요한 서비스예요</string>
+    <string name="home_message_require_login">로그인하고 나에게 맞는\n편의점 상품을 추천받아 보세요!</string>
+    <string name="review_title_require_login">로그인이 필요한 서비스예요</string>
+    <string name="review_message_require_login">로그인 / 회원가입 \n하고 리뷰 기능을 사용해 보세요!</string>
 </resources>
