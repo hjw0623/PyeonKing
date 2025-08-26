@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
@@ -19,7 +20,7 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 @Composable
 fun MyPageScreenRoot(
     modifier: Modifier = Modifier,
-    myPageViewModel: MyPageViewModel,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
     onNavigateToChangeNickname: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
     onNavigateToLogin: () -> Unit,

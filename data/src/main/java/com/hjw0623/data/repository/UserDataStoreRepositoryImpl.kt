@@ -1,22 +1,18 @@
 package com.hjw0623.data.repository
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-private const val DATASTORE_NAME = "user_prefs"
-val Context.userDataStore by preferencesDataStore(name = DATASTORE_NAME)
-
-
-class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
-
-    private val appContext = context.applicationContext
-    private val dataStore = appContext.userDataStore
+class UserDataStoreRepositoryImpl @Inject constructor(
+    private val dataStore: DataStore<Preferences>
+) : UserDataStoreRepository {
 
     companion object {
         val KEY_NICKNAME = stringPreferencesKey("nickname")
@@ -51,15 +47,22 @@ class UserDataStoreRepositoryImpl(context: Context) : UserDataStoreRepository {
 
     override suspend fun saveSearchHistory(query: String) {
         dataStore.edit { preferences ->
-            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
-            val newHistory = listOf(query.trim()) + current.filterNot { it.equals(query.trim(), ignoreCase = true) }
+            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() }
+                ?: emptyList()
+            val newHistory = listOf(query.trim()) + current.filterNot {
+                it.equals(
+                    query.trim(),
+                    ignoreCase = true
+                )
+            }
             preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
         }
     }
 
     override suspend fun removeSearchHistory(query: String) {
         dataStore.edit { preferences ->
-            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
+            val current = preferences[KEY_SEARCH_HISTORY]?.split(",")?.filter { it.isNotBlank() }
+                ?: emptyList()
             val newHistory = current.filterNot { it.equals(query.trim(), ignoreCase = true) }
             preferences[KEY_SEARCH_HISTORY] = newHistory.joinToString(",")
         }

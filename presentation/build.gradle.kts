@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -40,7 +42,6 @@ kotlin {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -73,4 +74,9 @@ dependencies {
     debugImplementation(libs.bundles.debug.tooling)
     //GoogleMap
     implementation(libs.bundles.googlemap)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }

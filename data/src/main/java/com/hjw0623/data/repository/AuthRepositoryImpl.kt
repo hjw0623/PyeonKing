@@ -1,18 +1,20 @@
 package com.hjw0623.data.repository
 
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.core.business_logic.model.request.AuthRequest
 import com.hjw0623.core.business_logic.model.response.AuthResponse
 import com.hjw0623.core.business_logic.model.response.BaseResponse
 import com.hjw0623.core.business_logic.repository.AuthRepository
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
-import com.hjw0623.data.remote.PyeonKingApiClient
+import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class AuthRepositoryImpl: AuthRepository {
-    private val apiService = PyeonKingApiClient.pyeonKingApiService
+class AuthRepositoryImpl @Inject constructor(
+    private val apiService: PyeonKingApiService
+) : AuthRepository {
 
     override suspend fun register(authRequest: AuthRequest): Flow<DataResourceResult<BaseResponse<AuthResponse>>> {
         val dto = authRequest.toDto()

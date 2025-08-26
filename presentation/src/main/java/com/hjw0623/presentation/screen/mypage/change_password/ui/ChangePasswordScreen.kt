@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.auth.validator.PasswordValidationState
 import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
@@ -39,9 +40,9 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 
 @Composable
 fun ChangePasswordScreenRoot(
-    myPageViewModel: MyPageViewModel,
-    onNavigateToMyPage: () -> Unit,
     modifier: Modifier = Modifier,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
+    onNavigateToMyPage: () -> Unit,
 ) {
     val context = LocalContext.current
 

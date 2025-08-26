@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -38,26 +39,31 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
 
-    // Coroutines
+    //Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    // Networking 
+    //Networking
     implementation(libs.bundles.retrofit)
+    ksp(libs.moshi.codegen)
 
-    // Serialization
+    //Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Logging
+    //Logging
     implementation(libs.timber)
 
     //DataStore
     implementation(libs.androidx.datastore.preferences)
 
-    // Testing
+    //Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.testing)
 
-    // Debug
+    //Debug
     debugImplementation(libs.bundles.debug.tooling)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

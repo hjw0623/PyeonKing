@@ -14,6 +14,7 @@ import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.home.ui.HomeScreenEvent
 import com.hjw0623.presentation.screen.home.ui.HomeScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,10 +22,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val MIN_SEARCH_QUERY_LENGTH = 2
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val userDataStoreRepository: UserDataStoreRepository
 ) : ViewModel() {
@@ -118,8 +121,13 @@ class HomeViewModel(
                         passedImagePath = null
                     )
                     _event.emit(HomeScreenEvent.NavigateToSearchResult(navArgs))
+                    clearSearchQuery()
                 }
             }
         }
+    }
+
+    fun clearSearchQuery() {
+        _state.update { it.copy(searchQuery = "") }
     }
 }

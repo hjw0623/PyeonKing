@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -28,9 +29,9 @@ import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 
 @Composable
 fun CameraScreenRoot(
-    cameraSearchViewModel: CameraSearchViewModel,
-    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cameraSearchViewModel: CameraSearchViewModel = hiltViewModel(),
+    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit
 ) {
     val context = LocalContext.current
     val state by cameraSearchViewModel.state.collectAsStateWithLifecycle()

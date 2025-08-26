@@ -102,3 +102,7 @@ object UiText {
 
     const val TITLE_CAMERA_SEARCH = "사진으로 검색한 결과"
 }
+
+object NavArgs {
+    const val REVIEW_REFRESH_FLAG = "reviewRefreshFlag"
+}

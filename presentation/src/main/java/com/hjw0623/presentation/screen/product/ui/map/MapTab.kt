@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -37,7 +37,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.hjw0623.core.presentation.ui.getBrandQuery
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.factory.MapViewModelFactory
 import com.hjw0623.presentation.screen.product.ui.map.component.EmptyResultOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.ErrorOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.MapTitleOverlay
@@ -54,10 +53,9 @@ fun MapTab(
     brandName: String
 ) {
     val context = LocalContext.current
-    val appContext = remember(context) { context.applicationContext }
-    val mapViewModel: MapViewModel = viewModel(factory = MapViewModelFactory(appContext))
-    val state by mapViewModel.state.collectAsStateWithLifecycle()
+    val mapViewModel: MapViewModel = hiltViewModel()
 
+    val state by mapViewModel.state.collectAsStateWithLifecycle()
     val cameraPositionState = rememberCameraPositionState()
     val scope = rememberCoroutineScope()
 

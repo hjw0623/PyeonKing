@@ -2,25 +2,27 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
-import com.hjw0623.core.BuildConfig
+import com.hjw0623.core.business_logic.location.LocationObserver
 import com.hjw0623.core.business_logic.model.response.PoiInfo
 import com.hjw0623.core.business_logic.repository.KakaoRepository
 import com.hjw0623.core.constants.Error
-import com.hjw0623.core.location.AndroidLocationObserver
 import com.hjw0623.core.presentation.ui.getBrandQuery
 import com.hjw0623.presentation.screen.product.ui.map.MapTabState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import javax.inject.Inject
+import com.google.android.gms.maps.model.LatLng as GmsLatLng
 
-class MapViewModel(
-    private val locationObserver: AndroidLocationObserver,
-    private val kakaoRepository: KakaoRepository
+@HiltViewModel
+class MapViewModel @Inject constructor(
+    private val locationObserver: LocationObserver,
+    private val kakaoRepository: KakaoRepository,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(MapTabState())
     val state = _state.asStateFlow()
 
@@ -29,15 +31,22 @@ class MapViewModel(
     }
 
     fun fetchCurrentLocation() {
+        if (_state.value.isFetchingLocation || _state.value.currentLocation != null) return
+
         viewModelScope.launch {
             _state.update { it.copy(isFetchingLocation = true, error = null) }
             try {
-                val currentLocation = locationObserver.observeLocation(5000).first()
+                val loc = withTimeoutOrNull(5000) {
+                    locationObserver.observeLocation(2000).firstOrNull()
+                }
+                if (loc == null) {
+                    _state.update { it.copy(error = Error.FAILED_TO_GET_LOCATION) }
+                    return@launch
+                }
                 _state.update {
                     it.copy(
-                        currentLocation = LatLng(
-                            currentLocation.latitude,
-                            currentLocation.longitude
+                        currentLocation = GmsLatLng(
+                            loc.latitude, loc.longitude
                         )
                     )
                 }
@@ -58,23 +67,16 @@ class MapViewModel(
             }
 
             _state.update { it.copy(isSearching = true, error = null) }
-            try {
-                val result = kakaoRepository.searchKeyword(
-                    apiKey = BuildConfig.KAKAO_API_KEY,
+            runCatching {
+                kakaoRepository.searchKeyword(
                     query = getBrandQuery(brand),
                     longitude = loc.longitude.toString(),
                     latitude = loc.latitude.toString(),
                     radius = radius
                 )
-                _state.update {
-                    it.copy(
-                        poiList = result,
-                        isSearching = false,
-                        hasSearched = true,
-                        error = null
-                    )
-                }
-            } catch (e: Exception) {
+            }.onSuccess { result ->
+                _state.update { it.copy(poiList = result, isSearching = false, hasSearched = true) }
+            }.onFailure { e ->
                 _state.update {
                     it.copy(
                         isSearching = false,

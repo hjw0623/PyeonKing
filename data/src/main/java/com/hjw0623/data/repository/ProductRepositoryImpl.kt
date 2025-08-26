@@ -1,20 +1,22 @@
 package com.hjw0623.data.repository
 
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.core.business_logic.model.response.BaseResponse
 import com.hjw0623.core.business_logic.model.response.Item
 import com.hjw0623.core.business_logic.model.response.ReviewPage
 import com.hjw0623.core.business_logic.model.response.ReviewSummaryResponse
 import com.hjw0623.core.business_logic.model.response.SearchItemResponse
 import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
 import com.hjw0623.data.model.mapper.toDomain
-import com.hjw0623.data.remote.PyeonKingApiClient
+import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class ProductRepositoryImpl : ProductRepository {
-    private val apiService = PyeonKingApiClient.pyeonKingApiService
+class ProductRepositoryImpl @Inject constructor(
+    private val apiService: PyeonKingApiService
+) : ProductRepository {
 
     override suspend fun getRecommendList(): Flow<DataResourceResult<BaseResponse<List<Item>>>> {
         return safeApiFlow {

@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.product.ProductDetailTab
@@ -37,6 +38,7 @@ import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.presentation.R
+import com.hjw0623.presentation.screen.home.ui.component.LoginPrompt
 import com.hjw0623.presentation.screen.product.ui.componet.EmptyReview
 import com.hjw0623.presentation.screen.product.ui.componet.ProductCardDetail
 import com.hjw0623.presentation.screen.product.ui.componet.RatingDistribution
@@ -48,12 +50,11 @@ import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
 
 @Composable
 fun ProductDetailScreenRoot(
-    product: Product,
-    productViewModel: ProductViewModel,
-    onNavigateToReviewWrite: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    product: Product,
+    productViewModel: ProductViewModel = hiltViewModel(),
+    onNavigateToReviewWrite: (Product) -> Unit
 ) {
-
     val context = LocalContext.current
     val state by productViewModel.state.collectAsStateWithLifecycle()
 
@@ -120,101 +121,114 @@ fun ProductDetailScreen(
 
             when (state.selectedTab) {
                 ProductDetailTab.REVIEW -> {
-                    item {
-                        if (state.isSummaryLoading) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        } else {
-                            Column(
+                    if (!state.isLoggedIn) {
+                        item {
+                            LoginPrompt(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = state.avgRating.toString(),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    RatingStars(
-                                        rating = state.avgRating.toFloat(),
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = stringResource(
-                                        R.string.text_total_reviews,
-                                        state.reviewSum
-                                    ),
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                RatingDistribution(
-                                    ratingList = state.ratingList.mapIndexed { idx, cnt -> (5 - idx) to cnt },
-                                )
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
-                        }
-                    }
-
-                    if (state.isReviewLoading && state.reviewList.isEmpty()) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 100.dp),
-                                contentAlignment = Alignment.Center
-                            ) { CircularProgressIndicator() }
+                                    .height(500.dp),
+                                title = stringResource(R.string.review_title_require_login),
+                                message = stringResource(R.string.review_message_require_login)
+                            )
                         }
                     } else {
-                        if (state.reviewList.isEmpty()) {
-                            item {
-                                EmptyReview(
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    title = stringResource(R.string.text_no_reviews),
-                                    description = stringResource(R.string.empty_review_description)
-                                )
-                            }
-                        } else {
-                            items(
-                                items = state.reviewList,
-                                key = { it.reviewId }
-                            ) { review ->
-                                ReviewListItem(
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    review = review
-                                )
-                            }
-
-                            if (state.currentPage != state.lastPage) {
-                                item {
-                                    PyeonKingButton(
-                                        text =
-                                            if (state.isReviewLoading)
-                                                stringResource(R.string.loading)
-                                            else
-                                                stringResource(
-                                                    R.string.action_see_more_review,
-                                                    state.currentPage,
-                                                    state.lastPage
-                                                ),
-                                        onClick = fetchNextReviewPage,
-                                        enabled = !state.isReviewLoading,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp)
+                        item {
+                            if (state.isSummaryLoading) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            } else {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    Text(
+                                        text = state.avgRating.toString(),
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.Bold
                                     )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RatingStars(
+                                            rating = state.avgRating.toFloat(),
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = stringResource(
+                                            R.string.text_total_reviews,
+                                            state.reviewSum
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    RatingDistribution(
+                                        ratingList = state.ratingList.mapIndexed { idx, cnt -> (5 - idx) to cnt },
+                                    )
+                                    Spacer(modifier = Modifier.height(24.dp))
                                 }
                             }
                         }
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                        if (state.isReviewLoading && state.reviewList.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 100.dp),
+                                    contentAlignment = Alignment.Center
+                                ) { CircularProgressIndicator() }
+                            }
+                        } else {
+                            if (state.reviewList.isEmpty()) {
+                                item {
+                                    EmptyReview(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        title = stringResource(R.string.text_no_reviews),
+                                        description = stringResource(R.string.empty_review_description)
+                                    )
+                                }
+                            } else {
+                                items(
+                                    items = state.reviewList,
+                                    key = { it.reviewId }
+                                ) { review ->
+                                    ReviewListItem(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        review = review
+                                    )
+                                }
+
+                                if (state.currentPage != state.lastPage) {
+                                    item {
+                                        PyeonKingButton(
+                                            text =
+                                                if (state.isReviewLoading)
+                                                    stringResource(R.string.loading)
+                                                else
+                                                    stringResource(
+                                                        R.string.action_see_more_review,
+                                                        state.currentPage,
+                                                        state.lastPage
+                                                    ),
+                                            onClick = fetchNextReviewPage,
+                                            enabled = !state.isReviewLoading,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                        }
                     }
                 }
 
@@ -236,16 +250,17 @@ fun ProductDetailScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                PyeonKingButton(
-                    text = stringResource(R.string.action_write_review),
-                    onClick = onWriteReviewClick,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (state.isLoggedIn) {
+                    PyeonKingButton(
+                        text = stringResource(R.string.action_write_review),
+                        onClick = onWriteReviewClick,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -260,7 +275,8 @@ private fun ProductDetailScreenPreview() {
                 reviewList = mockReviewList,
                 ratingList = listOf(80, 20, 10, 5, 10),
                 avgRating = 4.3,
-                reviewSum = 125
+                reviewSum = 125,
+                isLoggedIn = false
             ),
             onTabClick = {},
             onWriteReviewClick = {},

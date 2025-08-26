@@ -10,6 +10,7 @@ import com.hjw0623.core.constants.Error
 import com.hjw0623.core.util.takePictureAndSave
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,8 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CameraSearchViewModel : ViewModel() {
+@HiltViewModel
+class CameraSearchViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow(CameraScreenState())
     val state = _state.asStateFlow()

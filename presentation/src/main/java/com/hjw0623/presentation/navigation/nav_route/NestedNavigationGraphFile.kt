@@ -1,5 +1,8 @@
 package com.hjw0623.presentation.navigation.nav_route
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -7,6 +10,8 @@ import androidx.navigation.toRoute
 import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.business_logic.model.review.ReviewInfo
 import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.constants.NavArgs
+import com.hjw0623.presentation.navigation.parcelableType
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterSuccessScreen
@@ -26,23 +31,20 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenRoot
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
-import com.hjw0623.presentation.navigation.parcelableType
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.reflect.typeOf
-
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavHostController,
-    productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel,
-    searchResultViewModel: SearchResultViewModel
 ) {
     composable<HomeTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val navArgs = it.toRoute<HomeTabNestedRoute.SearchResult>().searchResultNavArgs
+    ) { backStackEntry ->
+        val vm: SearchResultViewModel = hiltViewModel(backStackEntry)
+        val navArgs = backStackEntry.toRoute<HomeTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
-            searchResultViewModel = searchResultViewModel,
+            searchResultViewModel = vm,
             onNavigateToProductDetail = { product ->
                 navController.navigate(HomeTabNestedRoute.ProductDetail(product))
             },
@@ -51,11 +53,26 @@ fun NavGraphBuilder.homeNavGraph(
 
     composable<HomeTabNestedRoute.ProductDetail>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<HomeTabNestedRoute.ProductDetail>().product
+    ) { backStackEntry ->
+        val vm: ProductViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<HomeTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
-            productViewModel = productViewModel,
+            productViewModel = vm,
             onNavigateToReviewWrite = { productData ->
                 navController.navigate(HomeTabNestedRoute.ReviewWrite(productData))
             }
@@ -64,12 +81,16 @@ fun NavGraphBuilder.homeNavGraph(
 
     composable<HomeTabNestedRoute.ReviewWrite>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<HomeTabNestedRoute.ReviewWrite>().product
+    ) { backStackEntry ->
+        val vm: ReviewWriteViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<HomeTabNestedRoute.ReviewWrite>().product
         ReviewWriteScreenRoot(
             product = product,
-            reviewWriteViewModel = reviewWriteViewModel,
+            reviewWriteViewModel = vm,
             onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
                 navController.popBackStack()
             },
         )
@@ -78,17 +99,16 @@ fun NavGraphBuilder.homeNavGraph(
 
 fun NavGraphBuilder.cameraNavGraph(
     navController: NavHostController,
-    productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel,
-    searchResultViewModel: SearchResultViewModel
 ) {
     composable<CameraTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val navArgs = it.toRoute<CameraTabNestedRoute.SearchResult>().searchResultNavArgs
+    ) { backStackEntry ->
+        val vm: SearchResultViewModel = hiltViewModel(backStackEntry)
+        val navArgs =
+            backStackEntry.toRoute<CameraTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
-            searchResultViewModel = searchResultViewModel,
+            searchResultViewModel = vm,
             onNavigateToProductDetail = { product ->
                 navController.navigate(CameraTabNestedRoute.ProductDetail(product))
             }
@@ -97,11 +117,26 @@ fun NavGraphBuilder.cameraNavGraph(
 
     composable<CameraTabNestedRoute.ProductDetail>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<CameraTabNestedRoute.ProductDetail>().product
+    ) { backStackEntry ->
+        val vm: ProductViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<CameraTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
-            productViewModel,
+            productViewModel = vm,
             onNavigateToReviewWrite = { productData ->
                 navController.navigate(CameraTabNestedRoute.ReviewWrite(productData))
             }
@@ -110,12 +145,16 @@ fun NavGraphBuilder.cameraNavGraph(
 
     composable<CameraTabNestedRoute.ReviewWrite>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<CameraTabNestedRoute.ReviewWrite>().product
+    ) { backStackEntry ->
+        val vm: ReviewWriteViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<CameraTabNestedRoute.ReviewWrite>().product
         ReviewWriteScreenRoot(
             product = product,
-            reviewWriteViewModel = reviewWriteViewModel,
+            reviewWriteViewModel = vm,
             onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
                 navController.popBackStack()
             },
         )
@@ -124,17 +163,16 @@ fun NavGraphBuilder.cameraNavGraph(
 
 fun NavGraphBuilder.textSearchNavGraph(
     navController: NavHostController,
-    productViewModel: ProductViewModel,
-    reviewWriteViewModel: ReviewWriteViewModel,
-    searchResultViewModel: SearchResultViewModel
 ) {
     composable<TextSearchTabNestedRoute.SearchResult>(
         typeMap = mapOf(typeOf<SearchResultNavArgs>() to parcelableType<SearchResultNavArgs>())
-    ) {
-        val navArgs = it.toRoute<TextSearchTabNestedRoute.SearchResult>().searchResultNavArgs
+    ) { backStackEntry ->
+        val vm: SearchResultViewModel = hiltViewModel(backStackEntry)
+        val navArgs =
+            backStackEntry.toRoute<TextSearchTabNestedRoute.SearchResult>().searchResultNavArgs
         SearchResultScreenRoot(
             navArgs = navArgs,
-            searchResultViewModel = searchResultViewModel,
+            searchResultViewModel = vm,
             onNavigateToProductDetail = { product ->
                 navController.navigate(TextSearchTabNestedRoute.ProductDetail(product))
             },
@@ -143,11 +181,26 @@ fun NavGraphBuilder.textSearchNavGraph(
 
     composable<TextSearchTabNestedRoute.ProductDetail>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<TextSearchTabNestedRoute.ProductDetail>().product
+    ) { backStackEntry ->
+        val vm: ProductViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<TextSearchTabNestedRoute.ProductDetail>().product
+
+        val refreshFlow = remember(backStackEntry) {
+            backStackEntry.savedStateHandle.getStateFlow(NavArgs.REVIEW_REFRESH_FLAG, false)
+        }
+
+        LaunchedEffect(Unit) {
+            refreshFlow.collectLatest { shouldRefresh ->
+                if (shouldRefresh) {
+                    vm.refreshReviews(product)
+                    backStackEntry.savedStateHandle[NavArgs.REVIEW_REFRESH_FLAG] = false
+                }
+            }
+        }
+
         ProductDetailScreenRoot(
             product = product,
-            productViewModel = productViewModel,
+            productViewModel = vm,
             onNavigateToReviewWrite = { productData ->
                 navController.navigate(TextSearchTabNestedRoute.ReviewWrite(productData))
             },
@@ -156,12 +209,16 @@ fun NavGraphBuilder.textSearchNavGraph(
 
     composable<TextSearchTabNestedRoute.ReviewWrite>(
         typeMap = mapOf(typeOf<Product>() to parcelableType<Product>())
-    ) {
-        val product = it.toRoute<TextSearchTabNestedRoute.ReviewWrite>().product
+    ) { backStackEntry ->
+        val vm: ReviewWriteViewModel = hiltViewModel(backStackEntry)
+        val product = backStackEntry.toRoute<TextSearchTabNestedRoute.ReviewWrite>().product
         ReviewWriteScreenRoot(
             product = product,
-            reviewWriteViewModel = reviewWriteViewModel,
+            reviewWriteViewModel = vm,
             onReviewWriteComplete = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavArgs.REVIEW_REFRESH_FLAG, true)
                 navController.popBackStack()
             },
         )
@@ -170,50 +227,36 @@ fun NavGraphBuilder.textSearchNavGraph(
 
 fun NavGraphBuilder.myPageNavGraph(
     navController: NavHostController,
-    myPageViewModel: MyPageViewModel,
-    loginViewModel: LoginViewModel,
-    registerViewModel: RegisterViewModel,
-    reviewEditViewModel: ReviewEditViewModel,
-    reviewHistoryViewModel: ReviewHistoryViewModel
 ) {
-    composable<MyPageTabNestedRoute.MyPage> {
+    composable<MyPageTabNestedRoute.MyPage> { backStackEntry ->
+        val vm: MyPageViewModel = hiltViewModel(backStackEntry)
         MyPageScreenRoot(
-            myPageViewModel = myPageViewModel,
-            onNavigateToChangeNickname = {
-                navController.navigate(MyPageTabNestedRoute.ChangeNickname)
-            },
-            onNavigateToChangePassword = {
-                navController.navigate(MyPageTabNestedRoute.ChangePassword)
-            },
-            onNavigateToLogin = {
-                navController.navigate(MyPageTabNestedRoute.Login)
-            },
-            onNavigateToReviewHistory = {
-                navController.navigate(MyPageTabNestedRoute.ReviewHistory)
-            }
+            myPageViewModel = vm,
+            onNavigateToChangeNickname = { navController.navigate(MyPageTabNestedRoute.ChangeNickname) },
+            onNavigateToChangePassword = { navController.navigate(MyPageTabNestedRoute.ChangePassword) },
+            onNavigateToLogin = { navController.navigate(MyPageTabNestedRoute.Login) },
+            onNavigateToReviewHistory = { navController.navigate(MyPageTabNestedRoute.ReviewHistory) }
         )
     }
 
-    composable<MyPageTabNestedRoute.Login> {
+    composable<MyPageTabNestedRoute.Login> { backStackEntry ->
+        val vm: LoginViewModel = hiltViewModel(backStackEntry)
         LoginScreenRoot(
-            onNavigateToRegister = {
-                navController.navigate(MyPageTabNestedRoute.Register)
-            },
+            onNavigateToRegister = { navController.navigate(MyPageTabNestedRoute.Register) },
             onNavigateToMyPage = {
                 navController.navigate(MyPageTabNestedRoute.MyPage) {
-                    popUpTo(MyPageTabNestedRoute.MyPage.javaClass.simpleName) { inclusive = true }
+                    popUpTo(MyPageTabNestedRoute.MyPage) { inclusive = true }
                 }
             },
-            loginViewModel = loginViewModel
+            loginViewModel = vm
         )
     }
 
-    composable<MyPageTabNestedRoute.Register> {
+    composable<MyPageTabNestedRoute.Register> { backStackEntry ->
+        val vm: RegisterViewModel = hiltViewModel(backStackEntry)
         RegisterScreenRoot(
-            onNavigateToRegisterSuccess = {
-                navController.navigate(MyPageTabNestedRoute.RegisterSuccess)
-            },
-            registerViewModel = registerViewModel
+            onNavigateToRegisterSuccess = { navController.navigate(MyPageTabNestedRoute.RegisterSuccess) },
+            registerViewModel = vm
         )
     }
 
@@ -221,35 +264,32 @@ fun NavGraphBuilder.myPageNavGraph(
         RegisterSuccessScreen(
             onNavigateToLogin = {
                 navController.navigate(MyPageTabNestedRoute.Login) {
-                    popUpTo(MyPageTabNestedRoute.Login) {
-                        inclusive = true
-                    }
+                    popUpTo(MyPageTabNestedRoute.Login) { inclusive = true }
                 }
             }
         )
     }
 
-    composable<MyPageTabNestedRoute.ChangeNickname> {
+    composable<MyPageTabNestedRoute.ChangeNickname> { backStackEntry ->
+        val vm: MyPageViewModel = hiltViewModel(backStackEntry)
         ChangeNicknameScreenRoot(
-            myPageViewModel = myPageViewModel,
-            onNavigateToMyPage = {
-                navController.popBackStack()
-            }
+            myPageViewModel = vm,
+            onNavigateToMyPage = { navController.popBackStack() }
         )
     }
 
-    composable<MyPageTabNestedRoute.ChangePassword> {
+    composable<MyPageTabNestedRoute.ChangePassword> { backStackEntry ->
+        val vm: MyPageViewModel = hiltViewModel(backStackEntry)
         ChangePasswordScreenRoot(
-            myPageViewModel = myPageViewModel,
-            onNavigateToMyPage = {
-                navController.popBackStack()
-            }
+            myPageViewModel = vm,
+            onNavigateToMyPage = { navController.popBackStack() }
         )
     }
 
-    composable<MyPageTabNestedRoute.ReviewHistory> {
+    composable<MyPageTabNestedRoute.ReviewHistory> { backStackEntry ->
+        val vm: ReviewHistoryViewModel = hiltViewModel(backStackEntry)
         ReviewHistoryScreenRoot(
-            reviewHistoryViewModel = reviewHistoryViewModel,
+            reviewHistoryViewModel = vm,
             onNavigateToReviewEdit = { reviewInfo ->
                 navController.navigate(MyPageTabNestedRoute.ReviewEdit(reviewInfo))
             }
@@ -258,14 +298,13 @@ fun NavGraphBuilder.myPageNavGraph(
 
     composable<MyPageTabNestedRoute.ReviewEdit>(
         typeMap = mapOf(typeOf<ReviewInfo>() to parcelableType<ReviewInfo>())
-    ) {
-        val reviewInfo = it.toRoute<MyPageTabNestedRoute.ReviewEdit>().reviewInfo
+    ) { backStackEntry ->
+        val vm: ReviewEditViewModel = hiltViewModel(backStackEntry)
+        val reviewInfo = backStackEntry.toRoute<MyPageTabNestedRoute.ReviewEdit>().reviewInfo
         ReviewEditScreenRoot(
             reviewInfo = reviewInfo,
-            reviewEditViewModel = reviewEditViewModel,
-            onNavigateReviewHistory = {
-                navController.popBackStack()
-            }
+            reviewEditViewModel = vm,
+            onNavigateReviewHistory = { navController.popBackStack() }
         )
     }
 }

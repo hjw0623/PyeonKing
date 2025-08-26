@@ -1,17 +1,18 @@
-package com.hjw0623.core.location
+package com.hjw0623.presentation.location
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.hjw0623.core.location.LocationObserver
+import com.hjw0623.core.business_logic.location.GeoPoint
+import com.hjw0623.core.business_logic.location.LocationObserver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -22,7 +23,7 @@ class AndroidLocationObserver(
     private val client = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    override fun observeLocation(interval: Long): Flow<Location> = callbackFlow {
+    override fun observeLocation(interval: Long): Flow<GeoPoint> = callbackFlow {
         if (
             ActivityCompat.checkSelfPermission(
                 context,
@@ -37,15 +38,18 @@ class AndroidLocationObserver(
             return@callbackFlow
         }
 
-        val request = com.google.android.gms.location.LocationRequest.Builder(
+        val request = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
             interval
-        ).build()
+        )
+            .setMaxUpdates(1)
+            .setWaitForAccurateLocation(true)
+            .build()
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 result.lastLocation?.let { location ->
-                    trySend(location)
+                    trySend(GeoPoint(location.latitude, location.longitude))
                     close()
                 }
             }
