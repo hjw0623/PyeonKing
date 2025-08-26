@@ -63,6 +63,10 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
+    //Networking
+    implementation(libs.bundles.retrofit)
+    ksp(libs.moshi.codegen)
+
     // Coil
     implementation(libs.bundles.coil)
 
