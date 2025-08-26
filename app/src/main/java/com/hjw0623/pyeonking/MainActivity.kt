@@ -11,9 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.screen.splash.SplashScreen
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

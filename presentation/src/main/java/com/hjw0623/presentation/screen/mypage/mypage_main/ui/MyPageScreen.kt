@@ -8,13 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.AuthManager
-import com.hjw0623.core.domain.mypage.User
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
-import com.hjw0623.core.util.mockdata.mockUser
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedInScreen
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedOutScreen
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
@@ -22,27 +20,26 @@ import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 @Composable
 fun MyPageScreenRoot(
     modifier: Modifier = Modifier,
-    myPageViewModel: MyPageViewModel,
+    myPageViewModel: MyPageViewModel = hiltViewModel(),
     onNavigateToChangeNickname: () -> Unit,
     onNavigateToChangePassword: () -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToReviewHistory: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = myPageViewModel
 
-    val isLoggedIn by AuthManager.isLoggedIn.collectAsStateWithLifecycle()
-    val userData by AuthManager.userData.collectAsStateWithLifecycle()
-    val throttledLoginClick = rememberThrottledOnClick { viewModel.onLoginClick() }
-    val throttledLogoutClick = rememberThrottledOnClick { viewModel.onLogoutClick() }
+    val state by myPageViewModel.myPageScreenState.collectAsStateWithLifecycle()
+
+    val throttledLoginClick = rememberThrottledOnClick { myPageViewModel.onLoginClick() }
+    val throttledLogoutClick = rememberThrottledOnClick { myPageViewModel.onLogoutClick() }
     val throttledChangePasswordClick =
-        rememberThrottledOnClick { viewModel.navigateToChangePassword() }
+        rememberThrottledOnClick { myPageViewModel.navigateToChangePassword() }
     val throttledChangeNicknameClick =
-        rememberThrottledOnClick { viewModel.navigateToChangeNickname() }
+        rememberThrottledOnClick { myPageViewModel.navigateToChangeNickname() }
     val throttledReviewHistoryClick =
-        rememberThrottledOnClick { viewModel.navigateToReviewHistory() }
+        rememberThrottledOnClick { myPageViewModel.navigateToReviewHistory() }
 
-    ObserveAsEvents(flow = viewModel.myPageScreenEvent) { event ->
+    ObserveAsEvents(flow = myPageViewModel.myPageScreenEvent) { event ->
         when (event) {
             is MyPageScreenEvent.Error -> {
                 Toast.makeText(context, event.error, Toast.LENGTH_SHORT).show()
@@ -69,8 +66,7 @@ fun MyPageScreenRoot(
 
     MyPageScreen(
         modifier = modifier,
-        isLoggedIn = isLoggedIn,
-        userData = userData,
+        state = state,
         onLoginClick = throttledLoginClick,
         onLogoutClick = throttledLogoutClick,
         onChangePasswordClick = throttledChangePasswordClick,
@@ -82,8 +78,7 @@ fun MyPageScreenRoot(
 @Composable
 private fun MyPageScreen(
     modifier: Modifier = Modifier,
-    isLoggedIn: Boolean,
-    userData: User?,
+    state: MyPageScreenState,
     onLoginClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
@@ -93,9 +88,9 @@ private fun MyPageScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        if (isLoggedIn) {
+        if (state.isLoggedIn) {
             LoggedInScreen(
-                userData = userData!!,
+                nickname = state.nickname,
                 onLogoutClick = onLogoutClick,
                 onChangePasswordClick = onChangePasswordClick,
                 onChangeNicknameClick = onChangeNicknameClick,
@@ -112,11 +107,31 @@ private fun MyPageScreen(
 
 @Preview
 @Composable
-private fun MyPageScreenPreview() {
+private fun MyPageScreenPreviewLoggedIn() {
     PyeonKingTheme {
         MyPageScreen(
-            isLoggedIn = true,
-            userData = mockUser,
+            state = MyPageScreenState(
+                isLoggedIn = true,
+                nickname = "nickname"
+            ),
+            onLoginClick = {},
+            onLogoutClick = {},
+            onChangePasswordClick = {},
+            onChangeNicknameClick = {},
+            onReviewHistoryClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MyPageScreenPreviewLoggedOut() {
+    PyeonKingTheme {
+        MyPageScreen(
+            state = MyPageScreenState(
+                isLoggedIn = false,
+                nickname = "nickname"
+            ),
             onLoginClick = {},
             onLogoutClick = {},
             onChangePasswordClick = {},

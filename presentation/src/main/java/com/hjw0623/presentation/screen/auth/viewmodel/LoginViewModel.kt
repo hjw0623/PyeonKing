@@ -2,110 +2,100 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.AuthRequest
+import com.hjw0623.core.business_logic.repository.AuthRepository
+import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
-import com.hjw0623.core.domain.model.AuthRequest
-import com.hjw0623.core.domain.model.AuthResponse
-import com.hjw0623.core.domain.model.BaseResponse
-import com.hjw0623.core.domain.AuthManager
-import com.hjw0623.core.domain.auth.AuthRepository
-import com.hjw0623.core.domain.auth.UserDataValidator
-import com.hjw0623.core.domain.mypage.User
-import com.hjw0623.core.network.DataResourceResult
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
+import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userDataValidator: UserDataValidator,
-    private val authManager: AuthManager = AuthManager
+    private val userDataStoreRepository: UserDataStoreRepository,
 ) : ViewModel() {
 
-    private val _email = MutableStateFlow("")
-    val email = _email.asStateFlow()
-
-    private val _password = MutableStateFlow("")
-    val password = _password.asStateFlow()
-
-    private val _isLoggingIn = MutableStateFlow(false)
-    val isLoggingIn = _isLoggingIn.asStateFlow()
-
-    private val _isPasswordVisible = MutableStateFlow(false)
-    val isPasswordVisible = _isPasswordVisible.asStateFlow()
-    private val _isEmailValid = MutableStateFlow(false)
-    val isEmailValid = _isEmailValid.asStateFlow()
-    val isLoginButtonEnabled = combine(isEmailValid, password) { isEmailValid, password ->
-        isEmailValid && password.isNotBlank()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    private val _loginResult =
-        MutableStateFlow<DataResourceResult<BaseResponse<AuthResponse>>>(DataResourceResult.DummyConstructor)
-    val loginResult = _loginResult.asStateFlow()
+    private val _state = MutableStateFlow(LoginScreenState())
+    val state = _state.asStateFlow()
     private val _event = MutableSharedFlow<LoginScreenEvent>()
     val event = _event.asSharedFlow()
 
     fun onEmailChange(inputEmail: String) {
-        if (inputEmail != _email.value) {
-            _isEmailValid.value = false
+        _state.update {
+            it.copy(
+                email = inputEmail,
+                isEmailValid = false
+            )
         }
-        _email.value = inputEmail
     }
 
     fun onEmailChangeDebounced(debouncedEmail: String) {
-        val isValid = userDataValidator.isEmailValid(debouncedEmail)
-        _isEmailValid.value = isValid
+        _state.update {
+            it.copy(isEmailValid = userDataValidator.isEmailValid(debouncedEmail))
+        }
     }
 
     fun onPasswordChange(inputPassword: String) {
-        _password.value = inputPassword
+        _state.update { it.copy(password = inputPassword) }
     }
 
     fun onTogglePasswordVisibility() {
-        _isPasswordVisible.update { !it }
+        _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
     fun onLoginClick() {
+        val currentState = state.value
+        if (!currentState.isEmailValid) return
+
         viewModelScope.launch {
-            _isLoggingIn.value = true
-            _loginResult.value = DataResourceResult.Loading
+            authRepository.login(
+                AuthRequest(
+                    email = currentState.email.trim(),
+                    password = currentState.password
+                )
+            ).collectLatest { result ->
+                _state.update {
+                    when (result) {
+                        is DataResourceResult.Loading -> it.copy(isLoggingIn = true)
+                        is DataResourceResult.Success -> {
+                            val response = result.data.data
+                            userDataStoreRepository.saveUserInfo(
+                                nickname = response.nickname,
+                                email = currentState.email.trim(),
+                                accessToken = response.accessToken,
+                                refreshToken = response.refreshToken
+                            )
+                            _event.emit(LoginScreenEvent.NavigateToMyPage)
+                            it.copy(
+                                isLoggingIn = false,
+                                email = "",
+                                password = ""
+                            )
+                        }
 
-            val authRequest = AuthRequest(
-                email = email.value,
-                password = password.value
-            )
+                        is DataResourceResult.Failure -> {
+                            _event.emit(
+                                LoginScreenEvent.Error(
+                                    result.exception.message ?: UNKNOWN_ERROR
+                                )
+                            )
+                            it.copy(isLoggingIn = false)
+                        }
 
-            authRepository.login(authRequest).collectLatest { result ->
-                _loginResult.value = result
-                _isLoggingIn.value = false
-
-                when (result) {
-                    is DataResourceResult.Success -> {
-                        val response = result.data.data
-
-                        val user = User(
-                            email = email.value,
-                            nickname = response.nickname,
-                            password = password.value,
-                            accessToken = response.accessToken,
-                            refreshToken = response.refreshToken
-                        )
-                        authManager.login(user)
-                        _event.emit(LoginScreenEvent.NavigateToMyPage)
+                        is DataResourceResult.DummyConstructor -> it
                     }
-
-                    is DataResourceResult.Failure -> {
-                        val message = result.exception.message ?: UNKNOWN_ERROR
-                        _event.emit(LoginScreenEvent.Error(message))
-                    }
-
-                    else -> Unit
                 }
             }
         }

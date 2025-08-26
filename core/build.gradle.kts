@@ -77,4 +77,7 @@ dependencies {
 
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
+
+    //javax
+    implementation(libs.javax.inject)
 }

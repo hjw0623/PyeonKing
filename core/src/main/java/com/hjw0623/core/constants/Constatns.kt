@@ -75,4 +75,34 @@ object Error {
     const val TOO_SHORT_SEARCH_QUERY_INPUT = "검색어는 2글자 이상 입력해주세요"
 
     const val UNCHANGED_NICKNAME = "현재 닉네임과 동일합니다."
+
+    const val SAVE_PICTURE_ERROR = "사진 저장 실패"
+
+    const val NO_IMAGE = "검색할 이미지가 없습니다."
+
+    const val NO_SEARCH_RESULT = "검색 결과가 없습니다."
+
+    const val NO_REVIEW = "작성된 리뷰가 없습니다."
+
+    const val NO_CURRENT_LOCATION = "현재 위치가 없습니다."
+
+    const val FAILED_TO_GET_LOCATION = "현재 위치를 가져올 수 없어요."
+
+    const val SEARCH_FAILED = "검색에 실패했어요."
+
+    const val SEARCH_HISTORY_DELETE_FAILED = "검색 기록 삭제에 실패했습니다."
+
+    const val SEARCH_HISTORY_SAVE_FAILED = "검색 기록 저장에 실패했습니다."
+
+    const val SEARCH_QUERY_EMPTY = "검색어를 입력해주세요."
+}
+
+object UiText {
+    const val TITLE_TEXT_SEARCH = "검색 결과"
+
+    const val TITLE_CAMERA_SEARCH = "사진으로 검색한 결과"
+}
+
+object NavArgs {
+    const val REVIEW_REFRESH_FLAG = "reviewRefreshFlag"
 }

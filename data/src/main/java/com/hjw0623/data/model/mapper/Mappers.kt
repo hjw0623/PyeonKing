@@ -1,19 +1,19 @@
 package com.hjw0623.data.model.mapper
 
 import com.hjw0623.core.constants.Promotion
-import com.hjw0623.core.domain.model.AuthRequest
-import com.hjw0623.core.domain.model.AuthResponse
-import com.hjw0623.core.domain.model.ChangeNicknameRequest
-import com.hjw0623.core.domain.model.ChangePasswordRequest
-import com.hjw0623.core.domain.model.ChangePasswordResponse
-import com.hjw0623.core.domain.model.Item
-import com.hjw0623.core.domain.model.ReviewPage
-import com.hjw0623.core.domain.model.ReviewPostBody
-import com.hjw0623.core.domain.model.ReviewProduct
-import com.hjw0623.core.domain.model.ReviewResponse
-import com.hjw0623.core.domain.model.ReviewSummaryResponse
-import com.hjw0623.core.domain.model.SearchItemResponse
-import com.hjw0623.core.domain.model.UpdateReviewBody
+import com.hjw0623.core.business_logic.model.request.AuthRequest
+import com.hjw0623.core.business_logic.model.response.AuthResponse
+import com.hjw0623.core.business_logic.model.request.ChangeNicknameRequest
+import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
+import com.hjw0623.core.business_logic.model.response.ChangePasswordResponse
+import com.hjw0623.core.business_logic.model.response.Item
+import com.hjw0623.core.business_logic.model.response.ReviewPage
+import com.hjw0623.core.business_logic.model.request.ReviewPostBody
+import com.hjw0623.core.business_logic.model.response.ReviewProduct
+import com.hjw0623.core.business_logic.model.response.ReviewResponse
+import com.hjw0623.core.business_logic.model.response.ReviewSummaryResponse
+import com.hjw0623.core.business_logic.model.response.SearchItemResponse
+import com.hjw0623.core.business_logic.model.request.UpdateReviewBody
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.ChangeNicknameRequestDto
@@ -46,7 +46,7 @@ fun AuthRequest.toDto(): AuthRequestDto {
 }
 
 fun ItemDto.toDomain(): Item {
-    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE) {
+    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE_RESPONSE) {
         this.pricePerGroup / 2
     } else {
         this.pricePerGroup / 3

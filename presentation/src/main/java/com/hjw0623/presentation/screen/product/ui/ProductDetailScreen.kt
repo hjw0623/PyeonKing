@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,10 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.product.ProductDetailTab
-import com.hjw0623.core.domain.product.ReviewItem
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.product.ProductDetailTab
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.TopRoundedBackground
 import com.hjw0623.core.presentation.designsystem.components.showToast
@@ -37,46 +38,41 @@ import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.core.util.mockdata.mockReviewList
 import com.hjw0623.presentation.R
-import com.hjw0623.presentation.screen.product.ui.componet.MapTab
+import com.hjw0623.presentation.screen.home.ui.component.LoginPrompt
+import com.hjw0623.presentation.screen.product.ui.componet.EmptyReview
 import com.hjw0623.presentation.screen.product.ui.componet.ProductCardDetail
 import com.hjw0623.presentation.screen.product.ui.componet.RatingDistribution
 import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
 import com.hjw0623.presentation.screen.product.ui.componet.ReviewListItem
 import com.hjw0623.presentation.screen.product.ui.componet.TabSection
+import com.hjw0623.presentation.screen.product.ui.map.MapTab
 import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
 
 @Composable
 fun ProductDetailScreenRoot(
-    product: Product,
-    productViewModel: ProductViewModel,
-    onNavigateToReviewWrite: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    product: Product,
+    productViewModel: ProductViewModel = hiltViewModel(),
+    onNavigateToReviewWrite: (Product) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = productViewModel
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val productFromVm by viewModel.product.collectAsStateWithLifecycle()
-    val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
-    val reviewList by viewModel.reviewListUi.collectAsStateWithLifecycle()
-    val ratingList by viewModel.ratingList.collectAsStateWithLifecycle()
-    val avgRating by viewModel.avgRating.collectAsStateWithLifecycle()
-    val reviewSum by viewModel.reviewSum.collectAsStateWithLifecycle()
-    val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
-    val lastPage by viewModel.lastPage.collectAsStateWithLifecycle()
+    val state by productViewModel.state.collectAsStateWithLifecycle()
 
     val throttledWriteReviewClick = rememberThrottledOnClick {
-        viewModel.onWriteReviewClick()
+        productViewModel.onWriteReviewClick()
     }
+
     val throttledFetchNextReviewPage = rememberThrottledOnClick {
-        viewModel.fetchNextReviewPage(product.id.toLong())
+        state.product?.id?.toLongOrNull()?.let { safeId ->
+            productViewModel.fetchNextReviewPage(safeId)
+        }
     }
 
-    LaunchedEffect(key1 = product) {
-        viewModel.initializeIfNeeded(product)
+    LaunchedEffect(product) {
+        productViewModel.initializeIfNeeded(product)
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = productViewModel.event) { event ->
         when (event) {
             is ProductDetailScreenEvent.Error -> showToast(context, event.error)
             is ProductDetailScreenEvent.NavigateToReviewWrite -> onNavigateToReviewWrite(event.product)
@@ -85,16 +81,8 @@ fun ProductDetailScreenRoot(
 
     ProductDetailScreen(
         modifier = modifier,
-        isLoading = isLoading,
-        product = productFromVm,
-        selectedTab = selectedTab,
-        reviewList = reviewList,
-        ratingList = ratingList,
-        avgRating = avgRating,
-        reviewSum = reviewSum,
-        currentPage = currentPage,
-        lastPage = lastPage,
-        onTabClick = viewModel::changeTab,
+        state = state,
+        onTabClick = productViewModel::changeTab,
         onWriteReviewClick = throttledWriteReviewClick,
         fetchNextReviewPage = throttledFetchNextReviewPage
     )
@@ -103,25 +91,16 @@ fun ProductDetailScreenRoot(
 @Composable
 fun ProductDetailScreen(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    product: Product?,
-    selectedTab: ProductDetailTab,
-    reviewList: List<ReviewItem>,
-    ratingList: List<Int>,
-    avgRating: Double,
-    reviewSum: Int,
-    currentPage: Int,
-    lastPage: Int,
+    state: ProductDetailScreenState,
     onTabClick: (ProductDetailTab) -> Unit,
     onWriteReviewClick: () -> Unit,
     fetchNextReviewPage: () -> Unit
 ) {
+    val listState = rememberLazyListState()
 
-
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 80.dp),
@@ -129,139 +108,179 @@ fun ProductDetailScreen(
         ) {
             item {
                 TopRoundedBackground {
-                    product?.let { ProductCardDetail(product = it) }
+                    state.product?.let { ProductCardDetail(product = it) }
                 }
             }
 
             item {
                 TabSection(
-                    selectedTab = selectedTab,
+                    selectedTab = state.selectedTab,
                     onTabClick = onTabClick
                 )
             }
 
-            when (selectedTab) {
+            when (state.selectedTab) {
                 ProductDetailTab.REVIEW -> {
-                    if (isLoading) {
+                    if (!state.isLoggedIn) {
                         item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 100.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    } else {
-                        item {
-                            Column(
+                            LoginPrompt(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = avgRating.toString(),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    RatingStars(
-                                        rating = avgRating.toFloat(),
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = stringResource(R.string.text_total_reviews, reviewSum),
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                RatingDistribution(
-                                    ratingList = ratingList.mapIndexed { index, count -> (5 - index) to count },
-                                )
-                                Spacer(modifier = Modifier.height(24.dp))
-                            }
+                                    .height(500.dp),
+                                title = stringResource(R.string.review_title_require_login),
+                                message = stringResource(R.string.review_message_require_login)
+                            )
                         }
-
-                        if (reviewList.isNotEmpty()) {
-                            items(
-                                items = reviewList,
-                                key = { it.reviewId }
-                            ) { review ->
-                                ReviewListItem(
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    review = review
-                                )
-                            }
-
-                            if (currentPage != lastPage) {
-                                item {
-                                    PyeonKingButton(
+                    } else {
+                        item {
+                            if (state.isSummaryLoading) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            } else {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    Text(
+                                        text = state.avgRating.toString(),
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RatingStars(
+                                            rating = state.avgRating.toFloat(),
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
                                         text = stringResource(
-                                            R.string.action_see_more_review,
-                                            currentPage,
-                                            lastPage
+                                            R.string.text_total_reviews,
+                                            state.reviewSum
                                         ),
-                                        onClick = {
-                                            fetchNextReviewPage()
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp)
+                                        style = MaterialTheme.typography.bodySmall
                                     )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    RatingDistribution(
+                                        ratingList = state.ratingList.mapIndexed { idx, cnt -> (5 - idx) to cnt },
+                                    )
+                                    Spacer(modifier = Modifier.height(24.dp))
                                 }
                             }
                         }
 
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                        if (state.isReviewLoading && state.reviewList.isEmpty()) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 100.dp),
+                                    contentAlignment = Alignment.Center
+                                ) { CircularProgressIndicator() }
+                            }
+                        } else {
+                            if (state.reviewList.isEmpty()) {
+                                item {
+                                    EmptyReview(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        title = stringResource(R.string.text_no_reviews),
+                                        description = stringResource(R.string.empty_review_description)
+                                    )
+                                }
+                            } else {
+                                items(
+                                    items = state.reviewList,
+                                    key = { it.reviewId }
+                                ) { review ->
+                                    ReviewListItem(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        review = review
+                                    )
+                                }
+
+                                if (state.currentPage != state.lastPage) {
+                                    item {
+                                        PyeonKingButton(
+                                            text =
+                                                if (state.isReviewLoading)
+                                                    stringResource(R.string.loading)
+                                                else
+                                                    stringResource(
+                                                        R.string.action_see_more_review,
+                                                        state.currentPage,
+                                                        state.lastPage
+                                                    ),
+                                            onClick = fetchNextReviewPage,
+                                            enabled = !state.isReviewLoading,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                        }
                     }
                 }
 
                 ProductDetailTab.MAP -> {
                     item {
                         MapTab(
-                            brandName = product?.brand ?: "",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            brandName = state.product?.brand ?: "",
+                            modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
             }
         }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            PyeonKingButton(
-                text = stringResource(R.string.action_write_review),
-                onClick = onWriteReviewClick,
-                modifier = Modifier.fillMaxWidth()
-            )
+        if (state.selectedTab == ProductDetailTab.REVIEW) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                if (state.isLoggedIn) {
+                    PyeonKingButton(
+                        text = stringResource(R.string.action_write_review),
+                        onClick = onWriteReviewClick,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 private fun ProductDetailScreenPreview() {
     PyeonKingTheme {
         ProductDetailScreen(
-            isLoading = false,
-            product = mockProduct,
-            selectedTab = ProductDetailTab.REVIEW,
-            reviewList = mockReviewList,
-            ratingList = listOf(80, 20, 10, 5, 10),
-            avgRating = 4.3,
-            reviewSum = 125,
+            state = ProductDetailScreenState(
+                isSummaryLoading = false,
+                isReviewLoading = false,
+                product = mockProduct,
+                selectedTab = ProductDetailTab.REVIEW,
+                reviewList = mockReviewList,
+                ratingList = listOf(80, 20, 10, 5, 10),
+                avgRating = 4.3,
+                reviewSum = 125,
+                isLoggedIn = false
+            ),
             onTabClick = {},
             onWriteReviewClick = {},
-            fetchNextReviewPage = {},
-            currentPage = 1,
-            lastPage = 2,
+            fetchNextReviewPage = {}
         )
     }
 }

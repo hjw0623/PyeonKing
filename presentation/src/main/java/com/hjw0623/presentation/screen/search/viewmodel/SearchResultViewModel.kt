@@ -2,61 +2,95 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.toProduct
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.SearchRepository
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.search.search_result.SearchResultSource
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.response.toProduct
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
+import com.hjw0623.core.business_logic.repository.SearchRepository
+import com.hjw0623.core.constants.Error
+import com.hjw0623.core.constants.UiText
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
+import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class SearchResultViewModel(
+@HiltViewModel
+class SearchResultViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
-
-    private val _products = MutableStateFlow<List<Product>>(emptyList())
-    val products = _products.asStateFlow()
-
-    private val _searchTitle = MutableStateFlow("")
-    val searchTitle = _searchTitle.asStateFlow()
+    private val _state = MutableStateFlow(SearchResultScreenState())
+    val state = _state.asStateFlow()
 
     private val _event = MutableSharedFlow<SearchResultScreenEvent>()
     val event = _event.asSharedFlow()
 
     fun searchProducts(navArgs: SearchResultNavArgs) {
         viewModelScope.launch {
-            _isLoading.value = true
-            when (navArgs.source) {
+            _state.update {
+                when (navArgs.source) {
+                    SearchResultSource.TEXT -> it.copy(
+                        isLoading = false,
+                        source = SearchResultSource.TEXT,
+                        query = navArgs.passedQuery,
+                        imagePath = null,
+                        searchTitle = "'${navArgs.passedQuery.orEmpty()}' ${UiText.TITLE_TEXT_SEARCH}",
+                        products = emptyList()
+                    )
+
+                    SearchResultSource.CAMERA -> it.copy(
+                        isLoading = false,
+                        source = SearchResultSource.CAMERA,
+                        query = null,
+                        imagePath = navArgs.passedImagePath,
+                        searchTitle = UiText.TITLE_CAMERA_SEARCH,
+                        products = emptyList()
+                    )
+                }
+            }
+
+            val currentState = _state.value
+
+            when (currentState.source) {
                 SearchResultSource.TEXT -> {
-                    _searchTitle.value = "'${navArgs.passedQuery}' 검색 결과"
                     searchRepository.searchItems(navArgs.passedQuery!!).collectLatest { result ->
                         when (result) {
                             DataResourceResult.Loading -> {
-                                _isLoading.value = true
+                                _state.update { it.copy(isLoading = true) }
                             }
 
                             is DataResourceResult.Success -> {
-                                if (result.data.data.searchItems.isEmpty()) {
-                                    _event.emit(SearchResultScreenEvent.Error("검색 결과가 없습니다."))
-                                    _isLoading.value = false
+                                val items = result.data.data.searchItems
+
+                                if (items.isEmpty()) {
+                                    _state.update {
+                                        it.copy(
+                                            isLoading = false,
+                                            products = emptyList()
+                                        )
+                                    }
+                                    _event.emit(SearchResultScreenEvent.Error(Error.NO_SEARCH_RESULT))
                                     return@collectLatest
                                 }
-                                _products.value =
-                                    result.data.data.searchItems.map { it.toProduct() }
-                                _isLoading.value = false
+                                _state.update {
+                                    it.copy(
+                                        isLoading = false,
+                                        products = items.map { dto -> dto.toProduct() }
+                                    )
+                                }
                             }
 
                             is DataResourceResult.Failure -> {
+                                _state.update { it.copy(isLoading = false) }
                                 val message = result.exception.message.toString()
                                 _event.emit(SearchResultScreenEvent.Error(message))
                             }
@@ -67,12 +101,10 @@ class SearchResultViewModel(
                 }
 
                 SearchResultSource.CAMERA -> {
-                    _searchTitle.value = "사진으로 검색한 결과"
-
-                    val path = navArgs.passedImagePath
-                    if (path == null) {
-                        _event.emit(SearchResultScreenEvent.Error("이미지 경로가 없습니다."))
-                        _isLoading.value = false
+                    val path = currentState.imagePath
+                    if (path.isNullOrBlank()) {
+                        _state.update { it.copy(isLoading = false) }
+                        _event.emit(SearchResultScreenEvent.Error(Error.NO_IMAGE))
                         return@launch
                     }
 
@@ -80,21 +112,36 @@ class SearchResultViewModel(
 
                     searchRepository.searchItemsByImg(file).collectLatest { result ->
                         when (result) {
-                            is DataResourceResult.Loading -> _isLoading.value = true
+                            DataResourceResult.Loading -> {
+                                _state.update { it.copy(isLoading = true) }
+                            }
 
                             is DataResourceResult.Success -> {
-                                if (result.data.data.searchItems.isEmpty()) {
-                                    _event.emit(SearchResultScreenEvent.Error("검색 결과가 없습니다."))
-                                    _isLoading.value = false
+                                val items = result.data.data.searchItems
+                                if (items.isEmpty()) {
+                                    _state.update {
+                                        it.copy(
+                                            isLoading = false,
+                                            products = emptyList()
+                                        )
+                                    }
+                                    _event.emit(SearchResultScreenEvent.Error(Error.NO_SEARCH_RESULT))
                                     return@collectLatest
                                 }
-                                _products.value =
-                                    result.data.data.searchItems.map { it.toProduct() }
-                                _isLoading.value = false
+                                _state.update {
+                                    it.copy(
+                                        isLoading = false,
+                                        products = items.map { dto -> dto.toProduct() }
+                                    )
+                                }
                             }
 
                             is DataResourceResult.Failure -> {
-                                _event.emit(SearchResultScreenEvent.Error("이미지 검색 실패: ${result.exception.message}"))
+                                _state.update { it.copy(isLoading = false) }
+                                val message = result.exception.message.toString()
+                                _event.emit(
+                                    SearchResultScreenEvent.Error(message)
+                                )
                             }
 
                             else -> Unit
@@ -102,8 +149,6 @@ class SearchResultViewModel(
                     }
                 }
             }
-
-            _isLoading.value = false
         }
     }
 

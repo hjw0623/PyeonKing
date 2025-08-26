@@ -2,11 +2,13 @@ package com.hjw0623.presentation.screen.search.text_search.ui.component.unFocuse
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.text_search.FilterType
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.text_search.FilterType
 import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 
@@ -17,6 +19,7 @@ fun ProductListSection(
     onProductClick: (Product) -> Unit,
     onFilterToggle: (FilterType) -> Unit,
     modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -27,7 +30,8 @@ fun ProductListSection(
         )
         ProductList(
             products = products,
-            onProductClick = onProductClick
+            onProductClick = onProductClick,
+            listState = listState
         )
     }
 }

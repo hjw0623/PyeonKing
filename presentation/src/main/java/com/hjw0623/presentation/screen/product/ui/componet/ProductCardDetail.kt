@@ -25,18 +25,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
-import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.getBrandColor
-import com.hjw0623.core.presentation.ui.getFullImageUrl
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.util.CoilImageRequest
 

@@ -1,19 +1,21 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.domain.model.BaseResponse
-import com.hjw0623.core.domain.model.ChangeNicknameRequest
-import com.hjw0623.core.domain.model.ChangePasswordRequest
-import com.hjw0623.core.domain.model.ChangePasswordResponse
-import com.hjw0623.core.domain.mypage.MyPageRepository
-import com.hjw0623.core.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.network.DataResourceResult
+import com.hjw0623.core.business_logic.model.request.ChangeNicknameRequest
+import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
+import com.hjw0623.core.business_logic.model.response.BaseResponse
+import com.hjw0623.core.business_logic.model.response.ChangePasswordResponse
+import com.hjw0623.core.business_logic.repository.MyPageRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
-import com.hjw0623.data.remote.PyeonKingApiClient
+import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class MyPageRepositoryImpl: MyPageRepository {
-    val apiService = PyeonKingApiClient.pyeonKingApiService
+class MyPageRepositoryImpl @Inject constructor(
+    private val apiService: PyeonKingApiService
+) : MyPageRepository {
 
     override suspend fun checkNickname(nickname: String): Flow<DataResourceResult<BaseResponse<Boolean>>> {
         return safeApiFlow {

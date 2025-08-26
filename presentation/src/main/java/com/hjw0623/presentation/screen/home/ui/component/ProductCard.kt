@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -31,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.hjw0623.core.domain.product.Product
+import com.hjw0623.core.business_logic.model.product.Product
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.presentation.R
@@ -51,7 +50,7 @@ fun ProductCardLarge(
     Card(
         modifier = modifier
             .width(180.dp)
-            .wrapContentHeight(),
+            .height(260.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -60,7 +59,7 @@ fun ProductCardLarge(
         onClick = { onCardClick() }
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
@@ -95,7 +94,9 @@ fun ProductCardLarge(
             }
 
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
             ) {
                 Text(
                     text = product.name,

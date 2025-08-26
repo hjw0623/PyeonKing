@@ -22,8 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.review.review_history.ReviewInfo
+import com.hjw0623.core.business_logic.model.review.ReviewInfo
 import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
@@ -35,24 +36,19 @@ import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
 
 @Composable
 fun ReviewHistoryScreenRoot(
-    reviewHistoryViewModel: ReviewHistoryViewModel,
-    onNavigateToReviewEdit: (ReviewInfo) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    reviewHistoryViewModel: ReviewHistoryViewModel = hiltViewModel(),
+    onNavigateToReviewEdit: (ReviewInfo) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = reviewHistoryViewModel
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val reviewHistoryList by viewModel.reviewHistoryList.collectAsStateWithLifecycle()
-    val currentPage by viewModel.currentPage.collectAsStateWithLifecycle()
-    val lastPage by viewModel.lastPage.collectAsStateWithLifecycle()
+    val state by reviewHistoryViewModel.state.collectAsStateWithLifecycle()
 
 
     LaunchedEffect(Unit) {
-        viewModel.fetchReviewHistory(1)
+        reviewHistoryViewModel.fetchReviewHistory(1)
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = reviewHistoryViewModel.event) { event ->
         when (event) {
             is ReviewHistoryScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -66,22 +62,16 @@ fun ReviewHistoryScreenRoot(
 
     ReviewHistoryScreen(
         modifier = modifier,
-        isLoading = isLoading,
-        reviewHistoryList = reviewHistoryList,
-        currentPage = currentPage,
-        lastPage = lastPage,
-        onEditReviewClick = viewModel::onEditReviewClick,
-        onLoadMoreClick = viewModel::fetchNextReviewPage
+        state = state,
+        onEditReviewClick = reviewHistoryViewModel::onEditReviewClick,
+        onLoadMoreClick = reviewHistoryViewModel::fetchNextReviewPage
     )
 }
 
 @Composable
 private fun ReviewHistoryScreen(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    reviewHistoryList: List<ReviewInfo>,
-    currentPage: Int,
-    lastPage: Int,
+    state: ReviewHistoryScreenState,
     onEditReviewClick: (ReviewInfo) -> Unit,
     onLoadMoreClick: () -> Unit
 ) {
@@ -99,7 +89,7 @@ private fun ReviewHistoryScreen(
         }
 
         items(
-            items = reviewHistoryList,
+            items = state.reviews,
             key = { it.reviewId }
         ) { reviewItem ->
             ReviewHistoryListItem(
@@ -107,7 +97,7 @@ private fun ReviewHistoryScreen(
                 onEditClick = { onEditReviewClick(reviewItem) }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            if (reviewHistoryList.last() != reviewItem) {
+            if (state.reviews.last() != reviewItem) {
                 Spacer(
                     modifier = Modifier
                         .height(1.dp)
@@ -118,12 +108,12 @@ private fun ReviewHistoryScreen(
             }
         }
 
-        if (currentPage < lastPage) {
+        if (state.currentPage < state.lastPage) {
             item {
                 Spacer(modifier = Modifier.height(20.dp))
                 PyeonKingButton(
                     text = stringResource(
-                        R.string.action_see_more_review, currentPage, lastPage
+                        R.string.action_see_more_review, state.currentPage, state.lastPage
                     ),
                     onClick = onLoadMoreClick,
                     modifier = Modifier
@@ -135,7 +125,7 @@ private fun ReviewHistoryScreen(
             }
         }
 
-        if (isLoading) {
+        if (state.isLoading) {
             item {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -153,12 +143,14 @@ private fun ReviewHistoryScreen(
 private fun ReviewHistoryScreenPreview() {
     PyeonKingTheme {
         ReviewHistoryScreen(
-            isLoading = false,
-            reviewHistoryList = mockReviewHistoryList,
+            state = ReviewHistoryScreenState(
+                reviews = mockReviewHistoryList,
+                isLoading = false,
+                currentPage = 1,
+                lastPage = 3
+            ),
             onEditReviewClick = {},
             onLoadMoreClick = {},
-            currentPage = 1,
-            lastPage = 3
         )
     }
 }

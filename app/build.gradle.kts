@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -14,7 +16,8 @@ android {
     defaultConfig {
         applicationId = "com.hjw0623.pyeonking"
         minSdk = 24
-        targetSdk = 35
+        //noinspection OldTargetApi
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -60,29 +63,18 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    // Networking
+    //Networking
     implementation(libs.bundles.retrofit)
+    ksp(libs.moshi.codegen)
 
     // Coil
     implementation(libs.bundles.coil)
-
-    // CameraX
-    implementation(libs.bundles.camerax)
-
-    //Rest
-    implementation(libs.bundles.retrofit)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
     // Logging
     implementation(libs.timber)
-
-    //GoogleMap
-    implementation(libs.bundles.googlemap)
-
-    //DataStore
-    implementation(libs.androidx.datastore.preferences)
 
     // Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -91,4 +83,9 @@ dependencies {
     // Debug
     testImplementation(libs.bundles.testing)
     debugImplementation(libs.bundles.debug.tooling)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }

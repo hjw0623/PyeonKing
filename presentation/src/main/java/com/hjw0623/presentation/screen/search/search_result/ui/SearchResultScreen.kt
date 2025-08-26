@@ -18,42 +18,42 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.product.Product
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
 import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
-import com.hjw0623.core.util.mockdata.mockProductList
+import com.hjw0623.presentation.R
+import com.hjw0623.presentation.screen.search.search_result.ui.component.NoSearchResult
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductCardSmall
 import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 
 @Composable
 fun SearchResultScreenRoot(
+    modifier: Modifier = Modifier,
     navArgs: SearchResultNavArgs,
-    searchResultViewModel: SearchResultViewModel,
-    onNavigateToProductDetail: (Product) -> Unit,
-    modifier: Modifier = Modifier
+    searchResultViewModel: SearchResultViewModel = hiltViewModel(),
+    onNavigateToProductDetail: (Product) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = searchResultViewModel
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-    val products by viewModel.products.collectAsStateWithLifecycle()
-    val searchTitle by viewModel.searchTitle.collectAsStateWithLifecycle()
+    val state by searchResultViewModel.state.collectAsStateWithLifecycle()
 
     val throttledProductClick = rememberThrottledOnClick<Product> { product ->
-        viewModel.onProductClick(product)
+        searchResultViewModel.onProductClick(product)
     }
 
     LaunchedEffect(key1 = navArgs) {
-        viewModel.searchProducts(navArgs)
+        searchResultViewModel.searchProducts(navArgs)
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = searchResultViewModel.event) { event ->
         when (event) {
             is SearchResultScreenEvent.Error -> {
                 showToast(context, event.error)
@@ -67,9 +67,7 @@ fun SearchResultScreenRoot(
 
     SearchResultScreen(
         modifier = modifier,
-        isLoading = isLoading,
-        products = products,
-        searchTitle = searchTitle,
+        state = state,
         onProductClick = throttledProductClick
     )
 }
@@ -77,9 +75,7 @@ fun SearchResultScreenRoot(
 @Composable
 fun SearchResultScreen(
     modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    products: List<Product>,
-    searchTitle: String,
+    state: SearchResultScreenState,
     onProductClick: (Product) -> Unit
 ) {
     Column(
@@ -88,32 +84,64 @@ fun SearchResultScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            text = searchTitle,
+            text = state.searchTitle,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(16.dp)
         )
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
             }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    items = products,
-                    key = { it.id }
-                ) { product ->
-                    ProductCardSmall(
-                        onClick = { onProductClick(product) },
-                        product = product
-                    )
+
+            state.products.isEmpty() -> {
+                val (title, message, tips) =
+                    when (state.source) {
+                        SearchResultSource.TEXT -> {
+                            val title = stringResource(R.string.text_search_empty_title)
+                            val message = stringResource(R.string.text_search_empty_message)
+                            val tipsList = listOf(
+                                stringResource(R.string.text_search_empty_tip_typo),
+                                stringResource(R.string.text_search_empty_tip_length)
+                            )
+                            Triple(title, message, tipsList)
+                        }
+
+                        SearchResultSource.CAMERA -> {
+                            val title = stringResource(R.string.camera_search_empty_title)
+                            val message = stringResource(R.string.camera_search_empty_message)
+                            val tipsList = listOf(
+                                stringResource(R.string.camera_search_empty_tip_light),
+                                stringResource(R.string.camera_search_empty_tip_frame),
+                                stringResource(R.string.camera_search_empty_tip_steady)
+                            )
+                            Triple(title, message, tipsList)
+                        }
+                    }
+
+                NoSearchResult(
+                    title = title,
+                    message = message,
+                    tips = tips,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(items = state.products, key = { it.id }) { product ->
+                        ProductCardSmall(
+                            onClick = { onProductClick(product) },
+                            product = product
+                        )
+                    }
                 }
             }
         }
@@ -125,9 +153,13 @@ fun SearchResultScreen(
 private fun SearchResultScreenPreview() {
     PyeonKingTheme {
         SearchResultScreen(
-            isLoading = false,
-            products = mockProductList,
-            searchTitle = "'콜라' 검색 결과",
+            state = SearchResultScreenState(
+                isLoading = false,
+                products = emptyList(),
+                searchTitle = "'콜라' 검색 결과",
+                source = SearchResultSource.TEXT,
+                query = "콜라"
+            ),
             onProductClick = {}
         )
     }

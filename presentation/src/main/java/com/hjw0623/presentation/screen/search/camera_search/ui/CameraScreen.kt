@@ -13,9 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.util.takePictureAndSave
-import com.hjw0623.core.domain.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.presentation.designsystem.components.showToast
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.presentation.ui.ObserveAsEvents
@@ -29,15 +29,12 @@ import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
 
 @Composable
 fun CameraScreenRoot(
-    cameraSearchViewModel: CameraSearchViewModel,
-    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cameraSearchViewModel: CameraSearchViewModel = hiltViewModel(),
+    onNavigateToSearchResult: (SearchResultNavArgs) -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel = cameraSearchViewModel
-
-    val hasPermission by viewModel.hasCameraPermission.collectAsStateWithLifecycle()
-    val capturedImagePath by viewModel.capturedImagePath.collectAsStateWithLifecycle()
+    val state by cameraSearchViewModel.state.collectAsStateWithLifecycle()
 
     val cameraController = remember {
         LifecycleCameraController(context).apply {
@@ -47,24 +44,31 @@ fun CameraScreenRoot(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
-        viewModel.onPermissionResult(granted)
+        cameraSearchViewModel.onPermissionResult(granted)
         if (!granted) {
             showToast(context, context.getString(R.string.camera_permission_required))
         }
     }
 
-    val throttledRetakeClick = rememberThrottledOnClick(onClick = viewModel::onRetakeClick)
-    val throttledSearchClick = rememberThrottledOnClick(onClick = viewModel::onSearchClick)
+    val throttledRetakeClick = rememberThrottledOnClick(
+        onClick = cameraSearchViewModel::onRetakeClick
+    )
+    val throttledSearchClick = rememberThrottledOnClick(
+        onClick = cameraSearchViewModel::onSearchClick
+    )
+    val throttledTakePicture = rememberThrottledOnClick {
+        cameraSearchViewModel.takePicture(context, cameraController)
+    }
 
     LaunchedEffect(Unit) {
         val isGranted = context.hasCameraPermission()
-        viewModel.onPermissionResult(isGranted)
+        cameraSearchViewModel.onPermissionResult(isGranted)
         if (!isGranted) {
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
-    ObserveAsEvents(flow = viewModel.event) { event ->
+    ObserveAsEvents(flow = cameraSearchViewModel.event) { event ->
         when (event) {
             is CameraScreenEvent.NavigateToSearchResult -> {
                 onNavigateToSearchResult(event.searchResultNavArgs)
@@ -76,16 +80,12 @@ fun CameraScreenRoot(
         }
     }
 
-    if (hasPermission) {
+    if (state.hasCameraPermission) {
         CameraScreen(
             modifier = modifier,
+            state = state,
             cameraController = cameraController,
-            capturedImagePath = capturedImagePath,
-            onCaptureClick = {
-                takePictureAndSave(context, cameraController) { path ->
-                    viewModel.onPhotoTaken(path)
-                }
-            },
+            onCaptureClick = throttledTakePicture,
             onRetakeClick = throttledRetakeClick,
             onSearchClick = throttledSearchClick
         )
@@ -104,16 +104,16 @@ fun CameraScreenRoot(
 @Composable
 fun CameraScreen(
     cameraController: LifecycleCameraController,
-    capturedImagePath: String?,
+    state: CameraScreenState,
     onCaptureClick: () -> Unit,
     onRetakeClick: () -> Unit,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (capturedImagePath != null) {
+    if (state.hasCapturedImage) {
         CapturedImageScreen(
             modifier = modifier.fillMaxSize(),
-            imagePath = capturedImagePath,
+            imagePath = state.capturedImagePath!!,
             onRetake = onRetakeClick,
             onSearchClick = onSearchClick
         )
@@ -132,10 +132,10 @@ private fun CameraScreenPreview() {
     PyeonKingTheme {
         CameraScreen(
             cameraController = LifecycleCameraController(LocalContext.current),
-            capturedImagePath = null,
             onCaptureClick = {},
             onRetakeClick = {},
-            onSearchClick = {}
+            onSearchClick = {},
+            state = CameraScreenState(),
         )
     }
 }

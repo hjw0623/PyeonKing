@@ -1,5 +1,6 @@
 package com.hjw0623.pyeonking
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,75 +18,44 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hjw0623.core.presentation.designsystem.components.BackBar
 import com.hjw0623.core.presentation.ui.shouldShowBottomBar
-import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel
-import com.hjw0623.presentation.screen.auth.viewmodel.RegisterViewModel
-import com.hjw0623.presentation.screen.factory.PyeonKingViewModelFactory
+import com.hjw0623.presentation.navigation.TopBarData
+import com.hjw0623.presentation.navigation.bottom_nav.BottomNavItem
+import com.hjw0623.presentation.navigation.nav_route.CameraTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.HomeTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.MainNavigationRoute
+import com.hjw0623.presentation.navigation.nav_route.MyPageTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.TextSearchTabNestedRoute
+import com.hjw0623.presentation.navigation.nav_route.cameraNavGraph
+import com.hjw0623.presentation.navigation.nav_route.homeNavGraph
+import com.hjw0623.presentation.navigation.nav_route.myPageNavGraph
+import com.hjw0623.presentation.navigation.nav_route.textSearchNavGraph
+import com.hjw0623.presentation.navigation.topBarAsRouteName
 import com.hjw0623.presentation.screen.home.ui.HomeScreenRoot
 import com.hjw0623.presentation.screen.home.viewmodel.HomeViewModel
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.MyPageScreenRoot
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
-import com.hjw0623.presentation.screen.product.viewmodel.ProductViewModel
-import com.hjw0623.presentation.screen.review.viewmodel.ReviewEditViewModel
-import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel
-import com.hjw0623.presentation.screen.review.viewmodel.ReviewWriteViewModel
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenRoot
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenRoot
 import com.hjw0623.presentation.screen.search.viewmodel.CameraSearchViewModel
-import com.hjw0623.presentation.screen.search.viewmodel.SearchResultViewModel
 import com.hjw0623.presentation.screen.search.viewmodel.TextSearchViewModel
-import com.hjw0623.pyeonking.navigation.TopBarData
-import com.hjw0623.pyeonking.navigation.bottom_nav.BottomNavItem
-import com.hjw0623.pyeonking.navigation.nav_route.CameraTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.HomeTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MainNavigationRoute
-import com.hjw0623.pyeonking.navigation.nav_route.MyPageTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.TextSearchTabNestedRoute
-import com.hjw0623.pyeonking.navigation.nav_route.cameraNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.homeNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.myPageNavGraph
-import com.hjw0623.pyeonking.navigation.nav_route.textSearchNavGraph
-import com.hjw0623.pyeonking.navigation.topBarAsRouteName
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     val bottomNavItems = remember { BottomNavItem.fetchBottomNavItems() }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val routeName = currentRoute?.substringAfterLast(".")
     val topBarData = navBackStackEntry?.topBarAsRouteName ?: TopBarData()
     val showBottomBar = shouldShowBottomBar(currentRoute)
-
-    val loginViewModel = viewModel<LoginViewModel>(factory = PyeonKingViewModelFactory)
-
-    val registerViewModel = viewModel<RegisterViewModel>(factory = PyeonKingViewModelFactory)
-
-    val homeViewModel = viewModel<HomeViewModel>(factory = PyeonKingViewModelFactory)
-
-    val myPageViewModel = viewModel<MyPageViewModel>(factory = PyeonKingViewModelFactory)
-
-    val productViewModel = viewModel<ProductViewModel>(factory = PyeonKingViewModelFactory)
-
-    val reviewEditViewModel = viewModel<ReviewEditViewModel>(factory = PyeonKingViewModelFactory)
-
-    val reviewHistoryViewModel =
-        viewModel<ReviewHistoryViewModel>(factory = PyeonKingViewModelFactory)
-
-    val reviewWriteViewModel = viewModel<ReviewWriteViewModel>(factory = PyeonKingViewModelFactory)
-
-    val cameraSearchViewModel =
-        viewModel<CameraSearchViewModel>(factory = PyeonKingViewModelFactory)
-
-    val searchResultViewModel =
-        viewModel<SearchResultViewModel>(factory = PyeonKingViewModelFactory)
-
-    val textSearchViewModel = viewModel<TextSearchViewModel>(factory = PyeonKingViewModelFactory)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -107,14 +77,17 @@ fun MainScreen() {
             if (showBottomBar) {
                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                     bottomNavItems.forEach { bottomItem ->
+                        val destinationName = bottomItem.destination::class.simpleName
                         NavigationBarItem(
-                            selected = currentRoute?.startsWith(bottomItem.destination.toString()) == true,
+                            selected = routeName == destinationName,
                             onClick = {
                                 navController.navigate(bottomItem.destination) {
                                     popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+                                        inclusive = true
+                                        saveState = false
                                     }
                                     launchSingleTop = true
+                                    restoreState = false
                                 }
                             },
                             icon = {
@@ -142,6 +115,7 @@ fun MainScreen() {
             startDestination = MainNavigationRoute.Home
         ) {
             composable<MainNavigationRoute.Home> {
+                val homeViewModel: HomeViewModel = hiltViewModel()
                 HomeScreenRoot(
                     homeViewModel = homeViewModel,
                     onNavigateToProductDetail = { product ->
@@ -157,6 +131,8 @@ fun MainScreen() {
                 )
             }
             composable<MainNavigationRoute.Camera> {
+                val cameraSearchViewModel: CameraSearchViewModel = hiltViewModel()
+
                 CameraScreenRoot(
                     cameraSearchViewModel = cameraSearchViewModel,
                     onNavigateToSearchResult = { args ->
@@ -167,6 +143,8 @@ fun MainScreen() {
                 )
             }
             composable<MainNavigationRoute.TextSearch> {
+                val textSearchViewModel: TextSearchViewModel = hiltViewModel()
+
                 TextSearchScreenRoot(
                     textSearchViewModel = textSearchViewModel,
                     onNavigateToSearchResult = { args ->
@@ -182,6 +160,8 @@ fun MainScreen() {
                 )
             }
             composable<MainNavigationRoute.MyPage> {
+                val myPageViewModel: MyPageViewModel = hiltViewModel()
+
                 MyPageScreenRoot(
                     myPageViewModel = myPageViewModel,
                     onNavigateToChangeNickname = {
@@ -206,32 +186,10 @@ fun MainScreen() {
                     }
                 )
             }
-            homeNavGraph(
-                navController,
-                productViewModel,
-                reviewWriteViewModel,
-                searchResultViewModel
-            )
-            cameraNavGraph(
-                navController,
-                productViewModel,
-                reviewWriteViewModel,
-                searchResultViewModel
-            )
-            textSearchNavGraph(
-                navController,
-                productViewModel,
-                reviewWriteViewModel,
-                searchResultViewModel
-            )
-            myPageNavGraph(
-                navController = navController,
-                myPageViewModel = myPageViewModel,
-                loginViewModel = loginViewModel,
-                registerViewModel = registerViewModel,
-                reviewEditViewModel = reviewEditViewModel,
-                reviewHistoryViewModel = reviewHistoryViewModel
-            )
+            homeNavGraph(navController)
+            cameraNavGraph(navController)
+            textSearchNavGraph(navController)
+            myPageNavGraph(navController)
         }
     }
 }
