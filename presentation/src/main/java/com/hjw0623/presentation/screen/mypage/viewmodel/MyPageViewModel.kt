@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_domain.auth.validator.NicknameValidationState
 import com.hjw0623.core.core_domain.auth.validator.UserDataValidator
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.request.ChangePasswordRequest
+import com.hjw0623.core.core_network.request.ChangePasswordRequest
 import com.hjw0623.core.core_domain.repository.MyPageRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.core_andriod.constants.Error.UNCHANGED_NICKNAME

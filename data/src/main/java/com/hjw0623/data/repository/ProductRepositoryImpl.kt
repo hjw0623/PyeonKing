@@ -1,11 +1,11 @@
 package com.hjw0623.data.repository
 
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.response.BaseResponse
-import com.hjw0623.core.core_domain.model.response.Item
-import com.hjw0623.core.core_domain.model.response.ReviewPage
-import com.hjw0623.core.core_domain.model.response.ReviewSummaryResponse
-import com.hjw0623.core.core_domain.model.response.SearchItemResponse
+import com.hjw0623.core.core_network.response.BaseResponse
+import com.hjw0623.core.core_network.response.Item
+import com.hjw0623.core.core_network.response.ReviewPage
+import com.hjw0623.core.core_network.response.ReviewSummaryResponse
+import com.hjw0623.core.core_network.response.SearchItemResponse
 import com.hjw0623.core.core_domain.repository.ProductRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.service.PyeonKingApiService

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_network.network.DataResourceResult
 import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_domain.model.response.toProduct
+import com.hjw0623.core.core_network.response.toProduct
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
 import com.hjw0623.core.core_domain.repository.ProductRepository

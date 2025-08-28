@@ -1,11 +1,11 @@
 package com.hjw0623.data.repository
 
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.request.ReviewPostBody
-import com.hjw0623.core.core_domain.model.request.UpdateReviewBody
-import com.hjw0623.core.core_domain.model.response.BaseResponse
-import com.hjw0623.core.core_domain.model.response.ReviewPage
-import com.hjw0623.core.core_domain.model.response.ReviewResponse
+import com.hjw0623.core.core_network.request.ReviewPostBody
+import com.hjw0623.core.core_network.request.UpdateReviewBody
+import com.hjw0623.core.core_network.response.BaseResponse
+import com.hjw0623.core.core_network.response.ReviewPage
+import com.hjw0623.core.core_network.response.ReviewResponse
 import com.hjw0623.core.core_domain.repository.ReviewRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto

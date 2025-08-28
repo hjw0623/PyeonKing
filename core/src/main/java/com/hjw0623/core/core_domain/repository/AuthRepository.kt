@@ -1,8 +1,8 @@
 package com.hjw0623.core.core_domain.repository
 
-import com.hjw0623.core.core_domain.model.request.AuthRequest
-import com.hjw0623.core.core_domain.model.response.AuthResponse
-import com.hjw0623.core.core_domain.model.response.BaseResponse
+import com.hjw0623.core.core_network.request.AuthRequest
+import com.hjw0623.core.core_network.response.AuthResponse
+import com.hjw0623.core.core_network.response.BaseResponse
 import com.hjw0623.core.core_network.network.DataResourceResult
 import kotlinx.coroutines.flow.Flow
 

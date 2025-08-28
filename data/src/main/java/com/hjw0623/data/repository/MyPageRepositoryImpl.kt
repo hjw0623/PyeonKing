@@ -1,10 +1,10 @@
 package com.hjw0623.data.repository
 
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.request.ChangeNicknameRequest
-import com.hjw0623.core.core_domain.model.request.ChangePasswordRequest
-import com.hjw0623.core.core_domain.model.response.BaseResponse
-import com.hjw0623.core.core_domain.model.response.ChangePasswordResponse
+import com.hjw0623.core.core_network.request.ChangeNicknameRequest
+import com.hjw0623.core.core_network.request.ChangePasswordRequest
+import com.hjw0623.core.core_network.response.BaseResponse
+import com.hjw0623.core.core_network.response.ChangePasswordResponse
 import com.hjw0623.core.core_domain.repository.MyPageRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
