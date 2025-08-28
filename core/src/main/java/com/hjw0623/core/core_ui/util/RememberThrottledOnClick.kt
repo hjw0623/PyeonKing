@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_ui.ui
+package com.hjw0623.core.core_ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_ui.ui
+package com.hjw0623.core.core_ui.util
 
 fun shouldShowBottomBar(route: String?): Boolean {
     val simpleName = route?.substringAfterLast(".") ?: return false

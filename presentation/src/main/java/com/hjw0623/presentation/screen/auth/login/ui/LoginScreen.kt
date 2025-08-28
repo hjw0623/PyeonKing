@@ -32,8 +32,8 @@ import com.hjw0623.core.core_ui.designsystem.components.PyeonKingPasswordTextFie
 import com.hjw0623.core.core_ui.designsystem.components.PyeonKingTextField
 import com.hjw0623.core.core_ui.designsystem.components.showToast
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.core_ui.ui.ObserveAsEvents
-import com.hjw0623.core.core_ui.ui.rememberThrottledOnClick
+import com.hjw0623.core.core_ui.util.ObserveAsEvents
+import com.hjw0623.core.core_ui.util.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.auth.login.ui.component.LoginGreetingSection
 import com.hjw0623.presentation.screen.auth.viewmodel.LoginViewModel

@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_ui.ui
+package com.hjw0623.core.core_ui.util
 
 import androidx.compose.ui.graphics.Color
 import com.hjw0623.core.core_andriod.constants.Api.IMAGE_URL
