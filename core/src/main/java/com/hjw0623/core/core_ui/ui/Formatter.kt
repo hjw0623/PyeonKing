@@ -1,15 +1,15 @@
-package com.hjw0623.core.presentation.ui
+package com.hjw0623.core.core_ui.ui
 
 import androidx.compose.ui.graphics.Color
 import com.hjw0623.core.constants.Api.IMAGE_URL
 import com.hjw0623.core.constants.Brand
 import com.hjw0623.core.constants.Promotion
-import com.hjw0623.core.presentation.designsystem.theme.Cu
-import com.hjw0623.core.presentation.designsystem.theme.Emart24
-import com.hjw0623.core.presentation.designsystem.theme.Gs25
-import com.hjw0623.core.presentation.designsystem.theme.Seven
-import com.hjw0623.core.presentation.designsystem.theme.errorDark
-import com.hjw0623.core.presentation.designsystem.theme.errorLight
+import com.hjw0623.core.core_ui.designsystem.theme.Cu
+import com.hjw0623.core.core_ui.designsystem.theme.Emart24
+import com.hjw0623.core.core_ui.designsystem.theme.Gs25
+import com.hjw0623.core.core_ui.designsystem.theme.Seven
+import com.hjw0623.core.core_ui.designsystem.theme.errorDark
+import com.hjw0623.core.core_ui.designsystem.theme.errorLight
 
 fun getBrandColor(
     brand: String,

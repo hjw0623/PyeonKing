@@ -1,8 +1,8 @@
 package com.hjw0623.core.core_domain.model.response
 
 import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.presentation.ui.changePromotionName
-import com.hjw0623.core.presentation.ui.getFullImageUrl
+import com.hjw0623.core.core_ui.ui.changePromotionName
+import com.hjw0623.core.core_ui.ui.getFullImageUrl
 
 data class Item(
     val id: Long,

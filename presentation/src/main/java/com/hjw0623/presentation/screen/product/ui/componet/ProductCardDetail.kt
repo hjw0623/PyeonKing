@@ -33,8 +33,8 @@ import coil3.compose.AsyncImage
 
 import com.hjw0623.core.core_domain.model.product.Product
 import com.hjw0623.core.util.mockdata.mockProduct
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.presentation.ui.getBrandColor
+import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.core_ui.ui.getBrandColor
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.util.CoilImageRequest
 

@@ -1,4 +1,4 @@
-package com.hjw0623.core.presentation.ui
+package com.hjw0623.core.core_ui.ui
 
 import android.Manifest
 import android.content.Context

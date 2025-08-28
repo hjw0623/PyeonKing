@@ -27,11 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.presentation.designsystem.components.LoadingButton
-import com.hjw0623.core.presentation.designsystem.components.showToast
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.core.core_ui.designsystem.components.LoadingButton
+import com.hjw0623.core.core_ui.designsystem.components.showToast
+import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.core_ui.ui.ObserveAsEvents
+import com.hjw0623.core.core_ui.ui.rememberThrottledOnClick
 import com.hjw0623.core.util.mockdata.mockProduct
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector

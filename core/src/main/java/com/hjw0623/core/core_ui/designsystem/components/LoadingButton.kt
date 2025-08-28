@@ -1,4 +1,4 @@
-package com.hjw0623.core.presentation.designsystem.components
+package com.hjw0623.core.core_ui.designsystem.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 
 @Composable
 fun LoadingButton(

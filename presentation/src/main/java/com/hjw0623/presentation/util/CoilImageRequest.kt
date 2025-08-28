@@ -7,7 +7,7 @@ import coil3.request.crossfade
 import coil3.request.error
 import coil3.size.Size
 import com.hjw0623.core.R
-import com.hjw0623.core.presentation.ui.getFullImageUrl
+import com.hjw0623.core.core_ui.ui.getFullImageUrl
 import timber.log.Timber
 
 const val COIL_CALL_TAG = "COIL_TAG"

@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.core_domain.auth.validator.NicknameValidationState
-import com.hjw0623.core.presentation.designsystem.components.LoadingButton
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingTextField
-import com.hjw0623.core.presentation.designsystem.components.showToast
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.core.core_ui.designsystem.components.LoadingButton
+import com.hjw0623.core.core_ui.designsystem.components.PyeonKingButton
+import com.hjw0623.core.core_ui.designsystem.components.PyeonKingTextField
+import com.hjw0623.core.core_ui.designsystem.components.showToast
+import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.core_ui.ui.ObserveAsEvents
+import com.hjw0623.core.core_ui.ui.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel
 

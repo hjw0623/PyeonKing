@@ -1,4 +1,4 @@
-package com.hjw0623.core.presentation.designsystem.components
+package com.hjw0623.core.core_ui.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

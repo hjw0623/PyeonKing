@@ -35,7 +35,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.hjw0623.core.presentation.ui.getBrandQuery
+import com.hjw0623.core.core_ui.ui.getBrandQuery
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.product.ui.map.component.EmptyResultOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.ErrorOverlay

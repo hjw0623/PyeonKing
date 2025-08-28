@@ -1,4 +1,4 @@
-package com.hjw0623.core.presentation.designsystem.theme
+package com.hjw0623.core.core_ui.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -8,8 +8,8 @@ import androidx.navigation.NavBackStackEntry
 import com.hjw0623.core.constants.EmptyString
 import com.hjw0623.core.constants.ScreenRoutes
 import com.hjw0623.core.constants.TopBarTitle
-import com.hjw0623.core.presentation.designsystem.theme.backgroundLight
-import com.hjw0623.core.presentation.designsystem.theme.primaryLight
+import com.hjw0623.core.core_ui.designsystem.theme.backgroundLight
+import com.hjw0623.core.core_ui.designsystem.theme.primaryLight
 
 data class TopBarData(
     val title: String = EmptyString.EMPTY_STRING,
