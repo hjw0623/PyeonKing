@@ -1,7 +1,7 @@
 package com.hjw0623.data.di
 
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.di.ApplicationScope
+import com.hjw0623.core.core_andriod.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

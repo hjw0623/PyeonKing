@@ -1,4 +1,4 @@
-package com.hjw0623.core.di
+package com.hjw0623.core.core_andriod.di
 
 import kotlin.annotation.AnnotationRetention.RUNTIME
 
