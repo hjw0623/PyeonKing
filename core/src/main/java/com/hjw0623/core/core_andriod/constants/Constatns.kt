@@ -1,4 +1,4 @@
-package com.hjw0623.core.constants
+package com.hjw0623.core.core_andriod.constants
 
 import com.hjw0623.core.BuildConfig
 

@@ -9,9 +9,9 @@ import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavAr
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
 import com.hjw0623.core.core_domain.repository.ProductRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.constants.Error.BLANK_INPUT
-import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
-import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.core_andriod.constants.Error.BLANK_INPUT
+import com.hjw0623.core.core_andriod.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
+import com.hjw0623.core.core_andriod.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.home.ui.HomeScreenEvent
 import com.hjw0623.presentation.screen.home.ui.HomeScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

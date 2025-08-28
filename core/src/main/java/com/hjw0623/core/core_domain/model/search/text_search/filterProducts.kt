@@ -1,7 +1,7 @@
 package com.hjw0623.core.core_domain.model.search.text_search
 
-import com.hjw0623.core.constants.Brand
-import com.hjw0623.core.constants.Promotion
+import com.hjw0623.core.core_andriod.constants.Brand
+import com.hjw0623.core.core_andriod.constants.Promotion
 import com.hjw0623.core.core_domain.model.product.Product
 
 fun filterProducts(

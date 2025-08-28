@@ -10,7 +10,7 @@ import androidx.navigation.toRoute
 import com.hjw0623.core.core_domain.model.product.Product
 import com.hjw0623.core.core_domain.model.review.ReviewInfo
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.constants.NavArgs
+import com.hjw0623.core.core_andriod.constants.NavArgs
 import com.hjw0623.presentation.navigation.parcelableType
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot

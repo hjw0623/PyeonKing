@@ -6,7 +6,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.hjw0623.core.constants.Brand
+import com.hjw0623.core.core_andriod.constants.Brand
 import com.hjw0623.presentation.R
 import kotlin.math.roundToInt
 

@@ -1,9 +1,9 @@
 package com.hjw0623.core.core_ui.ui
 
 import androidx.compose.ui.graphics.Color
-import com.hjw0623.core.constants.Api.IMAGE_URL
-import com.hjw0623.core.constants.Brand
-import com.hjw0623.core.constants.Promotion
+import com.hjw0623.core.core_andriod.constants.Api.IMAGE_URL
+import com.hjw0623.core.core_andriod.constants.Brand
+import com.hjw0623.core.core_andriod.constants.Promotion
 import com.hjw0623.core.core_ui.designsystem.theme.Cu
 import com.hjw0623.core.core_ui.designsystem.theme.Emart24
 import com.hjw0623.core.core_ui.designsystem.theme.Gs25

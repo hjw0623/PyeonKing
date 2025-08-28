@@ -8,8 +8,8 @@ import com.hjw0623.core.core_domain.model.network.DataResourceResult
 import com.hjw0623.core.core_domain.model.request.ChangePasswordRequest
 import com.hjw0623.core.core_domain.repository.MyPageRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
-import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.core_andriod.constants.Error.UNCHANGED_NICKNAME
+import com.hjw0623.core.core_andriod.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenState
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent

@@ -1,6 +1,6 @@
 package com.hjw0623.data.model.mapper
 
-import com.hjw0623.core.constants.Promotion
+import com.hjw0623.core.core_andriod.constants.Promotion
 import com.hjw0623.core.core_domain.model.request.AuthRequest
 import com.hjw0623.core.core_domain.model.response.AuthResponse
 import com.hjw0623.core.core_domain.model.request.ChangeNicknameRequest
