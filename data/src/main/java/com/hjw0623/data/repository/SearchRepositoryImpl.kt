@@ -1,6 +1,6 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_network.network.DataResourceResult
 import com.hjw0623.core.core_domain.model.response.BaseResponse
 import com.hjw0623.core.core_domain.model.response.SearchItemResponse
 import com.hjw0623.core.core_domain.repository.SearchRepository

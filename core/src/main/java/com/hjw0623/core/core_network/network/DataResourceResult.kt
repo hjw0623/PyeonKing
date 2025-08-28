@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_domain.model.network
+package com.hjw0623.core.core_network.network
 
 sealed class DataResourceResult<out T> {
     data object DummyConstructor : DataResourceResult<Nothing>()
