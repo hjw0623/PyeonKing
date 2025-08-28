@@ -29,7 +29,7 @@ import com.hjw0623.core.core_ui.designsystem.components.PyeonKingButton
 import com.hjw0623.core.core_ui.designsystem.components.showToast
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.ui.ObserveAsEvents
-import com.hjw0623.core.util.mockdata.mockReviewHistoryList
+import com.hjw0623.core.core_andriod.util.mockdata.mockReviewHistoryList
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.review.review_history.ui.component.ReviewHistoryListItem
 import com.hjw0623.presentation.screen.review.viewmodel.ReviewHistoryViewModel

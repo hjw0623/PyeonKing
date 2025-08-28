@@ -32,7 +32,7 @@ import com.hjw0623.core.core_ui.designsystem.components.showToast
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.ui.ObserveAsEvents
 import com.hjw0623.core.core_ui.ui.rememberThrottledOnClick
-import com.hjw0623.core.util.mockdata.mockProduct
+import com.hjw0623.core.core_andriod.util.mockdata.mockProduct
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.review.review_write.ui.component.StarRatingSelector
 import com.hjw0623.presentation.screen.review.review_write.ui.component.WritingSection
