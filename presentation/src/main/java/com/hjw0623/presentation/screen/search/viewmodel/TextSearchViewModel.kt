@@ -2,15 +2,15 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.response.toProduct
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
-import com.hjw0623.core.business_logic.model.search.text_search.FilterType
-import com.hjw0623.core.business_logic.model.search.text_search.filterProducts
-import com.hjw0623.core.business_logic.repository.SearchRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.core_domain.model.response.toProduct
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
+import com.hjw0623.core.core_domain.model.search.text_search.FilterType
+import com.hjw0623.core.core_domain.model.search.text_search.filterProducts
+import com.hjw0623.core.core_domain.repository.SearchRepository
+import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenState

@@ -1,11 +1,11 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.request.ChangeNicknameRequest
-import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
-import com.hjw0623.core.business_logic.model.response.BaseResponse
-import com.hjw0623.core.business_logic.model.response.ChangePasswordResponse
-import com.hjw0623.core.business_logic.repository.MyPageRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.request.ChangeNicknameRequest
+import com.hjw0623.core.core_domain.model.request.ChangePasswordRequest
+import com.hjw0623.core.core_domain.model.response.BaseResponse
+import com.hjw0623.core.core_domain.model.response.ChangePasswordResponse
+import com.hjw0623.core.core_domain.repository.MyPageRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
 import com.hjw0623.data.service.PyeonKingApiService

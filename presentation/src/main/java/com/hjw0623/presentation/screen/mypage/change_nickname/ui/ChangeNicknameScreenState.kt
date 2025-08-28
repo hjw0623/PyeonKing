@@ -1,6 +1,6 @@
 package com.hjw0623.presentation.screen.mypage.change_nickname.ui
 
-import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
+import com.hjw0623.core.core_domain.auth.validator.NicknameValidationState
 
 data class ChangeNicknameScreenState(
     val currentNickname: String = "",

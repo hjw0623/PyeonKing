@@ -2,11 +2,11 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.request.AuthRequest
-import com.hjw0623.core.business_logic.repository.AuthRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.core_domain.auth.validator.UserDataValidator
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.request.AuthRequest
+import com.hjw0623.core.core_domain.repository.AuthRepository
+import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenState

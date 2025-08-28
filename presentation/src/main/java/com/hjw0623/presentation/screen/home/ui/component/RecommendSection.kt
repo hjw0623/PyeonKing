@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.core_domain.model.product.Product
 import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.util.mockdata.mockProductList
 import com.hjw0623.presentation.R

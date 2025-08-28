@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.screen.search.text_search.ui
 
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.search.text_search.FilterType
+import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.core_domain.model.search.text_search.FilterType
 
 data class TextSearchScreenState(
     val isLoading: Boolean = false,

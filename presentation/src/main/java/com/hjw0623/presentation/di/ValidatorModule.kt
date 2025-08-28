@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.di
 
-import com.hjw0623.core.business_logic.auth.validator.EmailPatternValidator
-import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
+import com.hjw0623.core.core_domain.auth.validator.EmailPatternValidator
+import com.hjw0623.core.core_domain.auth.validator.UserDataValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

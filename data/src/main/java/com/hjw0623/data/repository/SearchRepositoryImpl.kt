@@ -1,9 +1,9 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.response.BaseResponse
-import com.hjw0623.core.business_logic.model.response.SearchItemResponse
-import com.hjw0623.core.business_logic.repository.SearchRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.response.BaseResponse
+import com.hjw0623.core.core_domain.model.response.SearchItemResponse
+import com.hjw0623.core.core_domain.repository.SearchRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow

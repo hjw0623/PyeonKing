@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.di
 
 import android.content.Context
-import com.hjw0623.core.business_logic.location.LocationObserver
+import com.hjw0623.core.core_domain.location.LocationObserver
 import com.hjw0623.presentation.location.AndroidLocationObserver
 import dagger.Module
 import dagger.Provides

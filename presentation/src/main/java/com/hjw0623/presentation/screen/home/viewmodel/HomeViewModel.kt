@@ -2,13 +2,13 @@ package com.hjw0623.presentation.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.response.toProduct
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
-import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.core_domain.model.response.toProduct
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
+import com.hjw0623.core.core_domain.repository.ProductRepository
+import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.BLANK_INPUT
 import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR

@@ -2,12 +2,12 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.product.ProductDetailTab
-import com.hjw0623.core.business_logic.model.response.toReviewItem
-import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.core_domain.model.product.ProductDetailTab
+import com.hjw0623.core.core_domain.model.response.toReviewItem
+import com.hjw0623.core.core_domain.repository.ProductRepository
+import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState

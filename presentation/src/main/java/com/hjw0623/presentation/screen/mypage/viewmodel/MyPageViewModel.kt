@@ -2,12 +2,12 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.auth.validator.NicknameValidationState
-import com.hjw0623.core.business_logic.auth.validator.UserDataValidator
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
-import com.hjw0623.core.business_logic.repository.MyPageRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.core_domain.auth.validator.NicknameValidationState
+import com.hjw0623.core.core_domain.auth.validator.UserDataValidator
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.request.ChangePasswordRequest
+import com.hjw0623.core.core_domain.repository.MyPageRepository
+import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
 import com.hjw0623.core.constants.Error.UNCHANGED_NICKNAME
 import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent

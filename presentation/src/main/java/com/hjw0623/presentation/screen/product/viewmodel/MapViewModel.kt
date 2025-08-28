@@ -2,9 +2,9 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.location.LocationObserver
-import com.hjw0623.core.business_logic.model.response.PoiInfo
-import com.hjw0623.core.business_logic.repository.KakaoRepository
+import com.hjw0623.core.core_domain.location.LocationObserver
+import com.hjw0623.core.core_domain.model.response.PoiInfo
+import com.hjw0623.core.core_domain.repository.KakaoRepository
 import com.hjw0623.core.constants.Error
 import com.hjw0623.core.presentation.ui.getBrandQuery
 import com.hjw0623.presentation.screen.product.ui.map.MapTabState

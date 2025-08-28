@@ -11,8 +11,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.hjw0623.core.business_logic.location.GeoPoint
-import com.hjw0623.core.business_logic.location.LocationObserver
+import com.hjw0623.core.core_domain.location.GeoPoint
+import com.hjw0623.core.core_domain.location.LocationObserver
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

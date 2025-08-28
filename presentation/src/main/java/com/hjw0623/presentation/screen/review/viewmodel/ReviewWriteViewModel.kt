@@ -2,10 +2,10 @@ package com.hjw0623.presentation.screen.review.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.request.ReviewPostBody
-import com.hjw0623.core.business_logic.repository.ReviewRepository
+import com.hjw0623.core.core_domain.model.network.DataResourceResult
+import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.core_domain.model.request.ReviewPostBody
+import com.hjw0623.core.core_domain.repository.ReviewRepository
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenEvent
 import com.hjw0623.presentation.screen.review.review_write.ui.ReviewWriteScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

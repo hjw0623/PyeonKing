@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.camera.view.LifecycleCameraController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
 import com.hjw0623.core.constants.Error
 import com.hjw0623.core.util.takePictureAndSave
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
