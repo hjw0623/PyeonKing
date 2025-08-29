@@ -1,8 +1,8 @@
 package com.hjw0623.presentation.screen.product.ui
 
-import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_domain.model.product.ProductDetailTab
-import com.hjw0623.core.core_domain.model.product.ReviewItem
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.product.ProductDetailTab
+import com.hjw0623.core.domain.model.product.ReviewItem
 
 data class ProductDetailScreenState(
     val isSummaryLoading: Boolean = false,

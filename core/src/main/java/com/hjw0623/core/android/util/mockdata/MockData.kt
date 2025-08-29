@@ -1,9 +1,9 @@
 package com.hjw0623.core.android.util.mockdata
 
-import com.hjw0623.core.core_domain.model.mypage.User
-import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_domain.model.product.ReviewItem
-import com.hjw0623.core.core_domain.model.review.ReviewInfo
+import com.hjw0623.core.domain.model.mypage.User
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.product.ReviewItem
+import com.hjw0623.core.domain.model.review.ReviewInfo
 import java.util.UUID
 
 val mockProduct = Product(

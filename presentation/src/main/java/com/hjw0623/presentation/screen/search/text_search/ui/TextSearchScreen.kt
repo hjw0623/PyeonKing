@@ -28,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.core_domain.model.search.text_search.FilterType
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.text_search.FilterType
 import com.hjw0623.core.core_ui.designsystem.components.showToast
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.util.ObserveAsEvents

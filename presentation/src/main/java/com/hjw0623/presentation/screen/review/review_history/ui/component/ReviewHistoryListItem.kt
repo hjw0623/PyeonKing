@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.hjw0623.core.core_domain.model.review.ReviewInfo
+import com.hjw0623.core.domain.model.review.ReviewInfo
 import com.hjw0623.core.core_ui.designsystem.components.PyeonKingButton
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.util.getFullImageUrl

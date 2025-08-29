@@ -4,7 +4,7 @@ import com.hjw0623.core.core_network.network.DataResourceResult
 import com.hjw0623.core.core_network.request.AuthRequest
 import com.hjw0623.core.core_network.response.AuthResponse
 import com.hjw0623.core.core_network.response.BaseResponse
-import com.hjw0623.core.core_domain.repository.AuthRepository
+import com.hjw0623.core.domain.repository.AuthRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
 import com.hjw0623.data.service.PyeonKingApiService

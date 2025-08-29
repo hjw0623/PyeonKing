@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_network.network.DataResourceResult
 import com.hjw0623.core.core_network.request.UpdateReviewBody
-import com.hjw0623.core.core_domain.model.review.ReviewInfo
-import com.hjw0623.core.core_domain.repository.ReviewRepository
+import com.hjw0623.core.domain.model.review.ReviewInfo
+import com.hjw0623.core.domain.repository.ReviewRepository
 import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenEvent
 import com.hjw0623.presentation.screen.review.review_edit.ui.ReviewEditScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

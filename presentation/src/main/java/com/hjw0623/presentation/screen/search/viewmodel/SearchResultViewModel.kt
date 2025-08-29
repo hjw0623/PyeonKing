@@ -3,11 +3,11 @@ package com.hjw0623.presentation.screen.search.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.product.Product
+import com.hjw0623.core.domain.model.product.Product
 import com.hjw0623.core.core_network.response.toProduct
-import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
-import com.hjw0623.core.core_domain.repository.SearchRepository
+import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.search_result.SearchResultSource
+import com.hjw0623.core.domain.repository.SearchRepository
 import com.hjw0623.core.android.constants.Error
 import com.hjw0623.core.android.constants.UiText
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent

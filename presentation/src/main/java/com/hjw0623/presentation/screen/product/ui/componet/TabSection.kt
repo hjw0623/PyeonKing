@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.hjw0623.core.core_domain.model.product.ProductDetailTab
+import com.hjw0623.core.domain.model.product.ProductDetailTab
 import com.hjw0623.presentation.R
 
 

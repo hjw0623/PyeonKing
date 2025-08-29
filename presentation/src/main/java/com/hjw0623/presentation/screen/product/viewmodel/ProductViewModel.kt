@@ -3,11 +3,11 @@ package com.hjw0623.presentation.screen.product.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_domain.model.product.ProductDetailTab
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.product.ProductDetailTab
 import com.hjw0623.core.core_network.response.toReviewItem
-import com.hjw0623.core.core_domain.repository.ProductRepository
-import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
+import com.hjw0623.core.domain.repository.ProductRepository
+import com.hjw0623.core.domain.repository.UserDataStoreRepository
 import com.hjw0623.core.android.constants.Error
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState

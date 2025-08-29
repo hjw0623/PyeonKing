@@ -6,7 +6,7 @@ import com.hjw0623.core.core_network.response.Item
 import com.hjw0623.core.core_network.response.ReviewPage
 import com.hjw0623.core.core_network.response.ReviewSummaryResponse
 import com.hjw0623.core.core_network.response.SearchItemResponse
-import com.hjw0623.core.core_domain.repository.ProductRepository
+import com.hjw0623.core.domain.repository.ProductRepository
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.service.PyeonKingApiService
 import com.hjw0623.data.util.safeApiFlow

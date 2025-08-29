@@ -1,7 +1,7 @@
 package com.hjw0623.core.core_network.response
 
-import com.hjw0623.core.core_domain.model.product.ReviewItem
-import com.hjw0623.core.core_domain.model.review.ReviewInfo
+import com.hjw0623.core.domain.model.product.ReviewItem
+import com.hjw0623.core.domain.model.review.ReviewInfo
 import com.hjw0623.core.core_ui.util.getFullImageUrl
 
 data class ReviewPage(
