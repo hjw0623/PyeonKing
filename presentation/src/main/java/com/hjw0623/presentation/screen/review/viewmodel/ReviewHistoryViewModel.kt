@@ -2,8 +2,8 @@ package com.hjw0623.presentation.screen.review.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.core_network.network.DataResourceResult
-import com.hjw0623.core.core_network.response.toReviewInfo
+import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.response.toReviewInfo
 import com.hjw0623.core.domain.model.review.ReviewInfo
 import com.hjw0623.core.domain.repository.ReviewRepository
 import com.hjw0623.presentation.screen.review.review_history.ui.ReviewHistoryScreenEvent

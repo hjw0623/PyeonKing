@@ -1,6 +1,6 @@
 package com.hjw0623.data.model.mapper
 
-import com.hjw0623.core.core_network.response.PoiInfo
+import com.hjw0623.core.network.response.PoiInfo
 import com.hjw0623.data.model.Document
 
 fun Document.toPoiInfoModel(): PoiInfo {

@@ -1,6 +1,6 @@
 package com.hjw0623.core.domain.repository
 
-import com.hjw0623.core.core_network.response.PoiInfo
+import com.hjw0623.core.network.response.PoiInfo
 
 interface KakaoRepository {
     suspend fun searchKeyword(

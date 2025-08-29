@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_network.response
+package com.hjw0623.core.network.response
 
 data class AuthResponse(
     val accessToken: String,

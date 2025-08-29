@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.screen.product.ui.map
 
 import com.google.android.gms.maps.model.LatLng
-import com.hjw0623.core.core_network.response.PoiInfo
+import com.hjw0623.core.network.response.PoiInfo
 
 data class MapTabState(
     val currentLocation: LatLng? = null,
