@@ -1,6 +1,4 @@
-package com.hjw0623.core.domain.auth.validator
-
-import android.util.Patterns
+package com.hjw0623.core.android.auth.validator
 
 object EmailPatternValidator: PatternValidator {
     override fun matches(value: String): Boolean {

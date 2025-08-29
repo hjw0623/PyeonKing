@@ -1,4 +1,4 @@
-package com.hjw0623.core.network.network
+package com.hjw0623.core.network.common
 
 sealed class DataResourceResult<out T> {
     data object DummyConstructor : DataResourceResult<Nothing>()

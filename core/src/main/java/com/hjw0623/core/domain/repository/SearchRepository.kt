@@ -2,7 +2,7 @@ package com.hjw0623.core.domain.repository
 
 import com.hjw0623.core.network.response.BaseResponse
 import com.hjw0623.core.network.response.SearchItemResponse
-import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.common.DataResourceResult
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 

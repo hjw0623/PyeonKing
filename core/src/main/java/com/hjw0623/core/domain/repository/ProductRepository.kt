@@ -5,7 +5,7 @@ import com.hjw0623.core.network.response.Item
 import com.hjw0623.core.network.response.ReviewPage
 import com.hjw0623.core.network.response.ReviewSummaryResponse
 import com.hjw0623.core.network.response.SearchItemResponse
-import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.common.DataResourceResult
 import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {

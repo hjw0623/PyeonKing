@@ -1,4 +1,4 @@
-package com.hjw0623.core.domain.auth.validator
+package com.hjw0623.core.domain.auth.model
 
 data class PasswordValidationState(
     val hasMinLength: Boolean = false,

@@ -1,4 +1,4 @@
-package com.hjw0623.core.network.response
+package com.hjw0623.core.network.response.location
 
 data class PoiInfo(
     val id: String,

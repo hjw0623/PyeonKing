@@ -2,7 +2,7 @@ package com.hjw0623.presentation.screen.review.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.common.DataResourceResult
 import com.hjw0623.core.domain.model.product.Product
 import com.hjw0623.core.network.request.ReviewPostBody
 import com.hjw0623.core.domain.repository.ReviewRepository

@@ -5,7 +5,7 @@ import com.hjw0623.core.network.response.ReviewPage
 import com.hjw0623.core.network.request.ReviewPostBody
 import com.hjw0623.core.network.response.ReviewResponse
 import com.hjw0623.core.network.request.UpdateReviewBody
-import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.common.DataResourceResult
 import kotlinx.coroutines.flow.Flow
 
 interface ReviewRepository {

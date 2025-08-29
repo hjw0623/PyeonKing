@@ -1,6 +1,6 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.network.network.DataResourceResult
+import com.hjw0623.core.network.common.DataResourceResult
 import com.hjw0623.core.network.request.ChangeNicknameRequest
 import com.hjw0623.core.network.request.ChangePasswordRequest
 import com.hjw0623.core.network.response.BaseResponse
