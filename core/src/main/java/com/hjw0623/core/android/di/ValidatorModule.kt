@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.di
+package com.hjw0623.core.android.di
 
 import com.hjw0623.core.domain.auth.validator.EmailPatternValidator
 import com.hjw0623.core.domain.auth.validator.UserDataValidator
