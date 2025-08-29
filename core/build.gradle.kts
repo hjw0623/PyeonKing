@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.gradle)
 }
 
 android {
@@ -78,6 +80,7 @@ dependencies {
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
 
-    //javax
-    implementation(libs.javax.inject)
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
