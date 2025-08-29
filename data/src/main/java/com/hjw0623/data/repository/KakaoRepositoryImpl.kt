@@ -1,7 +1,7 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.network.response.PoiInfo
 import com.hjw0623.core.domain.repository.KakaoRepository
+import com.hjw0623.core.network.response.location.PoiInfo
 import com.hjw0623.data.di.KakaoAuthHeader
 import com.hjw0623.data.model.mapper.toPoiInfoModelList
 import com.hjw0623.data.service.KakaoApiService

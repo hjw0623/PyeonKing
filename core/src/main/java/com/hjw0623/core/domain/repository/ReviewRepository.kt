@@ -1,11 +1,11 @@
 package com.hjw0623.core.domain.repository
 
-import com.hjw0623.core.network.response.BaseResponse
-import com.hjw0623.core.network.response.ReviewPage
-import com.hjw0623.core.network.request.ReviewPostBody
-import com.hjw0623.core.network.response.ReviewResponse
-import com.hjw0623.core.network.request.UpdateReviewBody
+import com.hjw0623.core.network.common.BaseResponse
 import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.request.review.ReviewPostBody
+import com.hjw0623.core.network.request.review.UpdateReviewBody
+import com.hjw0623.core.network.response.ReviewPage
+import com.hjw0623.core.network.response.ReviewResponse
 import kotlinx.coroutines.flow.Flow
 
 interface ReviewRepository {

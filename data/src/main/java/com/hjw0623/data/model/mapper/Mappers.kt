@@ -2,18 +2,18 @@ package com.hjw0623.data.model.mapper
 
 import com.hjw0623.core.android.constants.Promotion
 import com.hjw0623.core.network.request.AuthRequest
-import com.hjw0623.core.network.response.AuthResponse
 import com.hjw0623.core.network.request.ChangeNicknameRequest
 import com.hjw0623.core.network.request.ChangePasswordRequest
-import com.hjw0623.core.network.response.ChangePasswordResponse
+import com.hjw0623.core.network.request.review.ReviewPostBody
+import com.hjw0623.core.network.request.review.UpdateReviewBody
 import com.hjw0623.core.network.response.Item
 import com.hjw0623.core.network.response.ReviewPage
-import com.hjw0623.core.network.request.ReviewPostBody
 import com.hjw0623.core.network.response.ReviewProduct
 import com.hjw0623.core.network.response.ReviewResponse
 import com.hjw0623.core.network.response.ReviewSummaryResponse
-import com.hjw0623.core.network.response.SearchItemResponse
-import com.hjw0623.core.network.request.UpdateReviewBody
+import com.hjw0623.core.network.response.auth.AuthResponse
+import com.hjw0623.core.network.response.auth.ChangePasswordResponse
+import com.hjw0623.core.network.response.search.SearchItemResponse
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.ChangeNicknameRequestDto

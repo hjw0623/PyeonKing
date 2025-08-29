@@ -1,6 +1,6 @@
 package com.hjw0623.presentation.screen.mypage.change_password.ui
 
-import com.hjw0623.core.domain.auth.validator.PasswordValidationState
+import com.hjw0623.core.domain.auth.model.PasswordValidationState
 
 data class ChangePasswordScreenState(
     val email: String = "",

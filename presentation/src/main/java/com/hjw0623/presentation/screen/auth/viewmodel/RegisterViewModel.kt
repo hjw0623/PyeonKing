@@ -2,13 +2,13 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.auth.validator.NicknameValidationState
-import com.hjw0623.core.domain.auth.validator.UserDataValidator
-import com.hjw0623.core.network.common.DataResourceResult
-import com.hjw0623.core.network.request.AuthRequest
-import com.hjw0623.core.domain.repository.AuthRepository
 import com.hjw0623.core.android.constants.Error.DUPLICATED_NICKNAME
 import com.hjw0623.core.android.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.domain.auth.model.NicknameValidationState
+import com.hjw0623.core.domain.auth.validator.UserDataValidator
+import com.hjw0623.core.domain.repository.AuthRepository
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.request.AuthRequest
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenEvent
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

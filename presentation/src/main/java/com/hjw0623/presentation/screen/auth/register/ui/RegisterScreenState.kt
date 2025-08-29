@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.screen.auth.register.ui
 
-import com.hjw0623.core.domain.auth.validator.NicknameValidationState
-import com.hjw0623.core.domain.auth.validator.PasswordValidationState
+import com.hjw0623.core.domain.auth.model.NicknameValidationState
+import com.hjw0623.core.domain.auth.model.PasswordValidationState
 
 data class RegisterScreenState(
     val email: String = "",

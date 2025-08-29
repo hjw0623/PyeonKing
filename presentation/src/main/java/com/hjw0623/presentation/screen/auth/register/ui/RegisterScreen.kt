@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.domain.auth.validator.EmailPatternValidator
-import com.hjw0623.core.domain.auth.validator.NicknameValidationState
+import com.hjw0623.core.android.auth.validator.EmailPatternValidator
+import com.hjw0623.core.domain.auth.model.NicknameValidationState
 import com.hjw0623.core.domain.auth.validator.UserDataValidator
 import com.hjw0623.core.ui.designsystem.components.LoadingButton
 import com.hjw0623.core.ui.designsystem.components.PyeonKingButton

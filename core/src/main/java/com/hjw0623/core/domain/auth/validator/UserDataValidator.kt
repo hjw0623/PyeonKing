@@ -1,5 +1,7 @@
 package com.hjw0623.core.domain.auth.validator
 
+import com.hjw0623.core.domain.auth.model.PasswordValidationState
+
 class UserDataValidator(
     private val patternValidator: PatternValidator
 ) {
