@@ -8,8 +8,8 @@ import com.hjw0623.core.core_network.response.toProduct
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.core_domain.model.search.search_result.SearchResultSource
 import com.hjw0623.core.core_domain.repository.SearchRepository
-import com.hjw0623.core.core_andriod.constants.Error
-import com.hjw0623.core.core_andriod.constants.UiText
+import com.hjw0623.core.android.constants.Error
+import com.hjw0623.core.android.constants.UiText
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -5,9 +5,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavBackStackEntry
-import com.hjw0623.core.core_andriod.constants.EmptyString
-import com.hjw0623.core.core_andriod.constants.ScreenRoutes
-import com.hjw0623.core.core_andriod.constants.TopBarTitle
+import com.hjw0623.core.android.constants.EmptyString
+import com.hjw0623.core.android.constants.ScreenRoutes
+import com.hjw0623.core.android.constants.TopBarTitle
 import com.hjw0623.core.core_ui.designsystem.theme.backgroundLight
 import com.hjw0623.core.core_ui.designsystem.theme.primaryLight
 

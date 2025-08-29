@@ -1,6 +1,6 @@
 package com.hjw0623.pyeonking.di
 
-import com.hjw0623.core.core_andriod.di.IoDispatcher
+import com.hjw0623.core.android.di.IoDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

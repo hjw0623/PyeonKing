@@ -35,7 +35,7 @@ import com.hjw0623.core.core_ui.designsystem.components.showToast
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.util.ObserveAsEvents
 import com.hjw0623.core.core_ui.util.rememberThrottledOnClick
-import com.hjw0623.core.core_andriod.util.mockdata.mockProductList
+import com.hjw0623.core.android.util.mockdata.mockProductList
 import com.hjw0623.presentation.screen.search.text_search.ui.component.SearchTextField
 import com.hjw0623.presentation.screen.search.text_search.ui.component.focused.SearchHistorySection
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductListSection

@@ -1,6 +1,6 @@
 package com.hjw0623.data.di
 
-import com.hjw0623.core.core_andriod.constants.Api
+import com.hjw0623.core.android.constants.Api
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

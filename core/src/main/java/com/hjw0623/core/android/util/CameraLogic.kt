@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_andriod.util
+package com.hjw0623.core.android.util
 
 import android.content.Context
 import android.os.Environment

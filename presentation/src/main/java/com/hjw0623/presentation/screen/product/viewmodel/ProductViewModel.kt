@@ -8,7 +8,7 @@ import com.hjw0623.core.core_domain.model.product.ProductDetailTab
 import com.hjw0623.core.core_network.response.toReviewItem
 import com.hjw0623.core.core_domain.repository.ProductRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.core_andriod.constants.Error
+import com.hjw0623.core.android.constants.Error
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

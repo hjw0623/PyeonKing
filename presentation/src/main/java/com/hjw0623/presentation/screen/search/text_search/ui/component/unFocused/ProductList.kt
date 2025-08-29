@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hjw0623.core.core_domain.model.product.Product
-import com.hjw0623.core.core_andriod.util.mockdata.mockProductList
+import com.hjw0623.core.android.util.mockdata.mockProductList
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 
 @Composable

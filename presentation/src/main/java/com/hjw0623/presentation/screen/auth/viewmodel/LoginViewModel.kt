@@ -7,7 +7,7 @@ import com.hjw0623.core.core_network.network.DataResourceResult
 import com.hjw0623.core.core_network.request.AuthRequest
 import com.hjw0623.core.core_domain.repository.AuthRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.core_andriod.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.android.constants.Error.UNKNOWN_ERROR
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

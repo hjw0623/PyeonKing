@@ -11,7 +11,7 @@ import com.hjw0623.core.core_domain.model.search.text_search.FilterType
 import com.hjw0623.core.core_domain.model.search.text_search.filterProducts
 import com.hjw0623.core.core_domain.repository.SearchRepository
 import com.hjw0623.core.core_domain.repository.UserDataStoreRepository
-import com.hjw0623.core.core_andriod.constants.Error
+import com.hjw0623.core.android.constants.Error
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

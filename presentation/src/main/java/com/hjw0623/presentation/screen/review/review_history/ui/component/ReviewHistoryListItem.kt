@@ -28,7 +28,7 @@ import com.hjw0623.core.core_domain.model.review.ReviewInfo
 import com.hjw0623.core.core_ui.designsystem.components.PyeonKingButton
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.util.getFullImageUrl
-import com.hjw0623.core.core_andriod.util.mockdata.mockReviewInfo
+import com.hjw0623.core.android.util.mockdata.mockReviewInfo
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
 

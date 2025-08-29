@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_andriod.util.mockdata
+package com.hjw0623.core.android.util.mockdata
 
 import com.hjw0623.core.core_domain.model.mypage.User
 import com.hjw0623.core.core_domain.model.product.Product

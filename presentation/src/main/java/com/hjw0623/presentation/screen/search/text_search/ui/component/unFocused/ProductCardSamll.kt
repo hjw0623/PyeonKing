@@ -30,7 +30,7 @@ import com.hjw0623.core.core_domain.model.product.Product
 import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.core.core_ui.util.getBrandColor
 import com.hjw0623.core.core_ui.util.getFullImageUrl
-import com.hjw0623.core.core_andriod.util.mockdata.mockProduct
+import com.hjw0623.core.android.util.mockdata.mockProduct
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.util.CoilImageRequest
 

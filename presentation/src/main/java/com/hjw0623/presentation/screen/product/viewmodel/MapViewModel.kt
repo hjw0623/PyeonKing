@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hjw0623.core.core_domain.location.LocationObserver
 import com.hjw0623.core.core_network.response.PoiInfo
 import com.hjw0623.core.core_domain.repository.KakaoRepository
-import com.hjw0623.core.core_andriod.constants.Error
+import com.hjw0623.core.android.constants.Error
 import com.hjw0623.core.core_ui.util.getBrandQuery
 import com.hjw0623.presentation.screen.product.ui.map.MapTabState
 import dagger.hilt.android.lifecycle.HiltViewModel
