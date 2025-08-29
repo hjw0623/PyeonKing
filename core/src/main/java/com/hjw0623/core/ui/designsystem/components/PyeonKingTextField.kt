@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_ui.designsystem.components
+package com.hjw0623.core.ui.designsystem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,7 +39,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce

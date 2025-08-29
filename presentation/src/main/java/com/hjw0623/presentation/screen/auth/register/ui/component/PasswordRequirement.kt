@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hjw0623.core.core_ui.designsystem.theme.CheckIcon
-import com.hjw0623.core.core_ui.designsystem.theme.CrossIcon
+import com.hjw0623.core.ui.designsystem.theme.CheckIcon
+import com.hjw0623.core.ui.designsystem.theme.CrossIcon
 
 @Composable
 fun PasswordRequirement(

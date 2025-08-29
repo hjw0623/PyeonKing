@@ -6,7 +6,7 @@ import com.hjw0623.core.domain.location.LocationObserver
 import com.hjw0623.core.core_network.response.PoiInfo
 import com.hjw0623.core.domain.repository.KakaoRepository
 import com.hjw0623.core.android.constants.Error
-import com.hjw0623.core.core_ui.util.getBrandQuery
+import com.hjw0623.core.ui.util.getBrandQuery
 import com.hjw0623.presentation.screen.product.ui.map.MapTabState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,7 +2,7 @@ package com.hjw0623.core.core_network.response
 
 import com.hjw0623.core.domain.model.product.ReviewItem
 import com.hjw0623.core.domain.model.review.ReviewInfo
-import com.hjw0623.core.core_ui.util.getFullImageUrl
+import com.hjw0623.core.ui.util.getFullImageUrl
 
 data class ReviewPage(
     val content: List<ReviewResponse>,

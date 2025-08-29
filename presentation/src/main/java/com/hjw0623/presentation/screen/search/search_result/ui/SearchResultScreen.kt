@@ -26,10 +26,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hjw0623.core.domain.model.product.Product
 import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
 import com.hjw0623.core.domain.model.search.search_result.SearchResultSource
-import com.hjw0623.core.core_ui.designsystem.components.showToast
-import com.hjw0623.core.core_ui.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.core_ui.util.ObserveAsEvents
-import com.hjw0623.core.core_ui.util.rememberThrottledOnClick
+import com.hjw0623.core.ui.designsystem.components.showToast
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.ui.util.ObserveAsEvents
+import com.hjw0623.core.ui.util.rememberThrottledOnClick
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.search.search_result.ui.component.NoSearchResult
 import com.hjw0623.presentation.screen.search.text_search.ui.component.unFocused.ProductCardSmall

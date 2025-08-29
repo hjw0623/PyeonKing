@@ -1,4 +1,4 @@
-package com.hjw0623.core.core_ui.designsystem.components
+package com.hjw0623.core.ui.designsystem.components
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
