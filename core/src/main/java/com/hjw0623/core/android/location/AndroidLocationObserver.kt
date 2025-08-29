@@ -1,21 +1,4 @@
-package com.hjw0623.presentation.location
-
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Looper
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.hjw0623.core.domain.location.GeoPoint
-import com.hjw0623.core.domain.location.LocationObserver
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+package com.hjw0623.core.android.location
 
 class AndroidLocationObserver(
     private val context: Context
