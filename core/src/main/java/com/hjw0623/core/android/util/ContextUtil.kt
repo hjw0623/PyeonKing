@@ -1,4 +1,4 @@
-package com.hjw0623.presentation.util
+package com.hjw0623.core.android.util
 
 import android.app.Activity
 import android.content.Context
