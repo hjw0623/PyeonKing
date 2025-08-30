@@ -1,4 +1,4 @@
-package com.hjw0623.core.network.response
+package com.hjw0623.core.network.response.search
 
 import com.hjw0623.core.domain.model.product.Product
 import com.hjw0623.core.ui.util.changePromotionName

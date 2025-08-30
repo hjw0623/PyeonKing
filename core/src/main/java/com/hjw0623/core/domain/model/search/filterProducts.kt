@@ -1,7 +1,7 @@
-package com.hjw0623.core.domain.model.search.text_search
+package com.hjw0623.core.domain.model.search
 
-import com.hjw0623.core.android.constants.Brand
-import com.hjw0623.core.android.constants.Promotion
+import com.hjw0623.core.constants.brand.Brand
+import com.hjw0623.core.constants.promotion.PromotionConstants
 import com.hjw0623.core.domain.model.product.Product
 
 fun filterProducts(
@@ -19,8 +19,8 @@ fun filterProducts(
             .ifEmpty { null }
 
         val promotionMatch = listOf(
-            FilterType.ONE_PLUS_ONE to Promotion.ONE_PLUS_ONE,
-            FilterType.TWO_PLUS_ONE to Promotion.TWO_PLUS_ONE
+            FilterType.ONE_PLUS_ONE to PromotionConstants.ONE_PLUS_ONE,
+            FilterType.TWO_PLUS_ONE to PromotionConstants.TWO_PLUS_ONE
         ).filter { filters[it.first] == true }
             .map { it.second }
             .ifEmpty { null }

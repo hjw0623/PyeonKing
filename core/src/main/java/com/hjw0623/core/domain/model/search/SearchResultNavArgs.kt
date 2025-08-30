@@ -1,4 +1,4 @@
-package com.hjw0623.core.domain.model.search.search_result
+package com.hjw0623.core.domain.model.search
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

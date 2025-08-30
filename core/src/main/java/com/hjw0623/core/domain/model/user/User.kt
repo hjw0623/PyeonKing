@@ -1,4 +1,4 @@
-package com.hjw0623.core.domain.model.mypage
+package com.hjw0623.core.domain.model.user
 
 private const val EMPTY = ""
 

@@ -1,4 +1,4 @@
-package com.hjw0623.core.network.request
+package com.hjw0623.core.network.request.auth
 
 data class AuthRequest(
     val email: String,
