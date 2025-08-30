@@ -1,16 +1,16 @@
 package com.hjw0623.data.model.mapper
 
-import com.hjw0623.core.android.constants.Promotion
-import com.hjw0623.core.network.request.AuthRequest
-import com.hjw0623.core.network.request.ChangeNicknameRequest
-import com.hjw0623.core.network.request.ChangePasswordRequest
+import com.hjw0623.core.constants.promotion.PromotionConstants
+import com.hjw0623.core.network.request.auth.AuthRequest
+import com.hjw0623.core.network.request.auth.ChangeNicknameRequest
+import com.hjw0623.core.network.request.auth.ChangePasswordRequest
 import com.hjw0623.core.network.request.review.ReviewPostBody
 import com.hjw0623.core.network.request.review.UpdateReviewBody
-import com.hjw0623.core.network.response.Item
-import com.hjw0623.core.network.response.ReviewPage
-import com.hjw0623.core.network.response.ReviewProduct
-import com.hjw0623.core.network.response.ReviewResponse
-import com.hjw0623.core.network.response.ReviewSummaryResponse
+import com.hjw0623.core.network.response.search.Item
+import com.hjw0623.core.network.response.review.ReviewPage
+import com.hjw0623.core.network.response.review.ReviewProduct
+import com.hjw0623.core.network.response.review.ReviewResponse
+import com.hjw0623.core.network.response.review.ReviewSummaryResponse
 import com.hjw0623.core.network.response.auth.AuthResponse
 import com.hjw0623.core.network.response.auth.ChangePasswordResponse
 import com.hjw0623.core.network.response.search.SearchItemResponse
@@ -46,7 +46,7 @@ fun AuthRequest.toDto(): AuthRequestDto {
 }
 
 fun ItemDto.toDomain(): Item {
-    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE_RESPONSE) {
+    val discountedUnitPrice = if (this.promotion == PromotionConstants.ONE_PLUS_ONE_RESPONSE) {
         this.pricePerGroup / 2
     } else {
         this.pricePerGroup / 3

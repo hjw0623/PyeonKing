@@ -3,9 +3,9 @@ package com.hjw0623.data.repository
 import com.hjw0623.core.domain.repository.ProductRepository
 import com.hjw0623.core.network.common.BaseResponse
 import com.hjw0623.core.network.common.DataResourceResult
-import com.hjw0623.core.network.response.Item
-import com.hjw0623.core.network.response.ReviewPage
-import com.hjw0623.core.network.response.ReviewSummaryResponse
+import com.hjw0623.core.network.response.search.Item
+import com.hjw0623.core.network.response.review.ReviewPage
+import com.hjw0623.core.network.response.review.ReviewSummaryResponse
 import com.hjw0623.core.network.response.search.SearchItemResponse
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.service.PyeonKingApiService

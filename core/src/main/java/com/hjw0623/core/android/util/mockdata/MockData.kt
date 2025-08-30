@@ -1,6 +1,6 @@
 package com.hjw0623.core.android.util.mockdata
 
-import com.hjw0623.core.domain.model.mypage.User
+import com.hjw0623.core.domain.model.user.User
 import com.hjw0623.core.domain.model.product.Product
 import com.hjw0623.core.domain.model.product.ReviewItem
 import com.hjw0623.core.domain.model.review.ReviewInfo

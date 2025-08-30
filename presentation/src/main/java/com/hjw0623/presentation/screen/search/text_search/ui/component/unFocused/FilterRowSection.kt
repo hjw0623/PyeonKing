@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.hjw0623.core.domain.model.search.text_search.FilterType
+import com.hjw0623.core.domain.model.search.FilterType
 import com.hjw0623.presentation.R
 
 @Composable

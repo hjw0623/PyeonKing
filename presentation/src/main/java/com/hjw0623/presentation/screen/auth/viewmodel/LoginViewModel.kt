@@ -2,12 +2,12 @@ package com.hjw0623.presentation.screen.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hjw0623.core.constants.error.ErrorMessage
 import com.hjw0623.core.domain.auth.validator.UserDataValidator
-import com.hjw0623.core.network.common.DataResourceResult
-import com.hjw0623.core.network.request.AuthRequest
 import com.hjw0623.core.domain.repository.AuthRepository
 import com.hjw0623.core.domain.repository.UserDataStoreRepository
-import com.hjw0623.core.android.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.request.auth.AuthRequest
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenEvent
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -88,7 +88,7 @@ class LoginViewModel @Inject constructor(
                         is DataResourceResult.Failure -> {
                             _event.emit(
                                 LoginScreenEvent.Error(
-                                    result.exception.message ?: UNKNOWN_ERROR
+                                    result.exception.message ?: ErrorMessage.ERROR_UNKNOWN
                                 )
                             )
                             it.copy(isLoggingIn = false)

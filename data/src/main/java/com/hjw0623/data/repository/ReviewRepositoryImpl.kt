@@ -5,8 +5,8 @@ import com.hjw0623.core.network.common.BaseResponse
 import com.hjw0623.core.network.common.DataResourceResult
 import com.hjw0623.core.network.request.review.ReviewPostBody
 import com.hjw0623.core.network.request.review.UpdateReviewBody
-import com.hjw0623.core.network.response.ReviewPage
-import com.hjw0623.core.network.response.ReviewResponse
+import com.hjw0623.core.network.response.review.ReviewPage
+import com.hjw0623.core.network.response.review.ReviewResponse
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
 import com.hjw0623.data.service.PyeonKingApiService

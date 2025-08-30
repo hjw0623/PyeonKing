@@ -42,7 +42,7 @@ import com.hjw0623.presentation.screen.product.ui.map.component.ErrorOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.MapTitleOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.PermissionOverlay
 import com.hjw0623.presentation.screen.product.viewmodel.MapViewModel
-import com.hjw0623.presentation.util.findActivity
+import com.hjw0623.core.android.util.findActivity
 import com.hjw0623.presentation.util.getMarkerIconByBrand
 import kotlinx.coroutines.launch
 

@@ -1,7 +1,7 @@
 package com.hjw0623.presentation.navigation.nav_route
 
 import com.hjw0623.core.domain.model.product.Product
-import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
 import com.hjw0623.core.domain.model.review.ReviewInfo
 import kotlinx.serialization.Serializable
 

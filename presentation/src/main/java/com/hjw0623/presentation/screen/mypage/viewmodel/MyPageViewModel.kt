@@ -2,14 +2,13 @@ package com.hjw0623.presentation.screen.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.android.constants.Error.UNCHANGED_NICKNAME
-import com.hjw0623.core.android.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.constants.error.ErrorMessage
 import com.hjw0623.core.domain.auth.model.NicknameValidationState
 import com.hjw0623.core.domain.auth.validator.UserDataValidator
 import com.hjw0623.core.domain.repository.MyPageRepository
 import com.hjw0623.core.domain.repository.UserDataStoreRepository
 import com.hjw0623.core.network.common.DataResourceResult
-import com.hjw0623.core.network.request.ChangePasswordRequest
+import com.hjw0623.core.network.request.auth.ChangePasswordRequest
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenEvent
 import com.hjw0623.presentation.screen.mypage.change_nickname.ui.ChangeNicknameScreenState
 import com.hjw0623.presentation.screen.mypage.change_password.ui.ChangePasswordScreenEvent
@@ -109,7 +108,7 @@ class MyPageViewModel @Inject constructor(
             _changeNicknameState.update {
                 it.copy(
                     nicknameValidationState = NicknameValidationState.Invalid(
-                        UNCHANGED_NICKNAME
+                        ErrorMessage.ERROR_NICKNAME_UNCHANGED
                     )
                 )
             }
@@ -188,7 +187,7 @@ class MyPageViewModel @Inject constructor(
 
                     is DataResourceResult.Failure -> {
                         _changeNicknameState.update { it.copy(isChangingNickname = false) }
-                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        val message = result.exception.message ?: ErrorMessage.ERROR_UNKNOWN
                         _changeNicknameEvent.emit(
                             ChangeNicknameScreenEvent.Error(message)
                         )
@@ -228,7 +227,7 @@ class MyPageViewModel @Inject constructor(
 
                     is DataResourceResult.Failure -> {
                         _changePasswordState.update { it.copy(isChangingPassword = false) }
-                        val message = result.exception.message ?: UNKNOWN_ERROR
+                        val message = result.exception.message ?: ErrorMessage.ERROR_UNKNOWN
                         _changePasswordEvent.emit(ChangePasswordScreenEvent.Error(message))
                     }
 

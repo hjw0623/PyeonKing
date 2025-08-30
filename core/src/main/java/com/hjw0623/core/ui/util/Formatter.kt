@@ -1,9 +1,9 @@
 package com.hjw0623.core.ui.util
 
 import androidx.compose.ui.graphics.Color
-import com.hjw0623.core.android.constants.Api.IMAGE_URL
-import com.hjw0623.core.android.constants.Brand
-import com.hjw0623.core.android.constants.Promotion
+import com.hjw0623.core.constants.api.ApiUrl.IMAGE_URL
+import com.hjw0623.core.constants.brand.Brand
+import com.hjw0623.core.constants.promotion.PromotionConstants
 import com.hjw0623.core.ui.designsystem.theme.Cu
 import com.hjw0623.core.ui.designsystem.theme.Emart24
 import com.hjw0623.core.ui.designsystem.theme.Gs25
@@ -26,8 +26,8 @@ fun getBrandColor(
 
 fun changePromotionName(promotion: String): String {
     return when (promotion) {
-        Promotion.ONE_PLUS_ONE_RESPONSE -> Promotion.ONE_PLUS_ONE
-        Promotion.TWO_PLUS_ONE_RESPONSE -> Promotion.TWO_PLUS_ONE
+        PromotionConstants.ONE_PLUS_ONE_RESPONSE -> PromotionConstants.ONE_PLUS_ONE
+        PromotionConstants.TWO_PLUS_ONE_RESPONSE -> PromotionConstants.TWO_PLUS_ONE
         else -> promotion
     }
 }

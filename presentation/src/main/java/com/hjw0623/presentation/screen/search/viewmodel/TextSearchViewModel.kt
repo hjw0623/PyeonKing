@@ -2,16 +2,16 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.constants.error.ErrorMessage
 import com.hjw0623.core.domain.model.product.Product
-import com.hjw0623.core.network.response.toProduct
-import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.model.search.search_result.SearchResultSource
-import com.hjw0623.core.domain.model.search.text_search.FilterType
-import com.hjw0623.core.domain.model.search.text_search.filterProducts
+import com.hjw0623.core.domain.model.search.filterProducts
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.SearchResultSource
+import com.hjw0623.core.domain.model.search.FilterType
 import com.hjw0623.core.domain.repository.SearchRepository
 import com.hjw0623.core.domain.repository.UserDataStoreRepository
-import com.hjw0623.core.android.constants.Error
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.response.search.toProduct
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenEvent
 import com.hjw0623.presentation.screen.search.text_search.ui.TextSearchScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,7 +98,7 @@ class TextSearchViewModel @Inject constructor(
             try {
                 userDataStoreRepository.removeSearchHistory(history)
             } catch (e: Exception) {
-                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_HISTORY_DELETE_FAILED))
+                _event.emit(TextSearchScreenEvent.Error(ErrorMessage.ERROR_SEARCH_HISTORY_DELETE_FAILED))
             }
         }
     }
@@ -112,7 +112,7 @@ class TextSearchViewModel @Inject constructor(
         val currentQuery = _state.value.query
         if (currentQuery.isBlank()) {
             viewModelScope.launch {
-                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_QUERY_EMPTY))
+                _event.emit(TextSearchScreenEvent.Error(ErrorMessage.ERROR_INPUT_SEARCH_EMPTY))
             }
             return
         }
@@ -121,7 +121,7 @@ class TextSearchViewModel @Inject constructor(
             try {
                 userDataStoreRepository.saveSearchHistory(currentQuery)
             } catch (e: Exception) {
-                _event.emit(TextSearchScreenEvent.Error(Error.SEARCH_HISTORY_SAVE_FAILED))
+                _event.emit(TextSearchScreenEvent.Error(ErrorMessage.ERROR_SEARCH_HISTORY_SAVE_FAILED))
             }
         }
 

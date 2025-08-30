@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.camera.view.LifecycleCameraController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.domain.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.domain.model.search.search_result.SearchResultSource
-import com.hjw0623.core.android.constants.Error
 import com.hjw0623.core.android.util.takePictureAndSave
+import com.hjw0623.core.constants.error.ErrorMessage
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.SearchResultSource
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenEvent
 import com.hjw0623.presentation.screen.search.camera_search.ui.CameraScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +45,7 @@ class CameraSearchViewModel @Inject constructor() : ViewModel() {
                     _state.update { s -> s.copy(isTakingPicture = false) }
                     _event.emit(
                         CameraScreenEvent.Error(
-                            Error.SAVE_PICTURE_ERROR + (e.message ?: "")
+                            ErrorMessage.ERROR_IMAGE_SAVE_FAILED + (e.message ?: "")
                         )
                     )
                 }
@@ -71,7 +71,7 @@ class CameraSearchViewModel @Inject constructor() : ViewModel() {
                 )
                 _event.emit(CameraScreenEvent.NavigateToSearchResult(navArgs))
             } else {
-                _event.emit(CameraScreenEvent.Error(Error.NO_IMAGE))
+                _event.emit(CameraScreenEvent.Error(ErrorMessage.ERROR_IMAGE_NONE))
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.hjw0623.data.di
 
-import com.hjw0623.core.android.constants.Api
+import com.hjw0623.core.constants.api.ApiUrl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -31,7 +31,7 @@ object RetrofitModule {
         moshi: Moshi
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(Api.BASE_URL)
+            .baseUrl(ApiUrl.BASE_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
@@ -44,7 +44,7 @@ object RetrofitModule {
         moshi: Moshi
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(Api.KAKAO_BASE_URL)
+            .baseUrl(ApiUrl.KAKAO_BASE_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
