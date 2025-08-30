@@ -72,6 +72,7 @@ dependencies {
 
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
+
     //GoogleMap
     implementation(libs.bundles.googlemap)
 

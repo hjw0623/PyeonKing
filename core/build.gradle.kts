@@ -72,6 +72,10 @@ dependencies {
     //DataStore
     implementation(libs.androidx.datastore.preferences)
 
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     // Testing
     testImplementation(libs.bundles.testing)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -79,8 +83,4 @@ dependencies {
 
     // Debug
     debugImplementation(libs.bundles.debug.tooling)
-
-    //Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 }
