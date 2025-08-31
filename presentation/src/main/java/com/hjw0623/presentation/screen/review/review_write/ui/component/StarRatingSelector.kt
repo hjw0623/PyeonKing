@@ -9,7 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingYellow
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingYellow
 
 @Composable
 fun StarRatingSelector(

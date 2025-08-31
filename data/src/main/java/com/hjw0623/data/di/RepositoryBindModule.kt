@@ -1,12 +1,12 @@
 package com.hjw0623.data.di
 
-import com.hjw0623.core.business_logic.repository.AuthRepository
-import com.hjw0623.core.business_logic.repository.KakaoRepository
-import com.hjw0623.core.business_logic.repository.MyPageRepository
-import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.repository.ReviewRepository
-import com.hjw0623.core.business_logic.repository.SearchRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
+import com.hjw0623.core.domain.repository.AuthRepository
+import com.hjw0623.core.domain.repository.KakaoRepository
+import com.hjw0623.core.domain.repository.MyPageRepository
+import com.hjw0623.core.domain.repository.ProductRepository
+import com.hjw0623.core.domain.repository.ReviewRepository
+import com.hjw0623.core.domain.repository.SearchRepository
+import com.hjw0623.core.domain.repository.UserDataStoreRepository
 import com.hjw0623.data.repository.AuthRepositoryImpl
 import com.hjw0623.data.repository.KakaoRepositoryImpl
 import com.hjw0623.data.repository.MyPageRepositoryImpl

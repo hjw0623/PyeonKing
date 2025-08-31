@@ -35,14 +35,14 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.hjw0623.core.presentation.ui.getBrandQuery
+import com.hjw0623.core.ui.util.getBrandQuery
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.product.ui.map.component.EmptyResultOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.ErrorOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.MapTitleOverlay
 import com.hjw0623.presentation.screen.product.ui.map.component.PermissionOverlay
 import com.hjw0623.presentation.screen.product.viewmodel.MapViewModel
-import com.hjw0623.presentation.util.findActivity
+import com.hjw0623.core.android.util.findActivity
 import com.hjw0623.presentation.util.getMarkerIconByBrand
 import kotlinx.coroutines.launch
 

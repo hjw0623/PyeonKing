@@ -5,14 +5,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavBackStackEntry
-import com.hjw0623.core.constants.EmptyString
-import com.hjw0623.core.constants.ScreenRoutes
-import com.hjw0623.core.constants.TopBarTitle
-import com.hjw0623.core.presentation.designsystem.theme.backgroundLight
-import com.hjw0623.core.presentation.designsystem.theme.primaryLight
+import com.hjw0623.core.constants.navigation.ScreenRoutes
+import com.hjw0623.core.constants.ui.TopBarTitle
+import com.hjw0623.core.ui.designsystem.theme.backgroundLight
+import com.hjw0623.core.ui.designsystem.theme.primaryLight
 
 data class TopBarData(
-    val title: String = EmptyString.EMPTY_STRING,
+    val title: String = "",
     val iconTint: Color = primaryLight,
     val backgroundColor: Color = backgroundLight,
     val icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,

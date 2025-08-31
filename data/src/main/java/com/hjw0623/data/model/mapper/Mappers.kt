@@ -1,19 +1,19 @@
 package com.hjw0623.data.model.mapper
 
-import com.hjw0623.core.constants.Promotion
-import com.hjw0623.core.business_logic.model.request.AuthRequest
-import com.hjw0623.core.business_logic.model.response.AuthResponse
-import com.hjw0623.core.business_logic.model.request.ChangeNicknameRequest
-import com.hjw0623.core.business_logic.model.request.ChangePasswordRequest
-import com.hjw0623.core.business_logic.model.response.ChangePasswordResponse
-import com.hjw0623.core.business_logic.model.response.Item
-import com.hjw0623.core.business_logic.model.response.ReviewPage
-import com.hjw0623.core.business_logic.model.request.ReviewPostBody
-import com.hjw0623.core.business_logic.model.response.ReviewProduct
-import com.hjw0623.core.business_logic.model.response.ReviewResponse
-import com.hjw0623.core.business_logic.model.response.ReviewSummaryResponse
-import com.hjw0623.core.business_logic.model.response.SearchItemResponse
-import com.hjw0623.core.business_logic.model.request.UpdateReviewBody
+import com.hjw0623.core.constants.promotion.PromotionConstants
+import com.hjw0623.core.network.request.auth.AuthRequest
+import com.hjw0623.core.network.request.auth.ChangeNicknameRequest
+import com.hjw0623.core.network.request.auth.ChangePasswordRequest
+import com.hjw0623.core.network.request.review.ReviewPostBody
+import com.hjw0623.core.network.request.review.UpdateReviewBody
+import com.hjw0623.core.network.response.search.Item
+import com.hjw0623.core.network.response.review.ReviewPage
+import com.hjw0623.core.network.response.review.ReviewProduct
+import com.hjw0623.core.network.response.review.ReviewResponse
+import com.hjw0623.core.network.response.review.ReviewSummaryResponse
+import com.hjw0623.core.network.response.auth.AuthResponse
+import com.hjw0623.core.network.response.auth.ChangePasswordResponse
+import com.hjw0623.core.network.response.search.SearchItemResponse
 import com.hjw0623.data.model.AuthRequestDto
 import com.hjw0623.data.model.AuthResponseDto
 import com.hjw0623.data.model.ChangeNicknameRequestDto
@@ -46,7 +46,7 @@ fun AuthRequest.toDto(): AuthRequestDto {
 }
 
 fun ItemDto.toDomain(): Item {
-    val discountedUnitPrice = if (this.promotion == Promotion.ONE_PLUS_ONE_RESPONSE) {
+    val discountedUnitPrice = if (this.promotion == PromotionConstants.ONE_PLUS_ONE_RESPONSE) {
         this.pricePerGroup / 2
     } else {
         this.pricePerGroup / 3

@@ -2,14 +2,14 @@ package com.hjw0623.presentation.screen.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.response.toProduct
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
-import com.hjw0623.core.business_logic.repository.SearchRepository
-import com.hjw0623.core.constants.Error
-import com.hjw0623.core.constants.UiText
+import com.hjw0623.core.constants.error.ErrorMessage
+import com.hjw0623.core.constants.ui.TopBarTitle
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.SearchResultSource
+import com.hjw0623.core.domain.repository.SearchRepository
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.response.search.toProduct
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenEvent
 import com.hjw0623.presentation.screen.search.search_result.ui.SearchResultScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +43,7 @@ class SearchResultViewModel @Inject constructor(
                         source = SearchResultSource.TEXT,
                         query = navArgs.passedQuery,
                         imagePath = null,
-                        searchTitle = "'${navArgs.passedQuery.orEmpty()}' ${UiText.TITLE_TEXT_SEARCH}",
+                        searchTitle = "'${navArgs.passedQuery.orEmpty()}' ${TopBarTitle.TITLE_TEXT_SEARCH}",
                         products = emptyList()
                     )
 
@@ -52,7 +52,7 @@ class SearchResultViewModel @Inject constructor(
                         source = SearchResultSource.CAMERA,
                         query = null,
                         imagePath = navArgs.passedImagePath,
-                        searchTitle = UiText.TITLE_CAMERA_SEARCH,
+                        searchTitle = TopBarTitle.TITLE_CAMERA_SEARCH,
                         products = emptyList()
                     )
                 }
@@ -78,7 +78,7 @@ class SearchResultViewModel @Inject constructor(
                                             products = emptyList()
                                         )
                                     }
-                                    _event.emit(SearchResultScreenEvent.Error(Error.NO_SEARCH_RESULT))
+                                    _event.emit(SearchResultScreenEvent.Error(ErrorMessage.ERROR_SEARCH_RESULT_NONE))
                                     return@collectLatest
                                 }
                                 _state.update {
@@ -104,7 +104,7 @@ class SearchResultViewModel @Inject constructor(
                     val path = currentState.imagePath
                     if (path.isNullOrBlank()) {
                         _state.update { it.copy(isLoading = false) }
-                        _event.emit(SearchResultScreenEvent.Error(Error.NO_IMAGE))
+                        _event.emit(SearchResultScreenEvent.Error(ErrorMessage.ERROR_IMAGE_NONE))
                         return@launch
                     }
 
@@ -125,7 +125,7 @@ class SearchResultViewModel @Inject constructor(
                                             products = emptyList()
                                         )
                                     }
-                                    _event.emit(SearchResultScreenEvent.Error(Error.NO_SEARCH_RESULT))
+                                    _event.emit(SearchResultScreenEvent.Error(ErrorMessage.ERROR_IMAGE_NONE))
                                     return@collectLatest
                                 }
                                 _state.update {

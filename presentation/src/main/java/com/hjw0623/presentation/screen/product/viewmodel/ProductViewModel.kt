@@ -2,13 +2,13 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.product.ProductDetailTab
-import com.hjw0623.core.business_logic.model.response.toReviewItem
-import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
-import com.hjw0623.core.constants.Error
+import com.hjw0623.core.constants.error.ErrorMessage
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.product.ProductDetailTab
+import com.hjw0623.core.domain.repository.ProductRepository
+import com.hjw0623.core.domain.repository.UserDataStoreRepository
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.response.review.toReviewItem
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenEvent
 import com.hjw0623.presentation.screen.product.ui.ProductDetailScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -145,7 +145,7 @@ class ProductViewModel @Inject constructor(
                             )
                         }
                         if (reviewResult.totalPages == 0) {
-                            _event.emit(ProductDetailScreenEvent.Error(Error.NO_REVIEW))
+                            _event.emit(ProductDetailScreenEvent.Error(ErrorMessage.ERROR_REVIEW_NONE))
                         }
                     }
 

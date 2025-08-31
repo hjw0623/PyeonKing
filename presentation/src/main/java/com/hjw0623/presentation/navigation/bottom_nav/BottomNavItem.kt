@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.hjw0623.core.constants.MainScreenTitle
+import com.hjw0623.core.constants.ui.BottomTabTitle
 import com.hjw0623.presentation.navigation.nav_route.MainNavigationRoute
 
 data class BottomNavItem(
@@ -17,22 +17,22 @@ data class BottomNavItem(
     companion object {
         fun fetchBottomNavItems(): List<BottomNavItem> = listOf(
             BottomNavItem(
-                MainScreenTitle.HOME,
+                BottomTabTitle.HOME,
                 Icons.Default.Home,
                 MainNavigationRoute.Home
             ),
             BottomNavItem(
-                MainScreenTitle.CAMERA_SEARCH,
+                BottomTabTitle.CAMERA_SEARCH,
                 Icons.Default.CameraAlt,
                 MainNavigationRoute.Camera
             ),
             BottomNavItem(
-                MainScreenTitle.TEXT_SEARCH,
+                BottomTabTitle.TEXT_SEARCH,
                 Icons.Default.Search,
                 MainNavigationRoute.TextSearch
             ),
             BottomNavItem(
-                MainScreenTitle.MYPAGE,
+                BottomTabTitle.MY_PAGE,
                 Icons.Default.Person,
                 MainNavigationRoute.MyPage
             )

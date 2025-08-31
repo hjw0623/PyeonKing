@@ -2,16 +2,14 @@ package com.hjw0623.presentation.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.response.toProduct
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultSource
-import com.hjw0623.core.business_logic.repository.ProductRepository
-import com.hjw0623.core.business_logic.repository.UserDataStoreRepository
-import com.hjw0623.core.constants.Error.BLANK_INPUT
-import com.hjw0623.core.constants.Error.TOO_SHORT_SEARCH_QUERY_INPUT
-import com.hjw0623.core.constants.Error.UNKNOWN_ERROR
+import com.hjw0623.core.constants.error.ErrorMessage
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
+import com.hjw0623.core.domain.model.search.SearchResultSource
+import com.hjw0623.core.domain.repository.ProductRepository
+import com.hjw0623.core.domain.repository.UserDataStoreRepository
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.response.search.toProduct
 import com.hjw0623.presentation.screen.home.ui.HomeScreenEvent
 import com.hjw0623.presentation.screen.home.ui.HomeScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +66,7 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is DataResourceResult.Failure -> {
-                            val message = result.exception.message ?: UNKNOWN_ERROR
+                            val message = result.exception.message ?: ErrorMessage.ERROR_UNKNOWN
                             _event.emit(HomeScreenEvent.Error(message))
                             it.copy(
                                 isLoading = false,
@@ -103,13 +101,13 @@ class HomeViewModel @Inject constructor(
         when {
             query.isBlank() -> {
                 viewModelScope.launch {
-                    _event.emit(HomeScreenEvent.Error(BLANK_INPUT))
+                    _event.emit(HomeScreenEvent.Error(ErrorMessage.ERROR_INPUT_BLANK))
                 }
             }
 
             query.length < MIN_SEARCH_QUERY_LENGTH -> {
                 viewModelScope.launch {
-                    _event.emit(HomeScreenEvent.Error(TOO_SHORT_SEARCH_QUERY_INPUT))
+                    _event.emit(HomeScreenEvent.Error(ErrorMessage.ERROR_INPUT_SEARCH_TOO_SHORT))
                 }
             }
 

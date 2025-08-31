@@ -1,6 +1,6 @@
 package com.hjw0623.presentation.screen.home.ui
 
-import com.hjw0623.core.business_logic.model.product.Product
+import com.hjw0623.core.domain.model.product.Product
 
 data class HomeScreenState(
     val isLoading: Boolean = false,

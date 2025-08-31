@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
 import com.hjw0623.presentation.screen.splash.SplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay

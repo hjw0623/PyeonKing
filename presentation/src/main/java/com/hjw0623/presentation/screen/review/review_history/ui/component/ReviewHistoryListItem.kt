@@ -24,11 +24,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.hjw0623.core.business_logic.model.review.ReviewInfo
-import com.hjw0623.core.presentation.designsystem.components.PyeonKingButton
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.presentation.ui.getFullImageUrl
-import com.hjw0623.core.util.mockdata.mockReviewInfo
+import com.hjw0623.core.domain.model.review.ReviewInfo
+import com.hjw0623.core.ui.designsystem.components.PyeonKingButton
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.ui.util.getFullImageUrl
+import com.hjw0623.core.android.util.mockdata.mockReviewInfo
 import com.hjw0623.presentation.R
 import com.hjw0623.presentation.screen.product.ui.componet.RatingStars
 

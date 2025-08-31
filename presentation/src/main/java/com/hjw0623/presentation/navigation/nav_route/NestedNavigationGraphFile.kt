@@ -7,10 +7,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.review.ReviewInfo
-import com.hjw0623.core.business_logic.model.search.search_result.SearchResultNavArgs
-import com.hjw0623.core.constants.NavArgs
+import com.hjw0623.core.constants.navigation.NavArgs
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.review.ReviewInfo
+import com.hjw0623.core.domain.model.search.SearchResultNavArgs
 import com.hjw0623.presentation.navigation.parcelableType
 import com.hjw0623.presentation.screen.auth.login.ui.LoginScreenRoot
 import com.hjw0623.presentation.screen.auth.register.ui.RegisterScreenRoot

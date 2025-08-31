@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.secrets.gradle.plugin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.gradle)
@@ -53,9 +51,10 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":data"))
 
+    // Android 기본
     implementation(libs.androidx.core.ktx)
 
-    //compose
+    // Compose
     implementation(libs.bundles.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material.icons.extended)
@@ -63,18 +62,16 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    //Networking
-    implementation(libs.bundles.retrofit)
-    ksp(libs.moshi.codegen)
-
     // Coil
     implementation(libs.bundles.coil)
 
-    // Serialization
-    implementation(libs.kotlinx.serialization.json)
-
     // Logging
     implementation(libs.timber)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -83,9 +80,4 @@ dependencies {
     // Debug
     testImplementation(libs.bundles.testing)
     debugImplementation(libs.bundles.debug.tooling)
-
-    //Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
 }
