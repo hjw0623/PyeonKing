@@ -10,9 +10,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
-import com.hjw0623.core.presentation.ui.ObserveAsEvents
-import com.hjw0623.core.presentation.ui.rememberThrottledOnClick
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.ui.util.ObserveAsEvents
+import com.hjw0623.core.ui.util.rememberThrottledOnClick
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedInScreen
 import com.hjw0623.presentation.screen.mypage.mypage_main.ui.component.LoggedOutScreen
 import com.hjw0623.presentation.screen.mypage.viewmodel.MyPageViewModel

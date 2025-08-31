@@ -23,8 +23,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.hjw0623.core.business_logic.model.product.ReviewItem
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.domain.model.product.ReviewItem
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
 
 
 @Composable

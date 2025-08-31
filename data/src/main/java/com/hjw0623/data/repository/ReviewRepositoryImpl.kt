@@ -1,12 +1,12 @@
 package com.hjw0623.data.repository
 
-import com.hjw0623.core.business_logic.model.network.DataResourceResult
-import com.hjw0623.core.business_logic.model.request.ReviewPostBody
-import com.hjw0623.core.business_logic.model.request.UpdateReviewBody
-import com.hjw0623.core.business_logic.model.response.BaseResponse
-import com.hjw0623.core.business_logic.model.response.ReviewPage
-import com.hjw0623.core.business_logic.model.response.ReviewResponse
-import com.hjw0623.core.business_logic.repository.ReviewRepository
+import com.hjw0623.core.domain.repository.ReviewRepository
+import com.hjw0623.core.network.common.BaseResponse
+import com.hjw0623.core.network.common.DataResourceResult
+import com.hjw0623.core.network.request.review.ReviewPostBody
+import com.hjw0623.core.network.request.review.UpdateReviewBody
+import com.hjw0623.core.network.response.review.ReviewPage
+import com.hjw0623.core.network.response.review.ReviewResponse
 import com.hjw0623.data.model.mapper.toDomain
 import com.hjw0623.data.model.mapper.toDto
 import com.hjw0623.data.service.PyeonKingApiService

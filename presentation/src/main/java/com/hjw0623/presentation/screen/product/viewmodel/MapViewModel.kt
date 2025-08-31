@@ -2,11 +2,11 @@ package com.hjw0623.presentation.screen.product.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hjw0623.core.business_logic.location.LocationObserver
-import com.hjw0623.core.business_logic.model.response.PoiInfo
-import com.hjw0623.core.business_logic.repository.KakaoRepository
-import com.hjw0623.core.constants.Error
-import com.hjw0623.core.presentation.ui.getBrandQuery
+import com.hjw0623.core.constants.error.ErrorMessage
+import com.hjw0623.core.domain.location.LocationObserver
+import com.hjw0623.core.domain.repository.KakaoRepository
+import com.hjw0623.core.network.response.location.PoiInfo
+import com.hjw0623.core.ui.util.getBrandQuery
 import com.hjw0623.presentation.screen.product.ui.map.MapTabState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +40,7 @@ class MapViewModel @Inject constructor(
                     locationObserver.observeLocation(2000).firstOrNull()
                 }
                 if (loc == null) {
-                    _state.update { it.copy(error = Error.FAILED_TO_GET_LOCATION) }
+                    _state.update { it.copy(error = ErrorMessage.ERROR_LOCATION_FAILED) }
                     return@launch
                 }
                 _state.update {
@@ -51,7 +51,7 @@ class MapViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _state.update { it.copy(error = e.message ?: Error.FAILED_TO_GET_LOCATION) }
+                _state.update { it.copy(error = e.message ?: ErrorMessage.ERROR_LOCATION_FAILED) }
             } finally {
                 _state.update { it.copy(isFetchingLocation = false) }
             }
@@ -62,7 +62,12 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val loc = _state.value.currentLocation
             if (loc == null) {
-                _state.update { it.copy(hasSearched = true, error = Error.NO_CURRENT_LOCATION) }
+                _state.update {
+                    it.copy(
+                        hasSearched = true,
+                        error = ErrorMessage.ERROR_LOCATION_NONE
+                    )
+                }
                 return@launch
             }
 
@@ -81,7 +86,7 @@ class MapViewModel @Inject constructor(
                     it.copy(
                         isSearching = false,
                         hasSearched = true,
-                        error = e.message ?: Error.SEARCH_FAILED
+                        error = e.message ?: ErrorMessage.ERROR_SEARCH_FAILED
                     )
                 }
             }

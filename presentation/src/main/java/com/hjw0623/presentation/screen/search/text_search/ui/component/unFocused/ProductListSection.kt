@@ -7,10 +7,10 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hjw0623.core.business_logic.model.product.Product
-import com.hjw0623.core.business_logic.model.search.text_search.FilterType
-import com.hjw0623.core.util.mockdata.mockProductList
-import com.hjw0623.core.presentation.designsystem.theme.PyeonKingTheme
+import com.hjw0623.core.domain.model.product.Product
+import com.hjw0623.core.domain.model.search.FilterType
+import com.hjw0623.core.android.util.mockdata.mockProductList
+import com.hjw0623.core.ui.designsystem.theme.PyeonKingTheme
 
 @Composable
 fun ProductListSection(

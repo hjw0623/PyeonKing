@@ -23,8 +23,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hjw0623.core.presentation.designsystem.components.BackBar
-import com.hjw0623.core.presentation.ui.shouldShowBottomBar
+import com.hjw0623.core.ui.designsystem.components.BackBar
+import com.hjw0623.core.ui.util.shouldShowBottomBar
 import com.hjw0623.presentation.navigation.TopBarData
 import com.hjw0623.presentation.navigation.bottom_nav.BottomNavItem
 import com.hjw0623.presentation.navigation.nav_route.CameraTabNestedRoute
