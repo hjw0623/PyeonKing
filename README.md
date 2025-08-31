@@ -40,6 +40,12 @@
 
 ---
 
+## 📂 프로젝트 모듈 구성도
+
+data (Repository, Network, Local DB) ──▶ core (공용 유틸, 모델, 공통 로직) ◀── presentation (UI, ViewModel, Compose)
+
+---
+
 ## 📱 주요 기능 시연 및 설명
 
 ### 👍 1. 사용자 맞춤 추천 상품 
